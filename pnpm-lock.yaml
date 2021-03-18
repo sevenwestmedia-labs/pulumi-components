@@ -1,31 +1,64 @@
-devDependencies:
-  '@babel/core': 7.9.6
-  '@babel/preset-env': 7.9.6_@babel+core@7.9.6
-  '@babel/preset-react': 7.9.4_@babel+core@7.9.6
-  '@babel/preset-typescript': 7.9.0_@babel+core@7.9.6
-  '@changesets/cli': 2.14.1
-  '@nrwl/cli': 11.5.1
-  '@nrwl/eslint-plugin-nx': 11.5.1_109fe8a100a1cc8a264bc9a404c53b55
-  '@nrwl/jest': 11.5.1
-  '@nrwl/linter': 11.5.1
-  '@nrwl/tao': 11.5.1
-  '@nrwl/workspace': 11.5.1_prettier@2.2.1
-  '@pulumi/aws': 3.33.0
-  '@pulumi/pulumi': 2.23.0
-  '@types/jest': 26.0.8
-  '@types/node': 12.12.38
-  '@typescript-eslint/eslint-plugin': 4.3.0_994d979c051549b216df6838c5973d27
-  '@typescript-eslint/parser': 4.3.0_eslint@7.10.0+typescript@4.0.7
-  aws-sdk: 2.866.0
-  babel-jest: 26.2.2_@babel+core@7.9.6
-  dotenv: 6.2.0
-  eslint: 7.10.0
-  eslint-config-prettier: 8.1.0_eslint@7.10.0
-  jest: 26.2.2_ts-node@9.1.1
-  prettier: 2.2.1
-  ts-jest: 26.4.0_jest@26.2.2+typescript@4.0.7
-  ts-node: 9.1.1_typescript@4.0.7
-  typescript: 4.0.7
+importers:
+  .:
+    dependencies:
+      tslib: 2.1.0
+    devDependencies:
+      '@babel/core': 7.9.6
+      '@babel/preset-env': 7.9.6_@babel+core@7.9.6
+      '@babel/preset-react': 7.9.4_@babel+core@7.9.6
+      '@babel/preset-typescript': 7.9.0_@babel+core@7.9.6
+      '@changesets/cli': 2.14.1
+      '@nrwl/cli': 11.5.1
+      '@nrwl/eslint-plugin-nx': 11.5.1_109fe8a100a1cc8a264bc9a404c53b55
+      '@nrwl/jest': 11.5.1
+      '@nrwl/linter': 11.5.1
+      '@nrwl/tao': 11.5.1
+      '@nrwl/workspace': 11.5.1_prettier@2.2.1
+      '@pulumi/aws': 3.33.0
+      '@pulumi/pulumi': 2.23.0
+      '@types/jest': 26.0.8
+      '@types/node': 12.12.38
+      '@typescript-eslint/eslint-plugin': 4.3.0_994d979c051549b216df6838c5973d27
+      '@typescript-eslint/parser': 4.3.0_eslint@7.10.0+typescript@4.0.7
+      aws-sdk: 2.866.0
+      babel-jest: 26.2.2_@babel+core@7.9.6
+      dotenv: 6.2.0
+      eslint: 7.10.0
+      eslint-config-prettier: 8.1.0_eslint@7.10.0
+      jest: 26.2.2_ts-node@9.1.1
+      prettier: 2.2.1
+      ts-jest: 26.4.0_jest@26.2.2+typescript@4.0.7
+      ts-node: 9.1.1_typescript@4.0.7
+      typescript: 4.0.7
+    specifiers:
+      '@babel/core': 7.9.6
+      '@babel/preset-env': 7.9.6
+      '@babel/preset-react': 7.9.4
+      '@babel/preset-typescript': 7.9.0
+      '@changesets/cli': ^2.14.1
+      '@nrwl/cli': 11.5.1
+      '@nrwl/eslint-plugin-nx': 11.5.1
+      '@nrwl/jest': 11.5.1
+      '@nrwl/linter': 11.5.1
+      '@nrwl/tao': 11.5.1
+      '@nrwl/workspace': 11.5.1
+      '@pulumi/aws': ^3.33.0
+      '@pulumi/pulumi': ^2.23.0
+      '@types/jest': 26.0.8
+      '@types/node': 12.12.38
+      '@typescript-eslint/eslint-plugin': 4.3.0
+      '@typescript-eslint/parser': 4.3.0
+      aws-sdk: ^2.866.0
+      babel-jest: 26.2.2
+      dotenv: 6.2.0
+      eslint: 7.10.0
+      eslint-config-prettier: 8.1.0
+      jest: 26.2.2
+      prettier: 2.2.1
+      ts-jest: 26.4.0
+      ts-node: ~9.1.1
+      tslib: ^2.1.0
+      typescript: ~4.0.3
 lockfileVersion: 5.2
 packages:
   /@babel/code-frame/7.12.13:
@@ -1628,6 +1661,7 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-D9GGJb7KeKZDMXAWqv2xVBg9cR9rafyBpuQGP9FZNReEW6zAhMh0Jfp7QIZdqoNbPwC6JPwXR/PWFhwLhjYHDQ==
+      tarball: '@pulumi/aws/-/aws-3.33.0.tgz'
   /@pulumi/pulumi/2.23.0:
     dependencies:
       '@grpc/grpc-js': 1.2.11
@@ -6948,7 +6982,6 @@ packages:
     resolution:
       integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
   /tslib/2.1.0:
-    dev: true
     resolution:
       integrity: sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
   /tsutils/3.21.0_typescript@4.0.7:
@@ -7441,31 +7474,3 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
-specifiers:
-  '@babel/core': 7.9.6
-  '@babel/preset-env': 7.9.6
-  '@babel/preset-react': 7.9.4
-  '@babel/preset-typescript': 7.9.0
-  '@changesets/cli': ^2.14.1
-  '@nrwl/cli': 11.5.1
-  '@nrwl/eslint-plugin-nx': 11.5.1
-  '@nrwl/jest': 11.5.1
-  '@nrwl/linter': 11.5.1
-  '@nrwl/tao': 11.5.1
-  '@nrwl/workspace': 11.5.1
-  '@pulumi/aws': ^3.33.0
-  '@pulumi/pulumi': ^2.23.0
-  '@types/jest': 26.0.8
-  '@types/node': 12.12.38
-  '@typescript-eslint/eslint-plugin': 4.3.0
-  '@typescript-eslint/parser': 4.3.0
-  aws-sdk: ^2.866.0
-  babel-jest: 26.2.2
-  dotenv: 6.2.0
-  eslint: 7.10.0
-  eslint-config-prettier: 8.1.0
-  jest: 26.2.2
-  prettier: 2.2.1
-  ts-jest: 26.4.0
-  ts-node: ~9.1.1
-  typescript: ~4.0.3
