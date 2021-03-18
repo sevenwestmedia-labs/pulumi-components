@@ -1,0 +1,11 @@
+{
+    "files": [],
+    "compilerOptions": {
+        "disableSourceOfProjectReferenceRedirect": true
+    },
+    "references": [
+        {
+            "path": "./libs/pulumi-lambda"
+        }
+    ]
+}
