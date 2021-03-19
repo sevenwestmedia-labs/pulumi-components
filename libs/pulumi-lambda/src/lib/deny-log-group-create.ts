@@ -12,18 +12,22 @@ export class DenyLogGroupCreationPolicy extends pulumi.ComponentResource {
     ) {
         super('wanews:deny-log-group-create-policy', name, {}, opts)
 
-        this.policy = new aws.iam.Policy('deny-log-group-creation', {
-            name: 'deny-log-group-creation',
-            policy: {
-                Statement: [
-                    {
-                        Action: ['logs:CreateLogGroup'],
-                        Effect: 'Deny',
-                        Resource: '*',
-                    },
-                ],
-                Version: '2012-10-17',
+        this.policy = new aws.iam.Policy(
+            'deny-log-group-creation',
+            {
+                name: 'deny-log-group-creation',
+                policy: {
+                    Statement: [
+                        {
+                            Action: ['logs:CreateLogGroup'],
+                            Effect: 'Deny',
+                            Resource: '*',
+                        },
+                    ],
+                    Version: '2012-10-17',
+                },
             },
-        })
+            { parent: this },
+        )
     }
 }
