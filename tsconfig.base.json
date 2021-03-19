@@ -14,7 +14,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@wanews/pulumi-lambda": ["libs/pulumi-lambda/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

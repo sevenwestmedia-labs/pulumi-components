@@ -1,10 +1,27 @@
 {
-  
-  
-  "version": 2,
-  
-  "projects": {},
-  "cli": {
-    "defaultCollection": "@nrwl/workspace"
-  }
+    "version": 2,
+    "projects": {
+        "pulumi-lambda": {
+            "root": "libs/pulumi-lambda",
+            "sourceRoot": "libs/pulumi-lambda/src",
+            "projectType": "library",
+            "targets": {
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": ["libs/pulumi-lambda/**/*.ts"]
+                    }
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/pulumi-lambda"],
+                    "options": {
+                        "jestConfig": "libs/pulumi-lambda/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            }
+        }
+    },
+    "cli": { "defaultCollection": "@nrwl/workspace" }
 }
