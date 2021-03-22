@@ -18,6 +18,8 @@ jobs:
           node-version: 14.x
           registry-url: 'https://registry.npmjs.org'
           scope: '@wanews'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Cache ~/.pnpm-store
         uses: actions/cache@main
