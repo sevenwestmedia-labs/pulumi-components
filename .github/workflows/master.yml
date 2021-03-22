@@ -58,7 +58,7 @@ jobs:
           git config user.email "github.serviceaccount@wanews.com.au"
           git config user.name "SWM GitHub Service Account"
           git add -A
-          git commit -m "Version packages"
+          git commit -m "Version packages" || echo "No changes to commit"
           git push
 
   build:
