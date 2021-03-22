@@ -11,6 +11,8 @@ export class LambdaFunction extends pulumi.ComponentResource {
         args: {
             lambdaOptions: Omit<aws.lambda.FunctionArgs, 'role'>
 
+            executionRole?: aws.iam.Role
+
             getTags: (
                 name: string,
             ) => {
@@ -53,25 +55,27 @@ export class LambdaFunction extends pulumi.ComponentResource {
         )
 
         const roleName = `${name}-role`
-        this.executionRole = new aws.iam.Role(
-            roleName,
-            {
-                assumeRolePolicy: {
-                    Version: '2012-10-17',
-                    Statement: [
-                        {
-                            Action: 'sts:AssumeRole',
-                            Principal: {
-                                Service: 'lambda.amazonaws.com',
+        this.executionRole =
+            args.executionRole ||
+            new aws.iam.Role(
+                roleName,
+                {
+                    assumeRolePolicy: {
+                        Version: '2012-10-17',
+                        Statement: [
+                            {
+                                Action: 'sts:AssumeRole',
+                                Principal: {
+                                    Service: 'lambda.amazonaws.com',
+                                },
+                                Effect: 'Allow',
                             },
-                            Effect: 'Allow',
-                        },
-                    ],
+                        ],
+                    },
+                    tags: args.getTags(name),
                 },
-                tags: args.getTags(name),
-            },
-            { parent: this },
-        )
+                { parent: this },
+            )
 
         const accountId = pulumi.output(
             aws
