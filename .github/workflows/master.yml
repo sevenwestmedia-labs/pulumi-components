@@ -27,9 +27,18 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Install pnpm
+        run: |
+          npm i -g pnpm
+          pnpm set verify-store-integrity false
+
+      - name: pnpm install
+        run: |
+          pnpm install --frozen-lockfile
+
       - name: Version command
         id: version
-        run: echo ::set-output name=changes::$(npx @changesets/cli version | grep -q 'No unreleased changesets found, exiting.' && echo 'false' || echo 'true')
+        run: echo ::set-output name=changes::$(pnpx changeset version | grep -q 'No unreleased changesets found, exiting.' && echo 'false' || echo 'true')
 
       - name: Push changes
         if: steps.version.outputs.changes == 'true'
