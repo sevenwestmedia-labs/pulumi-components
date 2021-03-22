@@ -25,6 +25,8 @@ jobs:
       - name: Push changes
         if: steps.version.outputs.changes == 'true'
         run: |
+          git config user.email "github.serviceaccount@wanews.com.au"
+          git config user.name "SWM GitHub Service Account"
           git add -A
           git commit -m "Version packages"
           git push --ff-only
