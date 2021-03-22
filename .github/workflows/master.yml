@@ -16,7 +16,7 @@ jobs:
         with:
           # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
           fetch-depth: 0
-          token: ${{ secrets.GIT_PAT }}
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
 
       - name: Version command
         id: version
@@ -82,4 +82,4 @@ jobs:
       - name: Release packages
         uses: changesets/action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SERVICE_ACCOUNT_PAT }}
