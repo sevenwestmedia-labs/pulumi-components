@@ -59,7 +59,7 @@ jobs:
           git config user.name "SWM GitHub Service Account"
           git add -A
           git commit -m "Version packages"
-          git push --ff-only
+          git push
 
   build:
     runs-on: ubuntu-latest
