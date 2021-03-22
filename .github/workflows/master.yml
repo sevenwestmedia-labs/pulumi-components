@@ -6,8 +6,33 @@ on:
       - master
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.version.changes }} # map step output to job output
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
+          token: ${{ secrets.GIT_PAT }}
+
+      - name: Version command
+        id: version
+        run: echo ::set-output name=changes::$(pnpx changeset version | grep -q 'No unreleased changesets found, exiting.' && echo 'false' || echo 'true')
+
+      - name: Push changes
+        if: steps.version.outputs.changes === 'true'
+        run: |
+          git add -A
+          git commit -m "Version packages"
+          git push --ff-only
+
   build:
     runs-on: ubuntu-latest
+    needs: version
+    if: needs.version.outputs.changes === 'false'
     steps:
       - name: Checkout
         uses: actions/checkout@master
