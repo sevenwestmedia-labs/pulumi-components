@@ -24,6 +24,8 @@ export class LambdaFunction extends pulumi.ComponentResource {
              * Once imported, this param needs to be removed
              **/
             logGroupImport?: string
+
+            skipAttachDenyPolicy?: boolean
         },
         opts?: pulumi.ComponentResourceOptions | undefined,
     ) {
@@ -91,14 +93,15 @@ export class LambdaFunction extends pulumi.ComponentResource {
             { parent: this },
         )
 
-        new aws.iam.RolePolicyAttachment(
-            `${name}-attach-deny`,
-            {
-                role: this.executionRole,
-                policyArn: pulumi.interpolate`arn:aws:iam::${accountId}:policy/deny-log-group-creation`,
-            },
-            { parent: this },
-        )
+        !args.skipAttachDenyPolicy &&
+            new aws.iam.RolePolicyAttachment(
+                `${name}-attach-deny`,
+                {
+                    role: this.executionRole,
+                    policyArn: pulumi.interpolate`arn:aws:iam::${accountId}:policy/deny-log-group-creation`,
+                },
+                { parent: this },
+            )
 
         this.function = new aws.lambda.Function(
             name,
