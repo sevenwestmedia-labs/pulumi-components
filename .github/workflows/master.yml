@@ -9,7 +9,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
-      changes: ${{ steps.version.changes }} # map step output to job output
+      changes: ${{ steps.version.outputs.changes }} # map step output to job output
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -52,11 +52,6 @@ jobs:
         id: version
         run: |
           echo ::set-output name=changes::$(pnpx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
-
-      - name: Check Version command
-        id: version
-        run: |
-          echo ${{ steps.version.changes }}
 
       - name: Push changes
         if: steps.version.outputs.changes == 'true'
