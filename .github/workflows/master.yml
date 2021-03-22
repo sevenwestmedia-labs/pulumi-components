@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: 14.x
           registry-url: 'https://registry.npmjs.org'
+          scope: '@wanews'
 
       - name: Cache ~/.pnpm-store
         uses: actions/cache@main
