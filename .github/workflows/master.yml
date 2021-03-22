@@ -23,7 +23,7 @@ jobs:
         run: echo ::set-output name=changes::$(pnpx changeset version | grep -q 'No unreleased changesets found, exiting.' && echo 'false' || echo 'true')
 
       - name: Push changes
-        if: steps.version.outputs.changes === 'true'
+        if: steps.version.outputs.changes == 'true'
         run: |
           git add -A
           git commit -m "Version packages"
@@ -32,7 +32,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: version
-    if: needs.version.outputs.changes === 'false'
+    if: needs.version.outputs.changes == 'false'
     steps:
       - name: Checkout
         uses: actions/checkout@master
