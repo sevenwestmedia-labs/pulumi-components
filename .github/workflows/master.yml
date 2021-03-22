@@ -50,7 +50,7 @@ jobs:
 
       - name: Version command
         id: version
-        run: echo ::set-output name=changes::$(pnpx changeset version | grep -q 'No unreleased changesets found, exiting.' && echo 'false' || echo 'true')
+        run: echo ::set-output name=changes::$(pnpx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
 
       - name: Push changes
         if: steps.version.outputs.changes == 'true'
