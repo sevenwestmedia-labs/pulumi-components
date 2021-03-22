@@ -43,7 +43,7 @@ jobs:
           pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm run build
+        run: pnpm run build-tsc
 
       - name: Lint types and code
         run: pnpm run lint
@@ -51,8 +51,10 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Run tests
+        run: pnpx changeset version
+
       - name: Release packages
-        run: pnpm publish -r --access public
+        run: pnpx changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
