@@ -50,7 +50,13 @@ jobs:
 
       - name: Version command
         id: version
-        run: echo ::set-output name=changes::$(pnpx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
+        run: |
+          echo ::set-output name=changes::$(pnpx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
+
+      - name: Check Version command
+        id: version
+        run: |
+          echo ${{ steps.version.changes }}
 
       - name: Push changes
         if: steps.version.outputs.changes == 'true'
@@ -64,7 +70,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: version
-    if: needs.version.outputs.changes == 'false'
+    if: always() && needs.version.outputs.changes == 'false'
     steps:
       - name: Checkout
         uses: actions/checkout@master
