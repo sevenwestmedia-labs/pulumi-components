@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
 
       - name: Enable node
         uses: actions/setup-node@master
@@ -51,10 +54,7 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      - name: Run tests
-        run: pnpx changeset version
-
       - name: Release packages
-        run: pnpx changeset publish
+        uses: changesets/action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
