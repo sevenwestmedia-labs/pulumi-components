@@ -3,7 +3,7 @@ import * as aws from '@pulumi/aws'
 
 export class LambdaFunction extends pulumi.ComponentResource {
     readonly function: aws.lambda.Function
-    readonly executionRole: aws.iam.Role
+    readonly executionRoleArn: pulumi.Output<string>
     readonly logGroup: aws.cloudwatch.LogGroup
 
     constructor(
@@ -11,7 +11,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
         args: {
             lambdaOptions: Omit<aws.lambda.FunctionArgs, 'role'>
 
-            executionRole?: aws.iam.Role
+            executionRoleArn?: pulumi.Input<string>
 
             getTags: (
                 name: string,
@@ -57,27 +57,27 @@ export class LambdaFunction extends pulumi.ComponentResource {
         )
 
         const roleName = `${name}-role`
-        this.executionRole =
-            args.executionRole ||
-            new aws.iam.Role(
-                roleName,
-                {
-                    assumeRolePolicy: {
-                        Version: '2012-10-17',
-                        Statement: [
-                            {
-                                Action: 'sts:AssumeRole',
-                                Principal: {
-                                    Service: 'lambda.amazonaws.com',
-                                },
-                                Effect: 'Allow',
-                            },
-                        ],
-                    },
-                    tags: args.getTags(name),
-                },
-                { parent: this },
-            )
+        this.executionRoleArn = args.executionRoleArn
+            ? pulumi.output(args.executionRoleArn)
+            : new aws.iam.Role(
+                  roleName,
+                  {
+                      assumeRolePolicy: {
+                          Version: '2012-10-17',
+                          Statement: [
+                              {
+                                  Action: 'sts:AssumeRole',
+                                  Principal: {
+                                      Service: 'lambda.amazonaws.com',
+                                  },
+                                  Effect: 'Allow',
+                              },
+                          ],
+                      },
+                      tags: args.getTags(name),
+                  },
+                  { parent: this },
+              ).arn
 
         const accountId = pulumi.output(
             aws
@@ -87,7 +87,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
         new aws.iam.RolePolicyAttachment(
             `${name}-attach-execution-policy`,
             {
-                role: this.executionRole,
+                role: this.executionRoleArn,
                 policyArn: aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole,
             },
             { parent: this },
@@ -97,7 +97,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
             new aws.iam.RolePolicyAttachment(
                 `${name}-attach-deny`,
                 {
-                    role: this.executionRole,
+                    role: this.executionRoleArn,
                     policyArn: pulumi.interpolate`arn:aws:iam::${accountId}:policy/deny-log-group-creation`,
                 },
                 { parent: this },
@@ -108,7 +108,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
             {
                 name,
                 runtime: 'nodejs14.x',
-                role: this.executionRole.arn,
+                role: this.executionRoleArn,
                 ...(args.lambdaOptions || {}),
                 tags: args.getTags(name),
             },
