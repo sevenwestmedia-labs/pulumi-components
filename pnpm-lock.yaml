@@ -9,6 +9,7 @@ importers:
       '@babel/preset-typescript': 7.9.0_@babel+core@7.9.6
       '@changesets/cli': 2.14.1
       '@nrwl/cli': 11.5.1
+      '@nrwl/devkit': 11.5.1
       '@nrwl/eslint-plugin-nx': 11.5.1_109fe8a100a1cc8a264bc9a404c53b55
       '@nrwl/jest': 11.5.1
       '@nrwl/linter': 11.5.1
@@ -37,6 +38,7 @@ importers:
       '@babel/preset-typescript': 7.9.0
       '@changesets/cli': ^2.14.1
       '@nrwl/cli': 11.5.1
+      '@nrwl/devkit': 11.5.1
       '@nrwl/eslint-plugin-nx': 11.5.1
       '@nrwl/jest': 11.5.1
       '@nrwl/linter': 11.5.1
@@ -59,6 +61,8 @@ importers:
       ts-node: ~9.1.1
       tslib: ^2.1.0
       typescript: ~4.0.3
+  libs/pulumi-lambda:
+    specifiers: {}
 lockfileVersion: 5.2
 packages:
   /@babel/code-frame/7.12.13:
