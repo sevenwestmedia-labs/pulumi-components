@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.2.0
+
+### Minor Changes
+
+- e587792: Allow execution role argument to be an arn
+
 ## 0.1.1
 
 ### Patch Changes
