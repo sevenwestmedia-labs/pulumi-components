@@ -1,11 +1,14 @@
 {
-    "files": [],
-    "compilerOptions": {
-        "disableSourceOfProjectReferenceRedirect": true
+  "files": [],
+  "compilerOptions": {
+    "disableSourceOfProjectReferenceRedirect": true
+  },
+  "references": [
+    {
+      "path": "./libs/pulumi-lambda"
     },
-    "references": [
-        {
-            "path": "./libs/pulumi-lambda"
-        }
-    ]
+    {
+      "path": "./libs/certificate-validation"
+    }
+  ]
 }

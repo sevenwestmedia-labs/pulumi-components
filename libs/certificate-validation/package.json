@@ -1,0 +1,22 @@
+{
+  "name": "@wanews/pulumi-certificate-validation",
+  "version": "0.0.1",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "author": "Seven West Media WA",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sevenwestmedia-labs/pulumi-components.git"
+  },
+  "keywords": [
+    "Pulumi"
+  ],
+  "bugs": {
+    "url": "https://github.com/sevenwestmedia-labs/pulumi-components/issues"
+  },
+  "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/certificate-validation#readme",
+  "peerDependencies": {
+    "tslib": "^2.1.0"
+  }
+}
