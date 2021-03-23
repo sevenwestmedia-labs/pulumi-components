@@ -18,6 +18,9 @@
       "@wanews/pulumi-lambda": ["libs/pulumi-lambda/src/index.ts"],
       "@wanews/pulumi-certificate-validation": [
         "libs/certificate-validation/src/index.ts"
+      ],
+      "@wanews/pulumi-apigateway-lambda-proxy": [
+        "libs/apigateway-lambda-proxy/src/index.ts"
       ]
     }
   },

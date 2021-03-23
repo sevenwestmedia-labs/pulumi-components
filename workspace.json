@@ -1,46 +1,83 @@
 {
-  "version": 2,
-  "projects": {
-    "pulumi-lambda": {
-      "root": "libs/pulumi-lambda",
-      "sourceRoot": "libs/pulumi-lambda/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": { "lintFilePatterns": ["libs/pulumi-lambda/**/*.ts"] }
+    "version": 2,
+    "projects": {
+        "pulumi-lambda": {
+            "root": "libs/pulumi-lambda",
+            "sourceRoot": "libs/pulumi-lambda/src",
+            "projectType": "library",
+            "targets": {
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/pulumi-lambda/**/*.ts"
+                        ]
+                    }
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": [
+                        "coverage/libs/pulumi-lambda"
+                    ],
+                    "options": {
+                        "jestConfig": "libs/pulumi-lambda/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            }
         },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/pulumi-lambda"],
-          "options": {
-            "jestConfig": "libs/pulumi-lambda/jest.config.js",
-            "passWithNoTests": true
-          }
+        "certificate-validation": {
+            "root": "libs/certificate-validation",
+            "sourceRoot": "libs/certificate-validation/src",
+            "projectType": "library",
+            "targets": {
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/certificate-validation/**/*.ts"
+                        ]
+                    }
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": [
+                        "coverage/libs/certificate-validation"
+                    ],
+                    "options": {
+                        "jestConfig": "libs/certificate-validation/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            }
         }
-      }
     },
-    "certificate-validation": {
-      "root": "libs/certificate-validation",
-      "sourceRoot": "libs/certificate-validation/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/certificate-validation/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/certificate-validation"],
-          "options": {
-            "jestConfig": "libs/certificate-validation/jest.config.js",
-            "passWithNoTests": true
-          }
+    "apigateway-lambda-proxy": {
+        "root": "libs/apigateway-lambda-proxy",
+        "sourceRoot": "libs/apigateway-lambda-proxy/src",
+        "projectType": "library",
+        "targets": {
+            "lint": {
+                "executor": "@nrwl/linter:eslint",
+                "options": {
+                    "lintFilePatterns": [
+                        "libs/apigateway-lambda-proxy/**/*.ts"
+                    ]
+                }
+            },
+            "test": {
+                "executor": "@nrwl/jest:jest",
+                "outputs": [
+                    "coverage/libs/apigateway-lambda-proxy"
+                ],
+                "options": {
+                    "jestConfig": "libs/apigateway-lambda-proxy/jest.config.js",
+                    "passWithNoTests": true
+                }
+            }
         }
-      }
+    },
+    "cli": {
+        "defaultCollection": "@nrwl/workspace"
     }
-  },
-  "cli": { "defaultCollection": "@nrwl/workspace" }
 }

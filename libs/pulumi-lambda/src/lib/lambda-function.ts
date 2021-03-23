@@ -114,6 +114,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
             },
             {
                 parent: this,
+                dependsOn: [this.logGroup],
             },
         )
     }
