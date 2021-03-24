@@ -15,5 +15,8 @@
       "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
     }
   },
-  "projects": { "pulumi-lambda": { "tags": [] } }
+  "projects": {
+    "pulumi-lambda": { "tags": [] },
+    "certificate-validation": { "tags": [] }
+  }
 }
