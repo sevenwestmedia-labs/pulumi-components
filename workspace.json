@@ -50,29 +50,29 @@
                     }
                 }
             }
-        }
-    },
-    "apigateway-lambda-proxy": {
-        "root": "libs/apigateway-lambda-proxy",
-        "sourceRoot": "libs/apigateway-lambda-proxy/src",
-        "projectType": "library",
-        "targets": {
-            "lint": {
-                "executor": "@nrwl/linter:eslint",
-                "options": {
-                    "lintFilePatterns": [
-                        "libs/apigateway-lambda-proxy/**/*.ts"
-                    ]
-                }
-            },
-            "test": {
-                "executor": "@nrwl/jest:jest",
-                "outputs": [
-                    "coverage/libs/apigateway-lambda-proxy"
-                ],
-                "options": {
-                    "jestConfig": "libs/apigateway-lambda-proxy/jest.config.js",
-                    "passWithNoTests": true
+        },
+        "apigateway-lambda-proxy": {
+            "root": "libs/apigateway-lambda-proxy",
+            "sourceRoot": "libs/apigateway-lambda-proxy/src",
+            "projectType": "library",
+            "targets": {
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/apigateway-lambda-proxy/**/*.ts"
+                        ]
+                    }
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": [
+                        "coverage/libs/apigateway-lambda-proxy"
+                    ],
+                    "options": {
+                        "jestConfig": "libs/apigateway-lambda-proxy/jest.config.js",
+                        "passWithNoTests": true
+                    }
                 }
             }
         }
