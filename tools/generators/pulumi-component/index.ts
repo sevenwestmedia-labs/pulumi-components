@@ -15,8 +15,16 @@ export default async function (host: Tree, schema: any) {
         importPath: `@wanews/pulumi-${schema.name}`,
         linter: 'eslint',
         strict: true,
-        babelJest: true,
     })
+
+    host.write(
+        `./libs/${schema.name}/jest.config.js`,
+        `module.exports = {
+    displayName: '${schema.name}',
+    preset: '../../jest.preset.js',
+    coverageDirectory: '../../coverage/libs/${schema.name}',
+}`,
+    )
 
     updateJson(host, `./libs/${schema.name}/.eslintrc.json`, (eslint) => {
         delete eslint.overrides[0].parserOptions
