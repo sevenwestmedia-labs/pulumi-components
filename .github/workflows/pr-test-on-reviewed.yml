@@ -13,4 +13,4 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-          event-type: test
+          event-type: test-command
