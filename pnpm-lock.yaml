@@ -15,7 +15,6 @@ importers:
       '@nrwl/workspace': 11.5.1_debug@4.3.1+prettier@2.2.1
       '@pulumi/aws': 3.33.0
       '@pulumi/pulumi': 2.23.0
-      '@types/aws-lambda': 8.10.72
       '@types/debug': 4.1.5
       '@types/jest': 26.0.8
       '@types/node': 12.12.38
@@ -49,7 +48,6 @@ importers:
       '@nrwl/workspace': 11.5.1
       '@pulumi/aws': ^3.33.0
       '@pulumi/pulumi': ^2.23.0
-      '@types/aws-lambda': ^8.10.72
       '@types/debug': ^4.1.5
       '@types/jest': 26.0.8
       '@types/node': 12.12.38
@@ -1298,10 +1296,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-MZPUxrmFubI36XS1DI3qmI0YdN1gks62JtFZvxR67ljjSNCeK6U08Zx4msEWOXuofgqUt6zPHSi1H9fbjR/NRA==
-  /@types/aws-lambda/8.10.72:
-    dev: true
-    resolution:
-      integrity: sha512-jOrTwAhSiUtBIN/QsWNKlI4+4aDtpZ0sr2BRvKW6XQZdspgHUSHPcuzxbzCRiHUiDQ+0026u5TSE38VyIhNnfA==
   /@types/babel__core/7.1.13:
     dependencies:
       '@babel/parser': 7.13.11
