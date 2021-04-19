@@ -27,32 +27,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Cache ~/.pnpm-store
-        uses: actions/cache@main
-        env:
-          cache-name: cache-pnpm-store
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ matrix.node-version }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.node-version }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-${{ matrix.node-version }}-build-
-            ${{ runner.os }}-
-
-      - name: Install pnpm
-        run: |
-          npm i -g pnpm
-          pnpm set verify-store-integrity false
-
-      - name: pnpm install
-        run: |
-          pnpm install --frozen-lockfile
-
       - name: Version command
         id: version
         run: |
-          echo ::set-output name=changes::$(pnpx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
-
+          npm install --no-package-lock --no-save @changesets/cli
+          echo ::set-output name=changes::$(npx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
       - name: Push changes
         if: steps.version.outputs.changes == 'true'
         run: |

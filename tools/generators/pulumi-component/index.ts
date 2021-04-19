@@ -52,6 +52,7 @@ export default async function (host: Tree, schema: any) {
         installPackagesTask(host)
     }
 }
+
 function createProjectPackageJson(host: Tree, schema: any) {
     writeJson(host, `./libs/${schema.name}/package.json`, {
         name: `@wanews/pulumi-${schema.name}`,
@@ -96,6 +97,7 @@ function createTypeScriptConfig(host: Tree, schema: any) {
             },
         ],
     })
+
     writeJson(host, `./libs/${schema.name}/tsconfig.cjs.json`, {
         extends: './tsconfig.json',
         compilerOptions: {
