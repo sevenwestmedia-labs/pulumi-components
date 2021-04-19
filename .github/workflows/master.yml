@@ -68,6 +68,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ap-southeast-2
           role-to-assume: ${{ secrets.AWS_DEV_ACCOUNT_ROLE }}
+          role-skip-session-tagging: true
 
       - name: Cache ~/.pnpm-store
         uses: actions/cache@main
