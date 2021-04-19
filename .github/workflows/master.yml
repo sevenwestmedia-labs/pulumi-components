@@ -69,6 +69,7 @@ jobs:
           aws-region: ap-southeast-2
           role-to-assume: ${{ secrets.AWS_DEV_ACCOUNT_ROLE }}
           role-skip-session-tagging: true
+          role-duration-seconds: 3600
 
       - name: Cache ~/.pnpm-store
         uses: actions/cache@main
