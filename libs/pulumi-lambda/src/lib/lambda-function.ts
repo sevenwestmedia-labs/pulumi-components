@@ -3,7 +3,7 @@ import * as aws from '@pulumi/aws'
 
 export class LambdaFunction extends pulumi.ComponentResource {
     readonly function: aws.lambda.Function
-    readonly executionRoleArn: pulumi.Output<string>
+    readonly executionRole: aws.iam.Role
     readonly logGroup: aws.cloudwatch.LogGroup
 
     constructor(
@@ -24,8 +24,6 @@ export class LambdaFunction extends pulumi.ComponentResource {
              * Once imported, this param needs to be removed
              **/
             logGroupImport?: string
-
-            skipAttachDenyPolicy?: boolean
         },
         opts?: pulumi.ComponentResourceOptions | undefined,
     ) {
@@ -57,8 +55,11 @@ export class LambdaFunction extends pulumi.ComponentResource {
         )
 
         const roleName = `${name}-role`
-        this.executionRoleArn = args.executionRoleArn
-            ? pulumi.output(args.executionRoleArn)
+
+        this.executionRole = args.executionRoleArn
+            ? aws.iam.Role.get(roleName, args.executionRoleArn, undefined, {
+                  parent: this,
+              })
             : new aws.iam.Role(
                   roleName,
                   {
@@ -77,43 +78,29 @@ export class LambdaFunction extends pulumi.ComponentResource {
                       tags: args.getTags(name),
                   },
                   { parent: this },
-              ).arn
+              )
 
-        const accountId = pulumi.output(
-            aws
-                .getCallerIdentity({ provider: opts?.provider })
-                .then((current) => current.accountId),
-        )
         new aws.iam.RolePolicyAttachment(
             `${name}-attach-execution-policy`,
             {
-                role: this.executionRoleArn,
+                role: this.executionRole.name,
                 policyArn: aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole,
             },
             { parent: this },
         )
-
-        !args.skipAttachDenyPolicy &&
-            new aws.iam.RolePolicyAttachment(
-                `${name}-attach-deny`,
-                {
-                    role: this.executionRoleArn,
-                    policyArn: pulumi.interpolate`arn:aws:iam::${accountId}:policy/deny-log-group-creation`,
-                },
-                { parent: this },
-            )
 
         this.function = new aws.lambda.Function(
             name,
             {
                 name,
                 runtime: 'nodejs14.x',
-                role: this.executionRoleArn,
+                role: this.executionRole.arn,
                 ...(args.lambdaOptions || {}),
                 tags: args.getTags(name),
             },
             {
                 parent: this,
+                dependsOn: [this.logGroup],
             },
         )
     }

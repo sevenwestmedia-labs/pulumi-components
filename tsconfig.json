@@ -1,14 +1,17 @@
 {
-  "files": [],
-  "compilerOptions": {
-    "disableSourceOfProjectReferenceRedirect": true
-  },
-  "references": [
-    {
-      "path": "./libs/pulumi-lambda"
+    "files": [],
+    "compilerOptions": {
+        "disableSourceOfProjectReferenceRedirect": true
     },
-    {
-      "path": "./libs/certificate-validation"
-    }
-  ]
+    "references": [
+        {
+            "path": "./libs/pulumi-lambda"
+        },
+        {
+            "path": "./libs/certificate-validation"
+        },
+        {
+            "path": "./libs/apigateway-lambda-proxy"
+        }
+    ]
 }

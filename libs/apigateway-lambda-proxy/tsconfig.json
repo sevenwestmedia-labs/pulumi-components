@@ -1,0 +1,17 @@
+{
+    "extends": "../../tsconfig.settings.json",
+    "compilerOptions": {
+        "outDir": "./dist/esm",
+        "rootDir": "./src",
+        "types": ["jest", "node"]
+    },
+    "include": ["src/**/*.ts", "src/**/*.spec.ts"],
+    "references": [
+        {
+            "path": "./tsconfig.cjs.json"
+        },
+        {
+            "path": "../pulumi-lambda"
+        }
+    ]
+}

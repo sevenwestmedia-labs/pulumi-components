@@ -1,0 +1,16 @@
+name: PR Workflow
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  test:
+    runs-on: self-hosted
+    if: github.event.review.state == 'approved'
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          event-type: test-command
