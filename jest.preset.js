@@ -5,7 +5,9 @@ module.exports = {
   coverageReporters: ['html'],
   testEnvironment: 'jest-environment-node',
   transform: {
-    '^.+\\.(ts|js|html)$': 'esbuild-jest',
+    '^.+\\.(ts|js|html)$': 'babel-jest',
   },
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  modulePathIgnorePatterns: ['/dist/'],
   maxWorkers: 4,
 }
