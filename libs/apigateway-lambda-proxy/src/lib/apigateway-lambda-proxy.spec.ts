@@ -1,6 +1,7 @@
+import 'regenerator-runtime'
 import fs from 'fs'
 import cuid from 'cuid'
-import pulumi from '@pulumi/pulumi'
+import * as pulumi from '@pulumi/pulumi'
 import { LocalWorkspace, OutputMap, Stack } from '@pulumi/pulumi/x/automation'
 import { dir, DirectoryResult } from 'tmp-promise'
 import { ApiGatewayLambdaProxy } from './apigateway-lambda-proxy'
