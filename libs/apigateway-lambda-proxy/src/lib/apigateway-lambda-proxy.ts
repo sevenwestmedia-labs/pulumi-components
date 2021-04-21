@@ -45,6 +45,12 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
                 [key: string]: pulumi.Input<string>
             }
 
+            /**
+             * Enables API gateway logging
+             *
+             * WARNING: If your AWS account has a number of API gateways the managed resource policy may grow too big
+             * and deployments start failing.
+             */
             apiGatewayAccessLoggingEnabled?: boolean
         },
         opts?: pulumi.ResourceOptions,
