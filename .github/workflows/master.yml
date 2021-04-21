@@ -32,6 +32,7 @@ jobs:
         run: |
           npm install --no-package-lock --no-save @changesets/cli
           echo ::set-output name=changes::$(npx changeset version 2>&1 | grep -q 'No unreleased changesets found' && echo 'false' || echo 'true')
+
       - name: Push changes
         if: steps.version.outputs.changes == 'true'
         run: |
@@ -60,6 +61,9 @@ jobs:
           scope: '@wanews'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Install Pulumi CLI
+        uses: pulumi/action-install-pulumi-cli@v1
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
