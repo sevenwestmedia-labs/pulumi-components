@@ -26,9 +26,9 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             apiGatewayAccessLoggingEnabled,
         }: {
             /** The custom hostname to map to the API Gateway */
-            hostname?: string
+            hostname?: pulumi.Input<string>
             /** If hostname is set must be specified */
-            apiGatewayCertificateArn?: string
+            apiGatewayCertificateArn?: pulumi.Input<string>
 
             /**
              * Lambda options
