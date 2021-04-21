@@ -13,9 +13,9 @@ const pulumiDebug = debug('pulumi')
 jest.setTimeout(5 * 60 * 1000) /* 5 mins */
 
 let tmpPath: DirectoryResult
-let workspace: LocalWorkspace
+let workspace: LocalWorkspace | undefined
+let stack: Stack | undefined
 let stackname: string
-let stack: Stack
 let outputs: OutputMap
 
 beforeAll(async () => {
@@ -113,6 +113,8 @@ afterAll(async () => {
             onOutput: pulumiDebug,
         })
     }
-    await workspace.removeStack(stackname)
+    if (workspace) {
+        await workspace.removeStack(stackname)
+    }
     fs.rmdirSync(tmpPath.path, { recursive: true })
 })
