@@ -24,17 +24,11 @@ jobs:
           role-skip-session-tagging: true
           role-duration-seconds: 3600
 
-      - name: Cache ~/.pnpm-store
-        uses: actions/cache@main
-        env:
-          cache-name: cache-pnpm-store
+      - name: Cache .pnpm-store
+        uses: actions/cache@v1
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ matrix.node-version }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.node-version }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-${{ matrix.node-version }}-build-
-            ${{ runner.os }}-
+          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install pnpm
         run: |
