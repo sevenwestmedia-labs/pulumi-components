@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.3.0
+
+### Minor Changes
+
+- f0ed3da: Add missing dependency
+
 ## 0.2.0
 
 ### Minor Changes
