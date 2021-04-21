@@ -1,5 +1,13 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.4.0
+
+### Minor Changes
+
+- 7a07483: Removed unneeded cert validation dependency
+- 7a07483: Allow specifying of api gateway options
+- 7a07483: Removed tslib
+
 ## 0.3.0
 
 ### Minor Changes

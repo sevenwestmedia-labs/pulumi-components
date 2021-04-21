@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.4.0
+
+### Minor Changes
+
+- 7a07483: Removed tslib
+
 ## 0.3.0
 
 ### Minor Changes
