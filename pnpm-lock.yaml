@@ -80,7 +80,10 @@ importers:
       typescript: 4.2.4
 
   libs/apigateway-lambda-proxy:
-    specifiers: {}
+    specifiers:
+      '@wanews/pulumi-certificate-validation': 0.2.0
+    dependencies:
+      '@wanews/pulumi-certificate-validation': link:../certificate-validation
 
   libs/certificate-validation:
     specifiers: {}
@@ -1737,7 +1740,7 @@ packages:
     dev: true
 
   /@pulumi/aws/4.0.0:
-    resolution: {integrity: sha512-zW4EiJhR09Mu6nwF4GUjRwQuA0l1RU2KyPM/JEOOCRh1FCpUvMu+mP+Iuv2R8CQgI7G2gkkEuMRmV08e5u9DEQ==}
+    resolution: {integrity: sha512-zW4EiJhR09Mu6nwF4GUjRwQuA0l1RU2KyPM/JEOOCRh1FCpUvMu+mP+Iuv2R8CQgI7G2gkkEuMRmV08e5u9DEQ==, tarball: '@pulumi/aws/-/aws-4.0.0.tgz'}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.0.0
@@ -1775,7 +1778,7 @@ packages:
     dev: true
 
   /@pulumi/query/0.3.0:
-    resolution: {integrity: sha512-xfo+yLRM2zVjVEA4p23IjQWzyWl1ZhWOGobsBqRpIarzLvwNH/RAGaoehdxlhx4X92302DrpdIFgTICMN4P38w==}
+    resolution: {integrity: sha512-xfo+yLRM2zVjVEA4p23IjQWzyWl1ZhWOGobsBqRpIarzLvwNH/RAGaoehdxlhx4X92302DrpdIFgTICMN4P38w==, tarball: '@pulumi/query/-/query-0.3.0.tgz'}
     dev: true
 
   /@sinonjs/commons/1.8.3:
