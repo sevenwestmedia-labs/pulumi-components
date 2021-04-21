@@ -40,8 +40,6 @@ importers:
       tslib: ^2.2.0
       tsup: ^4.9.1
       typescript: 4.2.4
-    dependencies:
-      tslib: 2.2.0
     devDependencies:
       '@babel/core': 7.13.16
       '@babel/preset-env': 7.13.15_@babel+core@7.13.16
@@ -76,14 +74,12 @@ importers:
       tmp-promise: 3.0.2
       ts-jest: 26.5.5_jest@26.6.3+typescript@4.2.4
       ts-node: 9.1.1_typescript@4.2.4
+      tslib: 2.2.0
       tsup: 4.9.1_typescript@4.2.4
       typescript: 4.2.4
 
   libs/apigateway-lambda-proxy:
-    specifiers:
-      '@wanews/pulumi-certificate-validation': 0.2.0
-    dependencies:
-      '@wanews/pulumi-certificate-validation': link:../certificate-validation
+    specifiers: {}
 
   libs/certificate-validation:
     specifiers: {}
@@ -6774,6 +6770,7 @@ packages:
 
   /tslib/2.2.0:
     resolution: {integrity: sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==}
+    dev: true
 
   /tsup/4.9.1_typescript@4.2.4:
     resolution: {integrity: sha512-k8G4T1DR2G+7/gDzjbKLcjQxS95L7mSnBwcA4gIeglD1W5z6sJ8/HpgLF6ysEGJBA4QWaKRyuS/7nVO1rwMv9A==}
