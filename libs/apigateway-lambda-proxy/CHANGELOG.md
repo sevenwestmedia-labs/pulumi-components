@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.5.0
+
+### Minor Changes
+
+- e8a6e95: Allow pulumi inputs as arguments to lambda proxy
+
 ## 0.4.0
 
 ### Minor Changes
