@@ -23,6 +23,7 @@ importers:
       '@types/node-fetch': ^2.5.8
       '@typescript-eslint/eslint-plugin': 4.3.0
       '@typescript-eslint/parser': 4.3.0
+      '@wanews/nx-typescript-project-references': ^0.2.1
       aws-sdk: ^2.866.0
       cuid: ^2.1.8
       debug: ^4.3.1
@@ -59,6 +60,7 @@ importers:
       '@types/node-fetch': 2.5.8
       '@typescript-eslint/eslint-plugin': 4.3.0_994d979c051549b216df6838c5973d27
       '@typescript-eslint/parser': 4.3.0_eslint@7.10.0+typescript@4.0.7
+      '@wanews/nx-typescript-project-references': 0.2.1
       aws-sdk: 2.866.0
       cuid: 2.1.8
       debug: 4.3.1
@@ -1921,6 +1923,12 @@ packages:
     resolution: {integrity: sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==}
     dev: true
 
+  /@types/fs-extra/9.0.11:
+    resolution: {integrity: sha512-mZsifGG4QeQ7hlkhO56u7zt/ycBgGxSVsFI/6lGTU34VtwkiqrrSDgw0+ygs8kFGWcXnFQWMrzF2h7TtDFNixA==}
+    dependencies:
+      '@types/node': 14.14.35
+    dev: true
+
   /@types/graceful-fs/4.1.5:
     resolution: {integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==}
     dependencies:
@@ -2178,6 +2186,13 @@ packages:
     dependencies:
       '@typescript-eslint/types': 4.3.0
       eslint-visitor-keys: 2.0.0
+    dev: true
+
+  /@wanews/nx-typescript-project-references/0.2.1:
+    resolution: {integrity: sha512-eAZ8VsAwtTpPc6hEa5a+Kl27x5HZY7HmxZEvAmTRjCz6kSiRusu/FwpGy1z9sjVCyxiryooydUpAkPcF21HNhw==}
+    dependencies:
+      '@types/fs-extra': 9.0.11
+      execa: 5.0.0
     dev: true
 
   /abab/2.0.5:
@@ -3454,6 +3469,21 @@ packages:
       strip-final-newline: 2.0.0
     dev: true
 
+  /execa/5.0.0:
+    resolution: {integrity: sha512-ov6w/2LCiuyO4RLYGdpFGjkcs0wMTgGE8PrkTHikeUy5iJekXyPIKUjifk5CsE0pt7sMCrMZ3YNqoCj6idQOnQ==}
+    engines: {node: '>=10'}
+    dependencies:
+      cross-spawn: 7.0.3
+      get-stream: 6.0.1
+      human-signals: 2.1.0
+      is-stream: 2.0.0
+      merge-stream: 2.0.0
+      npm-run-path: 4.0.1
+      onetime: 5.1.2
+      signal-exit: 3.0.3
+      strip-final-newline: 2.0.0
+    dev: true
+
   /exit/0.1.2:
     resolution: {integrity: sha1-BjJjj42HfMghB9MKD/8aF8uhzQw=}
     engines: {node: '>= 0.8.0'}
@@ -3801,6 +3831,11 @@ packages:
       pump: 3.0.0
     dev: true
 
+  /get-stream/6.0.1:
+    resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
+    engines: {node: '>=10'}
+    dev: true
+
   /get-value/2.0.6:
     resolution: {integrity: sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=}
     engines: {node: '>=0.10.0'}
@@ -4035,6 +4070,11 @@ packages:
   /human-signals/1.1.1:
     resolution: {integrity: sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==}
     engines: {node: '>=8.12.0'}
+    dev: true
+
+  /human-signals/2.1.0:
+    resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
+    engines: {node: '>=10.17.0'}
     dev: true
 
   /iconv-lite/0.4.24:

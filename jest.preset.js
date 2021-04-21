@@ -1,13 +1,18 @@
+const { compilerOptions } = require('./tsconfig.base')
+const { pathsToModuleNameMapper } = require('ts-jest/utils')
+
 module.exports = {
   testMatch: ['**/+(*.)+(spec|test).+(ts|js)?(x)'],
-  resolver: '@nrwl/jest/plugins/resolver',
-  moduleFileExtensions: ['ts', 'js', 'html', 'json'],
-  coverageReporters: ['html'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'html'],
   testEnvironment: 'jest-environment-node',
+  coverageReporters: ['html'],
   transform: {
-    '^.+\\.(ts|js|html)$': 'babel-jest',
+    '^.+.(tsx?|jsx?|html)$': 'babel-jest',
   },
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   modulePathIgnorePatterns: ['/dist/'],
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: __dirname,
+  }),
   maxWorkers: 4,
 }

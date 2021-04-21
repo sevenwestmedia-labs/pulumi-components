@@ -92,7 +92,7 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
 
-      - name: Build packages
+      - name: Type check
         run: pnpm run build-tsc
 
       - name: Lint types and code
@@ -100,6 +100,9 @@ jobs:
 
       - name: Run tests
         run: pnpm test
+
+      - name: Package
+        run: pnpm package
 
       - name: Release packages
         uses: changesets/action@master

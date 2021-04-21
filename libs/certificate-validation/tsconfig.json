@@ -1,18 +1,15 @@
 {
   "extends": "../../tsconfig.settings.json",
   "compilerOptions": {
-    "outDir": "./dist/esm",
+    "outDir": "./dist",
     "rootDir": "./src",
-    "types": ["jest", "node"],
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "types": [
+      "jest",
+      "node"
+    ]
   },
-  "include": ["src/**/*.ts", "src/**/*.spec.ts"],
-  "references": [
-    {
-      "path": "./tsconfig.cjs.json"
-    }
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ]
 }

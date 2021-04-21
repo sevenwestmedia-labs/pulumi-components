@@ -4,3 +4,4 @@ tsconifg.*.json
 .babelrc
 jest.config.js
 !dist
+node_modules

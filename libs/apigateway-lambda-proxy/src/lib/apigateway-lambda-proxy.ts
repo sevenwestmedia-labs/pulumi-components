@@ -16,18 +16,25 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
         name: string,
         {
             apiGatewayCertificateArn,
-            desiredHostname,
+            hostname,
 
             lambdaOptions,
             getTags,
 
             apiGatewayAccessLoggingEnabled,
         }: {
-            desiredHostname?: string
+            /** The custom hostname to map to the API Gateway */
+            hostname?: string
+            /** If hostname is set must be specified */
             apiGatewayCertificateArn?: string
 
+            /**
+             * Lambda options
+             * @see https://www.pulumi.com/docs/reference/pkg/aws/lambda/function/#inputs
+             */
             lambdaOptions: Omit<aws.lambda.FunctionArgs, 'role'>
 
+            /** Callback to create tags for the resources created */
             getTags: (
                 name: string,
             ) => {
@@ -38,7 +45,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
         },
         opts?: pulumi.ResourceOptions,
     ) {
-        super('wanews:lambda-apigateway-proxy', name, {}, opts)
+        super('lambda-apigateway-proxy', name, {}, opts)
 
         this.apiGateway = new aws.apigatewayv2.Api(
             `${name}-gateway`,
@@ -49,14 +56,14 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             { parent: this },
         )
 
-        this.invokeUrl = desiredHostname
-            ? pulumi.interpolate`https://${desiredHostname}`
+        this.invokeUrl = hostname
+            ? pulumi.interpolate`https://${hostname}`
             : pulumi.interpolate`${this.apiGateway.apiEndpoint}`
 
         this.apiGatewayHostname = pulumi.interpolate`${this.apiGateway.id}.execute-api.ap-southeast-2.amazonaws.com`
 
-        this.publicHostname = desiredHostname
-            ? pulumi.output(desiredHostname)
+        this.publicHostname = hostname
+            ? pulumi.output(hostname)
             : this.apiGatewayHostname
 
         const lambdaFunction = new LambdaFunction(name, {
@@ -142,7 +149,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             { dependsOn: [route], parent: this },
         )
 
-        if (desiredHostname) {
+        if (hostname) {
             if (!apiGatewayCertificateArn) {
                 throw new ResourceError(
                     'Must specify apiGatewayCertificateArn if desiredHostname is set',
@@ -152,7 +159,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             this.apiGatewayDomainName = new aws.apigatewayv2.DomainName(
                 `${name}-apigateway-domain`,
                 {
-                    domainName: desiredHostname,
+                    domainName: hostname,
                     domainNameConfiguration: {
                         certificateArn: apiGatewayCertificateArn,
                         endpointType: 'REGIONAL',

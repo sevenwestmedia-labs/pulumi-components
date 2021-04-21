@@ -1,7 +1,7 @@
 {
   "name": "@wanews/pulumi-certificate-validation",
   "version": "0.1.0",
-  "main": "dist/cjs/index.js",
+  "main": "dist/index.js",
   "module": "dist/esm/index.js",
   "author": "Seven West Media WA",
   "license": "MIT",

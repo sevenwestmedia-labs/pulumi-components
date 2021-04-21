@@ -6,6 +6,10 @@
             "sourceRoot": "libs/pulumi-lambda/src",
             "projectType": "library",
             "targets": {
+                "package": {
+                    "excecutor": "@wanews/nx-typescript-project-references",
+                    "options": {}
+                },
                 "lint": {
                     "executor": "@nrwl/linter:eslint",
                     "options": {
@@ -31,6 +35,10 @@
             "sourceRoot": "libs/certificate-validation/src",
             "projectType": "library",
             "targets": {
+                "package": {
+                    "excecutor": "@wanews/nx-typescript-project-references",
+                    "options": {}
+                },
                 "lint": {
                     "executor": "@nrwl/linter:eslint",
                     "options": {
@@ -56,6 +64,10 @@
             "sourceRoot": "libs/apigateway-lambda-proxy/src",
             "projectType": "library",
             "targets": {
+                "package": {
+                    "excecutor": "@wanews/nx-typescript-project-references",
+                    "options": {}
+                },
                 "lint": {
                     "executor": "@nrwl/linter:eslint",
                     "options": {

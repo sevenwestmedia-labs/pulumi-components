@@ -23,7 +23,7 @@ export class ValidateCertificate extends pulumi.ComponentResource {
         },
         opts?: pulumi.ComponentResourceOptions | undefined,
     ) {
-        super('wanews:cert-validation', name, args, opts)
+        super('cert-validation', name, args, opts)
 
         const validationRecords = pulumi
             .all([args.cert.domainValidationOptions, args.zones])
