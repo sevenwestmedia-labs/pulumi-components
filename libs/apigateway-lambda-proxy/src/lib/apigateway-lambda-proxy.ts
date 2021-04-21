@@ -1,4 +1,5 @@
 import * as aws from '@pulumi/aws'
+import { ApiArgs } from '@pulumi/aws/apigatewayv2/api'
 import * as pulumi from '@pulumi/pulumi'
 import { ResourceError } from '@pulumi/pulumi'
 import { LambdaFunction } from '@wanews/pulumi-lambda'
@@ -19,6 +20,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             hostname,
 
             lambdaOptions,
+            apiGatewayOptions = {},
             getTags,
 
             apiGatewayAccessLoggingEnabled,
@@ -33,6 +35,8 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
              * @see https://www.pulumi.com/docs/reference/pkg/aws/lambda/function/#inputs
              */
             lambdaOptions: Omit<aws.lambda.FunctionArgs, 'role'>
+
+            apiGatewayOptions?: Omit<ApiArgs, 'protocolType' | 'tags'>
 
             /** Callback to create tags for the resources created */
             getTags: (
@@ -50,6 +54,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
         this.apiGateway = new aws.apigatewayv2.Api(
             `${name}-gateway`,
             {
+                ...apiGatewayOptions,
                 protocolType: 'HTTP',
                 tags: getTags(name),
             },
@@ -91,7 +96,6 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             {
                 apiId: this.apiGateway.id,
                 integrationType: 'AWS_PROXY',
-                passthroughBehavior: 'NEVER',
                 integrationUri: lambdaFunction.function.arn,
             },
             { parent: this },

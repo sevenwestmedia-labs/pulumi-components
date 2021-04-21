@@ -15,11 +15,5 @@
     "bugs": {
         "url": "https://github.com/sevenwestmedia-labs/pulumi-components/issues"
     },
-    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/apigateway-lambda-proxy#readme",
-    "dependencies": {
-        "@wanews/pulumi-certificate-validation": "0.2.0"
-    },
-    "peerDependencies": {
-        "tslib": "^2.1.0"
-    }
+    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/apigateway-lambda-proxy#readme"
 }

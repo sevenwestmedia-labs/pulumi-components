@@ -72,9 +72,6 @@ function createProjectPackageJson(host: Tree, schema: any) {
                 'https://github.com/sevenwestmedia-labs/pulumi-components/issues',
         },
         homepage: `https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/${schema.name}#readme`,
-        peerDependencies: {
-            tslib: '^2.1.0',
-        },
     })
 }
 
