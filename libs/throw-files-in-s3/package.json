@@ -1,0 +1,11 @@
+{
+    "name": "@wanews/pulumi-throw-files-in-s3",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "dependencies": {
+        "mime": "^2.5.2"
+    },
+    "peerDependencies": {
+        "@pulumi/random": "^4.0.0"
+    }
+}

@@ -19,6 +19,7 @@
     "pulumi-lambda": { "tags": [] },
     "certificate-validation": { "tags": [] },
     "apigateway-lambda-proxy": { "tags": [] },
-    "buildstep": { "tags": [] }
+    "buildstep": { "tags": [] },
+    "throw-files-in-s3": { "tags": [] }
   }
 }
