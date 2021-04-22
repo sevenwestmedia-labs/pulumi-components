@@ -1,6 +1,6 @@
 {
     "name": "@wanews/pulumi-throw-files-in-s3",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "main": "dist/index.js",
     "dependencies": {
         "mime": "^2.5.2"
