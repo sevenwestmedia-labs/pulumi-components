@@ -119,8 +119,22 @@
         "package": {
           "executor": "@wanews/nx-typescript-project-references:package",
           "options": {
-            "main": "libs/invoke-lamda/src/index.ts",
-            "tsConfig": "libs/invoke-lamda/tsconfig.json"
+          "main": "libs/invoke-lamda/src/index.ts",
+          "tsConfig": "libs/invoke-lamda/tsconfig.json"
+          }
+        }
+      }
+    },
+    "wait-for-ecs-deploy": {
+      "root": "libs/wait-for-ecs-deploy",
+      "projectType": "library",
+      "sourceRoot": "libs/wait-for-ecs-deploy/src",
+      "targets": {
+        "package": {
+          "executor": "@wanews/nx-typescript-project-references:package",
+          "options": {
+            "main": "libs/wait-for-ecs-deploy/src/index.ts",
+            "tsConfig": "libs/wait-for-ecs-deploy/tsconfig.json"
           }
         }
       }
