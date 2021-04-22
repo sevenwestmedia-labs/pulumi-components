@@ -1,1 +1,1 @@
-const variable = 'wait-for-ecs-deploy'
+export * from './resource'
