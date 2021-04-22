@@ -1,104 +1,98 @@
 {
-    "version": 2,
-    "projects": {
-        "pulumi-lambda": {
-            "root": "libs/pulumi-lambda",
-            "sourceRoot": "libs/pulumi-lambda/src",
-            "projectType": "library",
-            "targets": {
-                "package": {
-                    "executor": "@wanews/nx-typescript-project-references:package",
-                    "options": {
-                        "main": "libs/pulumi-lambda/src/index.ts",
-                        "tsConfig": "libs/pulumi-lambda/tsconfig.json"
-                    }
-                },
-                "lint": {
-                    "executor": "@nrwl/linter:eslint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "libs/pulumi-lambda/**/*.ts"
-                        ]
-                    }
-                },
-                "test": {
-                    "executor": "@nrwl/jest:jest",
-                    "outputs": [
-                        "coverage/libs/pulumi-lambda"
-                    ],
-                    "options": {
-                        "jestConfig": "libs/pulumi-lambda/jest.config.js",
-                        "passWithNoTests": true
-                    }
-                }
-            }
+  "version": 2,
+  "projects": {
+    "pulumi-lambda": {
+      "root": "libs/pulumi-lambda",
+      "sourceRoot": "libs/pulumi-lambda/src",
+      "projectType": "library",
+      "targets": {
+        "package": {
+          "executor": "@wanews/nx-typescript-project-references:package",
+          "options": {
+            "main": "libs/pulumi-lambda/src/index.ts",
+            "tsConfig": "libs/pulumi-lambda/tsconfig.json"
+          }
         },
-        "certificate-validation": {
-            "root": "libs/certificate-validation",
-            "sourceRoot": "libs/certificate-validation/src",
-            "projectType": "library",
-            "targets": {
-                "package": {
-                    "executor": "@wanews/nx-typescript-project-references:package",
-                    "options": {
-                        "main": "libs/certificate-validation/src/index.ts",
-                        "tsConfig": "libs/certificate-validation/tsconfig.json"
-                    }
-                },
-                "lint": {
-                    "executor": "@nrwl/linter:eslint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "libs/certificate-validation/**/*.ts"
-                        ]
-                    }
-                },
-                "test": {
-                    "executor": "@nrwl/jest:jest",
-                    "outputs": [
-                        "coverage/libs/certificate-validation"
-                    ],
-                    "options": {
-                        "jestConfig": "libs/certificate-validation/jest.config.js",
-                        "passWithNoTests": true
-                    }
-                }
-            }
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/pulumi-lambda/**/*.ts"] }
         },
-        "apigateway-lambda-proxy": {
-            "root": "libs/apigateway-lambda-proxy",
-            "sourceRoot": "libs/apigateway-lambda-proxy/src",
-            "projectType": "library",
-            "targets": {
-                "package": {
-                    "executor": "@wanews/nx-typescript-project-references:package",
-                    "options": {
-                        "main": "libs/apigateway-lambda-proxy/src/index.ts",
-                        "tsConfig": "libs/apigateway-lambda-proxy/tsconfig.json"
-                    }
-                },
-                "lint": {
-                    "executor": "@nrwl/linter:eslint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "libs/apigateway-lambda-proxy/**/*.ts"
-                        ]
-                    }
-                },
-                "test": {
-                    "executor": "@nrwl/jest:jest",
-                    "outputs": [
-                        "coverage/libs/apigateway-lambda-proxy"
-                    ],
-                    "options": {
-                        "jestConfig": "libs/apigateway-lambda-proxy/jest.config.js",
-                        "passWithNoTests": true
-                    }
-                }
-            }
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/pulumi-lambda"],
+          "options": {
+            "jestConfig": "libs/pulumi-lambda/jest.config.js",
+            "passWithNoTests": true
+          }
         }
+      }
     },
-    "cli": {
-        "defaultCollection": "@nrwl/workspace"
+    "certificate-validation": {
+      "root": "libs/certificate-validation",
+      "sourceRoot": "libs/certificate-validation/src",
+      "projectType": "library",
+      "targets": {
+        "package": {
+          "executor": "@wanews/nx-typescript-project-references:package",
+          "options": {
+            "main": "libs/certificate-validation/src/index.ts",
+            "tsConfig": "libs/certificate-validation/tsconfig.json"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/certificate-validation/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/certificate-validation"],
+          "options": {
+            "jestConfig": "libs/certificate-validation/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "apigateway-lambda-proxy": {
+      "root": "libs/apigateway-lambda-proxy",
+      "sourceRoot": "libs/apigateway-lambda-proxy/src",
+      "projectType": "library",
+      "targets": {
+        "package": {
+          "executor": "@wanews/nx-typescript-project-references:package",
+          "options": {
+            "main": "libs/apigateway-lambda-proxy/src/index.ts",
+            "tsConfig": "libs/apigateway-lambda-proxy/tsconfig.json"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/apigateway-lambda-proxy/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/apigateway-lambda-proxy"],
+          "options": {
+            "jestConfig": "libs/apigateway-lambda-proxy/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "buildstep": {
+      "root": "libs/buildstep",
+      "projectType": "library",
+      "sourceRoot": "libs/buildstep/src",
+      "targets": {
+        "package": {
+          "executor": "@wanews/nx-typescript-project-references:package"
+        }
+      }
     }
+  },
+  "cli": { "defaultCollection": "@nrwl/workspace" }
 }

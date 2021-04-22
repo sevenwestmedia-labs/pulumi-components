@@ -23,7 +23,7 @@ importers:
       '@types/node-fetch': ^2.5.10
       '@typescript-eslint/eslint-plugin': 4.22.0
       '@typescript-eslint/parser': 4.22.0
-      '@wanews/nx-typescript-project-references': ^0.2.1
+      '@wanews/nx-typescript-project-references': ^0.3.1
       aws-sdk: ^2.889.0
       cuid: ^2.1.8
       debug: ^4.3.1
@@ -60,7 +60,7 @@ importers:
       '@types/node-fetch': 2.5.10
       '@typescript-eslint/eslint-plugin': 4.22.0_9acede93a3623dd7abe65c65a7010e73
       '@typescript-eslint/parser': 4.22.0_eslint@7.24.0+typescript@4.2.4
-      '@wanews/nx-typescript-project-references': 0.2.1
+      '@wanews/nx-typescript-project-references': 0.3.1
       aws-sdk: 2.889.0
       cuid: 2.1.8
       debug: 4.3.1
@@ -79,6 +79,9 @@ importers:
       typescript: 4.2.4
 
   libs/apigateway-lambda-proxy:
+    specifiers: {}
+
+  libs/buildstep:
     specifiers: {}
 
   libs/certificate-validation:
@@ -2024,8 +2027,8 @@ packages:
       eslint-visitor-keys: 2.0.0
     dev: true
 
-  /@wanews/nx-typescript-project-references/0.2.1:
-    resolution: {integrity: sha512-eAZ8VsAwtTpPc6hEa5a+Kl27x5HZY7HmxZEvAmTRjCz6kSiRusu/FwpGy1z9sjVCyxiryooydUpAkPcF21HNhw==}
+  /@wanews/nx-typescript-project-references/0.3.1:
+    resolution: {integrity: sha512-kK+AlIya7kwEH+SJDtqKcjfn6Zn0UDjZf6OJ5a+8H8PNIzbgNbblGISxOqi8cDBaEmUfnBUUEJ9T1vEb+HHucA==}
     dependencies:
       '@types/fs-extra': 9.0.11
       execa: 5.0.0
