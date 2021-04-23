@@ -77,10 +77,14 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             ? pulumi.output(hostname)
             : this.apiGatewayHostname
 
-        const lambdaFunction = new LambdaFunction(name, {
-            getTags,
-            lambdaOptions,
-        })
+        const lambdaFunction = new LambdaFunction(
+            name,
+            {
+                getTags,
+                lambdaOptions,
+            },
+            { parent: this },
+        )
         this.lambdaExecutionRole = lambdaFunction.executionRole
 
         new aws.lambda.Permission(
