@@ -110,6 +110,20 @@
           }
         }
       }
+    },
+    "invoke-lamda": {
+      "root": "libs/invoke-lamda",
+      "projectType": "library",
+      "sourceRoot": "libs/invoke-lamda/src",
+      "targets": {
+        "package": {
+          "executor": "@wanews/nx-typescript-project-references:package",
+          "options": {
+            "main": "libs/invoke-lamda/src/index.ts",
+            "tsConfig": "libs/invoke-lamda/tsconfig.json"
+          }
+        }
+      }
     }
   },
   "cli": { "defaultCollection": "@nrwl/workspace" }

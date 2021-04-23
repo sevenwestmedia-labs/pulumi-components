@@ -20,6 +20,7 @@
     "certificate-validation": { "tags": [] },
     "apigateway-lambda-proxy": { "tags": [] },
     "buildstep": { "tags": [] },
-    "throw-files-in-s3": { "tags": [] }
+    "throw-files-in-s3": { "tags": [] },
+    "invoke-lamda": { "tags": [] }
   }
 }
