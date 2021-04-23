@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.6.0
+
+### Minor Changes
+
+- d7bece3: Fixed lambda not having parent set
+
 ## 0.5.0
 
 ### Minor Changes
