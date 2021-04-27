@@ -20,12 +20,13 @@ export interface Inputs {
     status?: 'COMPLETED' | 'FAILED'
     failureMessage?: string
     desiredTaskDef: string
+    timeoutMs?: number
 }
 
 export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
     create: async (inputs: Inputs) => ({
         id: cuid(),
-        outs: await waitForService(inputs),
+        outs: await waitForService(inputs, inputs.timeoutMs),
     }),
     update: async (_id: unknown, _olds: unknown, news: Inputs) => ({
         outs: await waitForService(news),

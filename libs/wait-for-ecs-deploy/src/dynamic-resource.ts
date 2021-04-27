@@ -3,7 +3,7 @@ import { dynamicProvider } from './dynamic-resource-provider'
 
 export interface EcsWaiterProps {
     clusterName: pulumi.Input<string>
-    serviceNames: pulumi.Input<string[]> | pulumi.Input<string>[]
+    serviceName: pulumi.Input<string>
     awsRegion?: string
     assumeRole?: string
 }
