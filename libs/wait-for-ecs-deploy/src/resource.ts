@@ -5,7 +5,7 @@ export type WaitForEcsDeploymentArgs = EcsWaiterProps
 
 export class WaitForEcsDeployment extends pulumi.ComponentResource {
     public readonly status: pulumi.Output<string>
-    public readonly failureMessage: pulumi.Output<string | undefined>
+    public readonly failureMessage: pulumi.Output<string>
 
     constructor(
         name: string,

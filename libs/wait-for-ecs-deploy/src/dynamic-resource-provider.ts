@@ -7,7 +7,7 @@ export interface State {
     serviceName: string
     awsRegion?: string
     assumeRole?: string
-    status: 'COMPLETED' | 'FAILED'
+    status: string //'COMPLETED' | 'FAILED'
     failureMessage?: string
     desiredTaskDef: string
 }
@@ -17,7 +17,7 @@ export interface Inputs {
     serviceName: string
     awsRegion?: string
     assumeRole?: string
-    status?: 'COMPLETED' | 'FAILED'
+    status?: string //'COMPLETED' | 'FAILED'
     failureMessage?: string
     desiredTaskDef: string
     timeoutMs?: number

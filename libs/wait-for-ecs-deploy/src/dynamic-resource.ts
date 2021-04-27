@@ -5,13 +5,14 @@ export interface EcsWaiterProps {
     clusterName: pulumi.Input<string>
     serviceName: pulumi.Input<string>
     desiredTaskDef: pulumi.Input<string>
-    awsRegion?: pulumi.Input<string | undefined>
-    assumeRole?: pulumi.Input<string | undefined>
+    awsRegion?: pulumi.Input<string>
+    assumeRole?: pulumi.Input<string>
+    timeoutMs?: pulumi.Input<string>
 }
 
 export class EcsWaiter extends pulumi.dynamic.Resource {
     public readonly status!: pulumi.Output<string>
-    public readonly failureMessage!: pulumi.Output<string | undefined>
+    public readonly failureMessage!: pulumi.Output<string>
 
     constructor(
         name: string,
