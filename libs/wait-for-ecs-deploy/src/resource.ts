@@ -4,6 +4,9 @@ import { EcsWaiter, EcsWaiterProps } from './dynamic-resource'
 export type WaitForEcsDeploymentArgs = EcsWaiterProps
 
 export class WaitForEcsDeployment extends pulumi.ComponentResource {
+    public readonly status: pulumi.Output<string>
+    public readonly failureMessage: pulumi.Output<string | undefined>
+
     constructor(
         name: string,
         args: WaitForEcsDeploymentArgs,
@@ -23,5 +26,8 @@ export class WaitForEcsDeployment extends pulumi.ComponentResource {
                     )
                 }
             })
+
+        this.status = waiter.status
+        this.failureMessage = waiter.failureMessage
     }
 }

@@ -126,7 +126,7 @@ describe('#waitForServices', () => {
 
     /**
      * skipped because I couldn't get it working without jest.useFakeTimers()
-     */ g
+     */
     it.skip('should time out if it takes too long', async () => {
         const file = path.join(
             __dirname,
