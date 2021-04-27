@@ -30,10 +30,10 @@ function mockedEcs(describeServicesResponse: unknown) {
  * Also includes a dummy describeServices method
  * @returns a mock ECS client implementation, for use with jest mocking
  */
-function mockedEcsDeploymentTimeout() {
+function mockedEcsDeploymentTimeout(describeServicesResponse: unknown) {
     return () => ({
         describeServices: jest.fn().mockReturnValue({
-            promise: jest.fn().mockResolvedValue(null),
+            promise: jest.fn().mockResolvedValue(describeServicesResponse),
         }),
         waitFor: jest.fn().mockReturnValue({
             promise: jest.fn(
@@ -130,22 +130,23 @@ describe('#waitForServices', () => {
             '__mocks__',
             'ecs-describe-services-failed-rollback-in-progress.json',
         )
-        const { clusters, serviceCount } = getSampleResponseFromFile(file)
+        const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        ECS.mockImplementation(mockedEcsDeploymentTimeout())
-        jest.useFakeTimers()
+        ECS.mockImplementation(mockedEcsDeploymentTimeout(json))
 
         for (const cluster of clusters) {
             for (const service of cluster.services) {
-                const result = waitForService({
-                    clusterName: cluster.clusterName,
-                    serviceName: service.serviceName,
-                    desiredTaskDef: service.taskDefinition,
-                })
-                expect(result).resolves.toHaveProperty('status', 'FAILED')
+                const result = waitForService(
+                    {
+                        clusterName: cluster.clusterName,
+                        serviceName: service.serviceName,
+                        desiredTaskDef: service.taskDefinition,
+                    },
+                    10 /* timeout: 10ms */,
+                )
+                await expect(result).resolves.toHaveProperty('status', 'FAILED')
             }
         }
-        jest.runAllTimers()
     })
 })
 

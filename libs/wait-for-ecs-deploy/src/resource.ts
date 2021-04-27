@@ -18,7 +18,7 @@ export class WaitForEcsDeployment extends pulumi.ComponentResource {
             .apply(([status, failureMessage]) => {
                 if (status !== 'COMPLETED') {
                     throw new pulumi.ResourceError(
-                        `TODO ${failureMessage}`,
+                        `ECS deployment failed: ${failureMessage}`,
                         this,
                     )
                 }
