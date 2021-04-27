@@ -4,8 +4,9 @@ import { dynamicProvider } from './dynamic-resource-provider'
 export interface EcsWaiterProps {
     clusterName: pulumi.Input<string>
     serviceName: pulumi.Input<string>
-    awsRegion?: string
-    assumeRole?: string
+    desiredTaskDef: pulumi.Input<string>
+    awsRegion?: pulumi.Input<string | undefined>
+    assumeRole?: pulumi.Input<string | undefined>
 }
 
 export class EcsWaiter extends pulumi.dynamic.Resource {

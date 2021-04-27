@@ -17,7 +17,13 @@ const cluster = new aws.ecs.Cluster('cluster', {
   //...
 })
 
+const taskDef = new aws.ecs.TaskDefinition('taskDef', {
+  //...
+})
+
 const service = new aws.ecs.Service('service', {
+  cluster: cluster.arn,
+  taskDefinition: taskDef.arn,
   deploymentController: {
     type: 'ECS',
   },
@@ -30,6 +36,7 @@ const service = new aws.ecs.Service('service', {
 const deployment = new WaitForEcsDeployment('wait-for-deployment', {
   clusterName: cluster.name,
   serviceName: service.name,
+  desiredTaskDef: taskDef.arn,
   awsRegion: 'ap-southeast-2', // optional
   assumeRole: 'arn:aws:iam::12345678:role/myRole', // optional
 })
