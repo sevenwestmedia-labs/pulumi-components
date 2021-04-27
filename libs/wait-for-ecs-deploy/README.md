@@ -11,7 +11,7 @@ This module requires an ECS service with circuit breaker enabled.
 ```ts
 import * as aws from '@pulumi/aws'
 
-import { WaitForEcsDeployment } from '@wanews/pulumi-wait-for-ecs-deployment'
+import { WaitForEcsDeployment } from '@wanews/pulumi-wait-for-ecs-deploy'
 
 const cluster = new aws.ecs.Cluster('cluster', {
   //...
