@@ -40,26 +40,24 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
  * @returns a State object representing the deployment result.
  */
 export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
-    // current circuit breakers don't catch all error conditions,
-    // eg https://github.com/aws/containers-roadmap/issues/1206 --
-    // this timeout will cause a deployment to fail after a certain
-    // amount of time.
-    const timeout = new Promise<State>((resolve) => {
-        const timer = setTimeout(() => {
-            clearTimeout(timer)
-            const result: State = {
-                status: 'FAILED',
-                failureMessage: `Timed out after ${timeoutMs} seconds`,
-                clusterName: inputs.clusterName,
-                serviceName: inputs.serviceName,
-                desiredTaskDef: inputs.desiredTaskDef,
-            }
-            resolve(result)
-        }, timeoutMs)
-    })
-
     return await Promise.race([
-        timeout,
+        // current circuit breakers don't catch all error conditions,
+        // eg https://github.com/aws/containers-roadmap/issues/1206 --
+        // this timeout will cause a deployment to fail after a certain
+        // amount of time.
+        new Promise<State>((resolve) => {
+            const timer = setTimeout(() => {
+                clearTimeout(timer)
+                const result: State = {
+                    status: 'FAILED',
+                    failureMessage: `Timed out after ${timeoutMs} seconds`,
+                    clusterName: inputs.clusterName,
+                    serviceName: inputs.serviceName,
+                    desiredTaskDef: inputs.desiredTaskDef,
+                }
+                resolve(result)
+            }, timeoutMs)
+        }),
         (async () => {
             const ecs = new aws.ECS({
                 region: inputs.awsRegion,
