@@ -58,7 +58,7 @@ describe('#waitForServices', () => {
     it('should return COMPLETED when a service is successfully deployed', async () => {
         const file = path.join(
             __dirname,
-            '__mocks__',
+            '__data__',
             'ecs-describe-services-all-services-deployed.json',
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
@@ -83,7 +83,7 @@ describe('#waitForServices', () => {
     it('should return FAILED when one or more services has failed and a rollback is in progress', async () => {
         const file = path.join(
             __dirname,
-            '__mocks__',
+            '__data__',
             'ecs-describe-services-failed-rollback-in-progress.json',
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
@@ -105,7 +105,7 @@ describe('#waitForServices', () => {
     it('should return FAILED when a rollback has completed', async () => {
         const file = path.join(
             __dirname,
-            '__mocks__',
+            '__data__',
             'ecs-describe-services-failed-rolled-back.json',
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
@@ -130,7 +130,7 @@ describe('#waitForServices', () => {
     it.skip('should time out if it takes too long', async () => {
         const file = path.join(
             __dirname,
-            '__mocks__',
+            '__data__',
             'ecs-describe-services-all-services-deployed.json',
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
