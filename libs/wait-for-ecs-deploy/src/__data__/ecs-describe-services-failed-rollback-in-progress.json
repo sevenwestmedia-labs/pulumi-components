@@ -1,0 +1,641 @@
+{
+    "services": [
+        {
+            "serviceArn": "arn:aws:ecs:ap-southeast-2:291971919224:service/news-shared-branch-deploys-cluster-dc6652e7f5dab6d3/news-thewest-pr713-web-app-service-452bf42",
+            "serviceName": "news-thewest-pr713-web-app-service-452bf42",
+            "clusterArn": "arn:aws:ecs:ap-southeast-2:291971919224:cluster/news-shared-branch-deploys-cluster-dc6652e7f5dab6d3",
+            "loadBalancers": [
+                {
+                    "targetGroupArn": "arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038",
+                    "containerName": "news-thewest-pr713-web-app-container",
+                    "containerPort": 80
+                }
+            ],
+            "serviceRegistries": [],
+            "status": "ACTIVE",
+            "desiredCount": 2,
+            "runningCount": 1,
+            "pendingCount": 3,
+            "capacityProviderStrategy": [
+                {
+                    "capacityProvider": "news-shared-branch-deploys-capacity-capacity-provider",
+                    "weight": 100,
+                    "base": 0
+                }
+            ],
+            "taskDefinition": "arn:aws:ecs:ap-southeast-2:291971919224:task-definition/news-thewest-pr713-web-app-task-definition:2",
+            "deploymentConfiguration": {
+                "deploymentCircuitBreaker": {
+                    "enable": true,
+                    "rollback": true
+                },
+                "maximumPercent": 200,
+                "minimumHealthyPercent": 100
+            },
+            "deployments": [
+                {
+                    "id": "ecs-svc/6405940160831029548",
+                    "status": "PRIMARY",
+                    "taskDefinition": "arn:aws:ecs:ap-southeast-2:291971919224:task-definition/news-thewest-pr713-web-app-task-definition:2",
+                    "desiredCount": 2,
+                    "pendingCount": 1,
+                    "runningCount": 1,
+                    "failedTasks": 0,
+                    "createdAt": "2021-04-23T12:06:21.711000+08:00",
+                    "updatedAt": "2021-04-23T12:59:22.904000+08:00",
+                    "capacityProviderStrategy": [
+                        {
+                            "capacityProvider": "news-shared-branch-deploys-capacity-capacity-provider",
+                            "weight": 100,
+                            "base": 0
+                        }
+                    ],
+                    "networkConfiguration": {
+                        "awsvpcConfiguration": {
+                            "subnets": [
+                                "subnet-0ad0510a2371ae9e4",
+                                "subnet-07495179515a18d23",
+                                "subnet-00d43dc8b89c50c71"
+                            ],
+                            "securityGroups": [
+                                "sg-0642f193a9c302c9b",
+                                "sg-0a6da2cb40d9a0783",
+                                "sg-01aeebaddfec1f82d"
+                            ],
+                            "assignPublicIp": "DISABLED"
+                        }
+                    },
+                    "rolloutState": "IN_PROGRESS",
+                    "rolloutStateReason": "ECS deployment circuit breaker: rolling back to deploymentId ecs-svc/6405940160831029548."
+                },
+                {
+                    "id": "ecs-svc/1281894607538416024",
+                    "status": "ACTIVE",
+                    "taskDefinition": "arn:aws:ecs:ap-southeast-2:291971919224:task-definition/news-thewest-pr713-web-app-task-definition:5",
+                    "desiredCount": 2,
+                    "pendingCount": 2,
+                    "runningCount": 0,
+                    "failedTasks": 0,
+                    "createdAt": "2021-04-23T12:50:59.004000+08:00",
+                    "updatedAt": "2021-04-23T12:55:27.013000+08:00",
+                    "capacityProviderStrategy": [
+                        {
+                            "capacityProvider": "news-shared-branch-deploys-capacity-capacity-provider",
+                            "weight": 100,
+                            "base": 0
+                        }
+                    ],
+                    "networkConfiguration": {
+                        "awsvpcConfiguration": {
+                            "subnets": [
+                                "subnet-0ad0510a2371ae9e4",
+                                "subnet-07495179515a18d23",
+                                "subnet-00d43dc8b89c50c71"
+                            ],
+                            "securityGroups": [
+                                "sg-0642f193a9c302c9b",
+                                "sg-0a6da2cb40d9a0783",
+                                "sg-01aeebaddfec1f82d"
+                            ],
+                            "assignPublicIp": "DISABLED"
+                        }
+                    },
+                    "rolloutState": "IN_PROGRESS",
+                    "rolloutStateReason": "ECS deployment ecs-svc/1281894607538416024 in progress."
+                }
+            ],
+            "roleArn": "arn:aws:iam::291971919224:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+            "events": [
+                {
+                    "id": "ed6e9c69-6114-40bc-bfe5-3d20fb851d87",
+                    "createdAt": "2021-04-23T12:59:40.603000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task d249df6d4f62428abbbab74a944b5d97)."
+                },
+                {
+                    "id": "cb0d8584-e789-4766-8e16-65f3b2462d2a",
+                    "createdAt": "2021-04-23T12:59:30.770000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) stopped 1 pending tasks."
+                },
+                {
+                    "id": "d729b3d1-56f3-4fe0-b6e6-689d76f1b68d",
+                    "createdAt": "2021-04-23T12:59:22.969000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) rolling back to deployment ecs-svc/6405940160831029548."
+                },
+                {
+                    "id": "f8a3d27d-9321-47b3-8fc5-89202e2f67b7",
+                    "createdAt": "2021-04-23T12:59:22.787000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) (deployment ecs-svc/1570303241572688488) deployment failed: tasks failed to start."
+                },
+                {
+                    "id": "df389a9d-5c0b-456a-936e-0d810e9479c5",
+                    "createdAt": "2021-04-23T12:59:22.735000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task fae23661bfbd4c0695131e33d3462baa)."
+                },
+                {
+                    "id": "26d7ce45-61f6-4899-96b0-ad39afe59716",
+                    "createdAt": "2021-04-23T12:59:19.964000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "b3625607-de35-43b7-bad3-ccf6dd74773a",
+                    "createdAt": "2021-04-23T12:59:19.949000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "6f167932-0fdc-439c-8369-07471338b15d",
+                    "createdAt": "2021-04-23T12:59:02.086000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task e91027bf40264910874e4e5657ec2067)."
+                },
+                {
+                    "id": "7ab23cd2-bbcb-4efb-a867-1312c877b32d",
+                    "createdAt": "2021-04-23T12:58:58.438000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "51665e8d-87fc-45a7-8c2f-e50c6c5b1968",
+                    "createdAt": "2021-04-23T12:58:58.424000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "40df283d-51b3-46b9-b5f9-ea97925efbc5",
+                    "createdAt": "2021-04-23T12:58:40.937000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task ef3c9af97719448089e07565dd414686)."
+                },
+                {
+                    "id": "b25bf9d4-2de3-48c1-8b62-781f5eb7e8fa",
+                    "createdAt": "2021-04-23T12:58:38.289000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "247d52a6-37a1-418e-9e0f-a9d56661b433",
+                    "createdAt": "2021-04-23T12:58:38.268000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "8fb55c82-74d3-4035-a1d5-c88f68adeb2f",
+                    "createdAt": "2021-04-23T12:58:19.831000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task a865ee9182a64b95aa62c4b18540970c)."
+                },
+                {
+                    "id": "e87fd9fe-dc6b-48dd-a94b-a0f504ef3f93",
+                    "createdAt": "2021-04-23T12:58:15.502000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "b7badd6a-c5c0-4591-a640-f8971dbd9214",
+                    "createdAt": "2021-04-23T12:58:15.489000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "6973eee7-05af-4e90-8b49-fef32d80c36e",
+                    "createdAt": "2021-04-23T12:57:58.929000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 46ca8749cfcf4e3ba8e338cd9e8cff12)."
+                },
+                {
+                    "id": "b8d1980e-cbe3-493c-a3d1-f71ab37e3046",
+                    "createdAt": "2021-04-23T12:57:53.718000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "2f2ee279-068f-404b-acfc-0d175f70dd31",
+                    "createdAt": "2021-04-23T12:57:53.701000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "04e28592-59f2-4fbc-974d-7f3ab7b9f4cb",
+                    "createdAt": "2021-04-23T12:57:37.255000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task e58ecf87ea96419698bf7eeb8f4533d6)."
+                },
+                {
+                    "id": "288015d4-4760-47e7-b87b-36be1cf8f44b",
+                    "createdAt": "2021-04-23T12:57:25.648000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "076753cd-db72-40fd-8c80-3ef6121efc96",
+                    "createdAt": "2021-04-23T12:57:25.633000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "1990aaef-7983-478c-8c0d-83c90bb36276",
+                    "createdAt": "2021-04-23T12:57:05.436000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task ef82dc3e3b414b799f59860208720d57)."
+                },
+                {
+                    "id": "285f4306-057b-48ba-a608-88e432d95f29",
+                    "createdAt": "2021-04-23T12:56:59.613000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "3061c3d1-f68e-4e6c-8f96-9e3ec53223b7",
+                    "createdAt": "2021-04-23T12:56:59.598000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "f09ab02e-eb74-4cb9-b984-39b152545b9f",
+                    "createdAt": "2021-04-23T12:56:44.290000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 378cd603bca4485b831987c2999a6ac1)."
+                },
+                {
+                    "id": "66255227-fad6-4cf1-9a9b-12c64a6d799f",
+                    "createdAt": "2021-04-23T12:56:31.443000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "c5c453d9-b6c5-4438-85f5-ef9b72767f76",
+                    "createdAt": "2021-04-23T12:56:31.429000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "3b44fca8-ccae-4916-9ceb-c3349c7f213a",
+                    "createdAt": "2021-04-23T12:56:13.277000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task d6182a9abc9246449444450aa9010c9e)."
+                },
+                {
+                    "id": "05910777-34c2-41c1-a34a-2c3d2e1fb45c",
+                    "createdAt": "2021-04-23T12:56:09.867000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "9557185d-a86f-4003-88fa-5971adb0f00b",
+                    "createdAt": "2021-04-23T12:56:09.851000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "132becb8-1c9d-4a20-adb3-8bb276e70d1d",
+                    "createdAt": "2021-04-23T12:55:51.663000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task c71875dc593a444ead94fc8c49eb9ec9)."
+                },
+                {
+                    "id": "aaa51c05-e11c-4725-bc9f-0628a22a9e1d",
+                    "createdAt": "2021-04-23T12:55:48.164000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "e8ddab8c-505f-4986-85a5-401936c10afc",
+                    "createdAt": "2021-04-23T12:55:48.152000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "aa0fb47d-0a28-4893-8346-9f7289c66938",
+                    "createdAt": "2021-04-23T12:55:29.768000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task b5739b4b91b04e36b96fbb968419b6ac)."
+                },
+                {
+                    "id": "5097453c-499c-4933-b959-9acccc1c0b34",
+                    "createdAt": "2021-04-23T12:51:05.253000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) stopped 1 pending tasks."
+                },
+                {
+                    "id": "2e25e9bc-89d0-4428-bdf2-fb703f64f24d",
+                    "createdAt": "2021-04-23T12:51:03.621000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "ec7dd9fc-270f-4ac5-8a8b-f479e686387a",
+                    "createdAt": "2021-04-23T12:51:03.608000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "adc89fa7-a854-486f-836c-bb508c12ac3f",
+                    "createdAt": "2021-04-23T12:50:57.793000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task cb124af2c0d64141b97fe809775d865b)."
+                },
+                {
+                    "id": "6c9c6bbe-b89b-40d8-839c-6ce0b8661b15",
+                    "createdAt": "2021-04-23T12:50:54.686000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "921cc506-e200-4bad-a65c-81c86dff697e",
+                    "createdAt": "2021-04-23T12:50:54.670000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "2d1f492f-f3c7-445c-be33-9a2af5f04450",
+                    "createdAt": "2021-04-23T12:50:26.790000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "87fccb11-4f58-4e37-bec7-e4c173e3746e",
+                    "createdAt": "2021-04-23T12:50:16.192000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task d3270f0992c54194ba653c108b67959a)."
+                },
+                {
+                    "id": "0738772d-ffa6-4795-97e2-482c582bcd7c",
+                    "createdAt": "2021-04-23T12:50:11.970000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "52718bc9-f983-4b82-a693-08d4766e20cc",
+                    "createdAt": "2021-04-23T12:50:11.954000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "c4e8d75c-b4e3-4cae-b06f-b8be5974f153",
+                    "createdAt": "2021-04-23T12:50:05.110000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 31d5f7a10dba4a009111acaf99d12416)."
+                },
+                {
+                    "id": "e55b19cd-9f63-4fd1-8d8c-e1b0948e4295",
+                    "createdAt": "2021-04-23T12:50:01.399000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "a15bd950-15cf-4fd2-b3a6-4f7dab650367",
+                    "createdAt": "2021-04-23T12:50:01.381000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "724f1e44-46f0-4e96-9ddf-f2ed0a856302",
+                    "createdAt": "2021-04-23T12:49:33.446000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "f3d3b5b2-2062-4ff9-8c90-a343692a7508",
+                    "createdAt": "2021-04-23T12:49:23.259000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task a9574e1da1a44d4bb5af127324e2d01d)."
+                },
+                {
+                    "id": "be96b9ad-9f0d-44be-90ef-3f15ebe85e41",
+                    "createdAt": "2021-04-23T12:49:18.462000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "8698a308-f3d4-4971-bd4b-040562f1c9d9",
+                    "createdAt": "2021-04-23T12:49:18.445000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "3899b7da-33c4-4880-bd31-4a07346a13b6",
+                    "createdAt": "2021-04-23T12:49:12.246000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 187fad24874f4e3fa9b931dcf49c0147)."
+                },
+                {
+                    "id": "f63dbb3c-a569-42f6-89a4-e663486ba577",
+                    "createdAt": "2021-04-23T12:49:06.561000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "54b367b4-859b-4ddd-9d3c-11c994d821f2",
+                    "createdAt": "2021-04-23T12:49:06.545000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "465f6242-8582-4a37-bc91-57962966c6d2",
+                    "createdAt": "2021-04-23T12:48:40.522000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "5a57855f-359f-4587-9e13-41c0c0e221de",
+                    "createdAt": "2021-04-23T12:48:29.097000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 64da759470804b02974a39f42950b7c9)."
+                },
+                {
+                    "id": "4f08a55d-9b28-4cf5-b77d-b64081de0136",
+                    "createdAt": "2021-04-23T12:48:25.154000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "a924bb01-dcdf-4ded-853d-6366dff49b39",
+                    "createdAt": "2021-04-23T12:48:25.139000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "4301df08-d78b-4ad7-89b7-db140601f44a",
+                    "createdAt": "2021-04-23T12:48:18.899000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task c483cf1fef0f4410a7cc37abdb779b35)."
+                },
+                {
+                    "id": "1509a127-3961-477f-9105-1109d334cdfc",
+                    "createdAt": "2021-04-23T12:48:13.740000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "ed66e6c4-5a84-477b-acd6-9b241d546957",
+                    "createdAt": "2021-04-23T12:48:13.727000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "de832264-771c-42de-b133-98fa18fcbec1",
+                    "createdAt": "2021-04-23T12:47:47.153000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "99f62537-a217-43f2-b22c-0d5c12717c20",
+                    "createdAt": "2021-04-23T12:47:36.536000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 7cfee9a8bb8642eaab1f3fcc117141a6)."
+                },
+                {
+                    "id": "d7feeea5-e487-4068-bfea-e99afdc54283",
+                    "createdAt": "2021-04-23T12:47:33.850000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "6c24d6e3-a0cb-4e19-859d-78abf0f12c4f",
+                    "createdAt": "2021-04-23T12:47:33.831000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "88cecb68-2eea-4e9a-9e89-9ff1cbc48543",
+                    "createdAt": "2021-04-23T12:47:25.871000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 895e9b950b3d450492de07eb806357b4)."
+                },
+                {
+                    "id": "cee53a60-1ef1-4302-be55-d662d438dd13",
+                    "createdAt": "2021-04-23T12:47:24.181000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "b5213cb6-7705-47ad-b892-bd3e6a1efc7b",
+                    "createdAt": "2021-04-23T12:47:24.158000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "a9f51f4e-e801-440b-85b3-8a3fda22acb9",
+                    "createdAt": "2021-04-23T12:46:53.951000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "83f1b675-cb86-4a63-a338-f9b1afd4d31e",
+                    "createdAt": "2021-04-23T12:46:43.587000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task d9990f13c4574dd1a959c62924a59a38)."
+                },
+                {
+                    "id": "08e3e6b6-bfa9-4193-b9ea-6f76bb98338d",
+                    "createdAt": "2021-04-23T12:46:38.051000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "61c7143e-d742-4695-ab90-53adb277122e",
+                    "createdAt": "2021-04-23T12:46:38.038000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "0cea0ae4-3fce-403e-9961-3869d3195209",
+                    "createdAt": "2021-04-23T12:46:32.931000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 0d646d85a2da4353932d694aca0cbbef)."
+                },
+                {
+                    "id": "c03a7604-1b61-4a3c-8a02-af1217b0c5b4",
+                    "createdAt": "2021-04-23T12:46:28.529000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "b1248014-ecde-453c-b320-b161667b2b3b",
+                    "createdAt": "2021-04-23T12:46:28.515000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "f508e679-d653-4dbb-b318-ee6f8c7f0fb2",
+                    "createdAt": "2021-04-23T12:46:01.092000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "f1a77143-e141-412b-ae46-0a3a137b23c1",
+                    "createdAt": "2021-04-23T12:45:50.528000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 3fae24d7236548069e909babc94d2e19)."
+                },
+                {
+                    "id": "5723070b-3c2c-4dd4-a113-c4e1221cfb8a",
+                    "createdAt": "2021-04-23T12:45:42.285000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "a405ede6-538d-4ef2-a45c-cf7e7fd0bfb1",
+                    "createdAt": "2021-04-23T12:45:42.247000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "8b89a610-e72d-4bfd-9cd8-2514140cb7b3",
+                    "createdAt": "2021-04-23T12:45:40.071000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task cec67c888216475b9f55d23d07af2d21)."
+                },
+                {
+                    "id": "428486ce-8868-4610-a835-dfc5fcbe5e96",
+                    "createdAt": "2021-04-23T12:45:36.033000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "c1504160-5fb3-42ba-8356-9806c146ac30",
+                    "createdAt": "2021-04-23T12:45:36.016000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "610c29d6-ae03-4dc3-bf15-4e5634a6f268",
+                    "createdAt": "2021-04-23T12:45:07.156000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "7ee8d6c6-4db7-4c49-8fd7-5c90a033719c",
+                    "createdAt": "2021-04-23T12:44:56.504000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 904ffd4d0d34457bab364e96c8e8ed78)."
+                },
+                {
+                    "id": "0411cd96-d989-4e3f-8c38-823cfea5547c",
+                    "createdAt": "2021-04-23T12:44:54.479000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "620139e6-404f-4b94-800d-5d3bf3e77c66",
+                    "createdAt": "2021-04-23T12:44:54.465000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "efdbbda7-46b7-48d2-8ae5-e059eb5c2492",
+                    "createdAt": "2021-04-23T12:44:45.627000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 04d558d21b4b48bab0ae0cda4a496cb1)."
+                },
+                {
+                    "id": "49e6fa70-9f8f-4a5c-8a71-4445d7d0f782",
+                    "createdAt": "2021-04-23T12:44:44.406000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "b86a5fdc-39ce-483b-84ee-18e4315aee32",
+                    "createdAt": "2021-04-23T12:44:44.390000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "385c2981-0779-4c0a-8cd6-3286a679c98c",
+                    "createdAt": "2021-04-23T12:44:14.261000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "0ff5a165-eb82-4497-8008-fd533cd496b7",
+                    "createdAt": "2021-04-23T12:44:03.602000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task d67aa52b9f5045c9ac83151d94d34748)."
+                },
+                {
+                    "id": "3384bda3-281f-4582-b8b3-cc22d7a58ee1",
+                    "createdAt": "2021-04-23T12:43:58.724000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "bbae36b1-d007-48ee-9115-5cfa6b5196b0",
+                    "createdAt": "2021-04-23T12:43:58.706000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "a26babe9-0fc6-432d-a116-88e112be1ab1",
+                    "createdAt": "2021-04-23T12:43:52.728000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task 24aa19ce2d0b4a7bbd8e35bb570f9875)."
+                },
+                {
+                    "id": "5e289864-f4c2-4033-9352-59a29be53dea",
+                    "createdAt": "2021-04-23T12:43:49.687000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has begun draining connections on 1 tasks."
+                },
+                {
+                    "id": "e7047b6c-f325-4b27-9f6f-c6c2228ec1ac",
+                    "createdAt": "2021-04-23T12:43:49.671000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "8c149933-43f3-44ff-92be-af7077678064",
+                    "createdAt": "2021-04-23T12:43:21.088000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) registered 1 targets in (target-group arn:aws:elasticloadbalancing:ap-southeast-2:291971919224:targetgroup/thewest-pr713-tg-443a352/85dedf7235f35038)"
+                },
+                {
+                    "id": "7cc00c9a-37d7-44d4-a61a-37fefa46d428",
+                    "createdAt": "2021-04-23T12:43:09.891000+08:00",
+                    "message": "(service news-thewest-pr713-web-app-service-452bf42) has started 1 tasks: (task ee0f93946dd34771b48867f81065e5b6)."
+                }
+            ],
+            "createdAt": "2021-04-21T16:37:00.221000+08:00",
+            "placementConstraints": [],
+            "placementStrategy": [
+                {
+                    "type": "spread",
+                    "field": "attribute:ecs.availability-zone"
+                },
+                {
+                    "type": "binpack",
+                    "field": "MEMORY"
+                }
+            ],
+            "networkConfiguration": {
+                "awsvpcConfiguration": {
+                    "subnets": [
+                        "subnet-0ad0510a2371ae9e4",
+                        "subnet-07495179515a18d23",
+                        "subnet-00d43dc8b89c50c71"
+                    ],
+                    "securityGroups": [
+                        "sg-0642f193a9c302c9b",
+                        "sg-0a6da2cb40d9a0783",
+                        "sg-01aeebaddfec1f82d"
+                    ],
+                    "assignPublicIp": "DISABLED"
+                }
+            },
+            "healthCheckGracePeriodSeconds": 0,
+            "schedulingStrategy": "REPLICA",
+            "createdBy": "arn:aws:iam::291971919224:role/Admin",
+            "enableECSManagedTags": false,
+            "propagateTags": "SERVICE",
+            "enableExecuteCommand": false
+        }
+    ],
+    "failures": []
+}
