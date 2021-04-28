@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.1.6
+
+### Patch Changes
+
+- 02ced32: reduce loglevel of debug logs
+
 ## 0.1.5
 
 ### Patch Changes
