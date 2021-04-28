@@ -3,24 +3,22 @@ import aws from 'aws-sdk'
 import cuid from 'cuid'
 
 export interface State {
-    clusterName: string
-    serviceName: string
-    awsRegion?: string
-    assumeRole?: string
-    status: string //'COMPLETED' | 'FAILED'
-    failureMessage?: string
-    desiredTaskDef: string
+    clusterName: pulumi.Input<string>
+    serviceName: pulumi.Input<string>
+    status: pulumi.Input<string> //'COMPLETED' | 'FAILED'
+    failureMessage: pulumi.Input<string>
+    desiredTaskDef: pulumi.Input<string>
 }
+
+export interface UnwrappedState extends pulumi.UnwrappedObject<State> {}
 
 export interface Inputs {
     clusterName: string
     serviceName: string
-    awsRegion?: string
-    assumeRole?: string
-    status?: string //'COMPLETED' | 'FAILED'
-    failureMessage?: string
+    awsRegion: string
+    assumeRole: string
     desiredTaskDef: string
-    timeoutMs?: number
+    timeoutMs: number
 }
 
 export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
@@ -41,21 +39,24 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
  * @returns a State object representing the deployment result.
  */
 export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
-    return await Promise.race([
+    const retval = Promise.race([
         // current circuit breakers don't catch all error conditions,
         // eg https://github.com/aws/containers-roadmap/issues/1206 --
         // this timeout will cause a deployment to fail after a certain
         // amount of time.
-        new Promise<State>((resolve) => {
+        new Promise<UnwrappedState>((resolve) => {
             const timer = setTimeout(() => {
                 clearTimeout(timer)
-                const result: State = {
+                const result: UnwrappedState = {
                     status: 'FAILED',
                     failureMessage: `Timed out after ${timeoutMs} seconds`,
                     clusterName: inputs.clusterName,
                     serviceName: inputs.serviceName,
                     desiredTaskDef: inputs.desiredTaskDef,
                 }
+                pulumi.log.warn(
+                    `reached timeout, returning ${JSON.stringify(result)}`,
+                )
                 resolve(result)
             }, timeoutMs)
         }),
@@ -79,6 +80,8 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
                 .catch((err) => {
                     throw new pulumi.RunError(err)
                 })
+
+            pulumi.log.warn(`services are stable`)
 
             const services = await ecs
                 .describeServices({
@@ -104,24 +107,27 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
                     ? `One or more services failed to deploy: ${failedServices.map(
                           (service) => service.serviceName,
                       )}`
-                    : undefined
+                    : ''
 
             const status = failedServices.length > 0 ? 'FAILED' : 'COMPLETED'
 
-            const result: State = {
+            const result: UnwrappedState = {
                 clusterName: inputs.clusterName,
                 serviceName: inputs.serviceName,
                 desiredTaskDef: inputs.desiredTaskDef,
-                awsRegion: ecs.config?.region,
                 failureMessage,
                 status,
             }
+
+            pulumi.log.warn(`successful return: ${JSON.stringify(result)}`)
 
             return result
         })().catch((err) => {
             throw err
         }),
     ])
+    pulumi.log.warn(`return retval: ${JSON.stringify(retval)}`)
+    return retval
 }
 
 /**
