@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.1.5
+
+### Patch Changes
+
+- 36b24e0: fix unwapped input types
+
 ## 0.1.4
 
 ### Patch Changes
