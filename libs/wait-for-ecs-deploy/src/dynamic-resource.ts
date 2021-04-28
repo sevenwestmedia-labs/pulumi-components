@@ -1,8 +1,13 @@
 import * as pulumi from '@pulumi/pulumi'
-import { dynamicProvider, Inputs } from './dynamic-resource-provider'
+import { dynamicProvider } from './dynamic-resource-provider'
 
-export interface EcsWaiterProps extends Omit<Inputs, 'timeoutMs'> {
-    timeoutMs?: number
+export interface EcsWaiterProps {
+    clusterName: pulumi.Input<string>
+    serviceName: pulumi.Input<string>
+    desiredTaskDef: pulumi.Input<string>
+    timeoutMs?: pulumi.Input<number>
+    awsRegion?: pulumi.Input<string>
+    assumeRole?: pulumi.Input<string>
 }
 
 export class EcsWaiter extends pulumi.dynamic.Resource {
