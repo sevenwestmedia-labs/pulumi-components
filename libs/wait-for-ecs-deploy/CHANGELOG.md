@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.1.3
+
+### Patch Changes
+
+- 06f5cbc: hopefully fix struct type
+
 ## 0.1.2
 
 ### Patch Changes
