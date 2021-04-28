@@ -47,7 +47,9 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
                 clearTimeout(timer)
                 const result: pulumi.UnwrappedObject<State> = {
                     status: 'FAILED',
-                    failureMessage: `Timed out after ${timeoutMs} seconds`,
+                    failureMessage: `Timed out after ${
+                        timeoutMs / 1000
+                    } seconds`,
                     clusterName: inputs.clusterName,
                     serviceName: inputs.serviceName,
                     desiredTaskDef: inputs.desiredTaskDef,
