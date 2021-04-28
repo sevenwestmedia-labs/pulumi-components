@@ -52,7 +52,7 @@ By default, it will fail after three minutes and treat the deployment as failed.
 
 ## Known issues
 
-- Some failure modes are not yet supported by circuit breakers. To catch these conditions, set timeout appropriately.
+- Some failure modes are not yet supported by circuit breakers. This includes tasks that fail to launch (eg `CMD /bin/false`). However, since they never become healthy, the deployment never succeeds. This module includes a timeout (default: 3 minutes); once the timeout is reached, a deployment is treated as failed.
 
 ## Tests
 
