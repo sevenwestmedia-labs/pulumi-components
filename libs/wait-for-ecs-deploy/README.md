@@ -134,6 +134,7 @@ If rollbacks are enabled, it will also show the task is being rolled back:
           "taskDefinition": "arn:aws:ecs:ap-southeast-2:291971919224:task-definition/news-thewest-pr713-web-app-task-definition:3",
           "rolloutState": "IN_PROGRESS",
           "rolloutStateReason": "ECS deployment ecs-svc/1281894607538416024 in progress."
+        }
       ]
     }
   ]
