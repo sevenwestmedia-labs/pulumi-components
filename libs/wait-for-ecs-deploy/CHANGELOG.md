@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.1.7
+
+### Patch Changes
+
+- 414732d: fix incorrect units in timeout
+
 ## 0.1.6
 
 ### Patch Changes

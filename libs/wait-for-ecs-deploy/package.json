@@ -1,6 +1,6 @@
 {
   "name": "@wanews/pulumi-wait-for-ecs-deploy",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "dist/index.js",
   "dependencies": {
     "aws-sdk": "^2.891.0"
