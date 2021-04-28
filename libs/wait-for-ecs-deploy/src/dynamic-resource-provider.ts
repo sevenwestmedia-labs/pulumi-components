@@ -52,7 +52,9 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
                     serviceName: inputs.serviceName,
                     desiredTaskDef: inputs.desiredTaskDef,
                 }
-                pulumi.log.warn(
+                // note that this is _always_ printed
+                //TODO cancel this timeout when the main promise resolves!
+                pulumi.log.debug(
                     `reached timeout, returning ${JSON.stringify(result)}`,
                 )
                 resolve(result)
@@ -79,7 +81,7 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
                     throw new pulumi.RunError(err)
                 })
 
-            pulumi.log.warn(`services are stable`)
+            pulumi.log.debug(`services are stable`)
 
             const services = await ecs
                 .describeServices({
@@ -117,14 +119,14 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
                 status,
             }
 
-            pulumi.log.warn(`successful return: ${JSON.stringify(result)}`)
+            pulumi.log.debug(`successful return: ${JSON.stringify(result)}`)
 
             return result
         })().catch((err) => {
             throw err
         }),
     ])
-    pulumi.log.warn(`return retval: ${JSON.stringify(retval)}`)
+    pulumi.log.debug(`return retval: ${JSON.stringify(retval)}`)
     return retval
 }
 
