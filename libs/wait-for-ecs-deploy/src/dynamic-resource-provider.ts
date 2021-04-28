@@ -13,10 +13,10 @@ export interface State {
 export interface Inputs {
     clusterName: string
     serviceName: string
-    awsRegion: string
-    assumeRole: string
     desiredTaskDef: string
-    timeoutMs: number
+    timeoutMs?: number
+    awsRegion?: string
+    assumeRole?: string
 }
 
 export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
