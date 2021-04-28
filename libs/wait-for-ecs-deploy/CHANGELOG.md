@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.1.4
+
+### Patch Changes
+
+- 59e6ae6: fix type errors in tests
+
 ## 0.1.3
 
 ### Patch Changes
