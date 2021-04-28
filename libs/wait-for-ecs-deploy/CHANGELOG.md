@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.1.2
+
+### Patch Changes
+
+- 56f71cd: attempted fix for unexpected type: struct error
+
 ## 0.1.1
 
 ### Patch Changes
