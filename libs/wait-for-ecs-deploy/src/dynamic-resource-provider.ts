@@ -10,8 +10,6 @@ export interface State {
     desiredTaskDef: pulumi.Input<string>
 }
 
-export interface UnwrappedState extends pulumi.UnwrappedObject<State> {}
-
 export interface Inputs {
     clusterName: string
     serviceName: string
@@ -44,10 +42,10 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
         // eg https://github.com/aws/containers-roadmap/issues/1206 --
         // this timeout will cause a deployment to fail after a certain
         // amount of time.
-        new Promise<UnwrappedState>((resolve) => {
+        new Promise<pulumi.UnwrappedObject<State>>((resolve) => {
             const timer = setTimeout(() => {
                 clearTimeout(timer)
-                const result: UnwrappedState = {
+                const result: pulumi.UnwrappedObject<State> = {
                     status: 'FAILED',
                     failureMessage: `Timed out after ${timeoutMs} seconds`,
                     clusterName: inputs.clusterName,
@@ -111,7 +109,7 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
 
             const status = failedServices.length > 0 ? 'FAILED' : 'COMPLETED'
 
-            const result: UnwrappedState = {
+            const result: pulumi.UnwrappedObject<State> = {
                 clusterName: inputs.clusterName,
                 serviceName: inputs.serviceName,
                 desiredTaskDef: inputs.desiredTaskDef,
