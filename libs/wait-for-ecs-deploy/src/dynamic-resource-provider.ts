@@ -39,7 +39,7 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
  * @returns a State object representing the deployment result.
  */
 export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
-    const retval = Promise.race([
+    const retval = await Promise.race([
         // current circuit breakers don't catch all error conditions,
         // eg https://github.com/aws/containers-roadmap/issues/1206 --
         // this timeout will cause a deployment to fail after a certain
