@@ -39,7 +39,7 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
  */
 export async function waitForService(inputs: Inputs) {
     const timeoutMs = inputs.timeoutMs ?? 180000
-    pulumi.log.warn('waitForService timeout is ' + timeoutMs)
+    pulumi.log.debug(`waitForService: timeoutMs is ${timeoutMs}`)
     const retval = await Promise.race([
         // current circuit breakers don't catch all error conditions,
         // eg https://github.com/aws/containers-roadmap/issues/1206 --
@@ -61,7 +61,9 @@ export async function waitForService(inputs: Inputs) {
                 // note that this is _always_ printed
                 //TODO cancel this timeout when the main promise resolves!
                 pulumi.log.debug(
-                    `reached timeout, returning ${JSON.stringify(result)}`,
+                    `waitForService: reached timeout, returning ${JSON.stringify(
+                        result,
+                    )}`,
                 )
                 resolve(result)
             }, timeoutMs)
@@ -87,7 +89,7 @@ export async function waitForService(inputs: Inputs) {
                     throw new pulumi.RunError(err)
                 })
 
-            pulumi.log.debug(`services are stable`)
+            pulumi.log.debug(`waitForService: services are stable`)
 
             const services = await ecs
                 .describeServices({
@@ -126,14 +128,16 @@ export async function waitForService(inputs: Inputs) {
                 timeoutMs,
             }
 
-            pulumi.log.debug(`successful return: ${JSON.stringify(result)}`)
+            pulumi.log.debug(
+                `waitForService: successful return: ${JSON.stringify(result)}`,
+            )
 
             return result
         })().catch((err) => {
             throw err
         }),
     ])
-    pulumi.log.debug(`return retval: ${JSON.stringify(retval)}`)
+    pulumi.log.debug(`waitForService: return retval: ${JSON.stringify(retval)}`)
     return retval
 }
 
