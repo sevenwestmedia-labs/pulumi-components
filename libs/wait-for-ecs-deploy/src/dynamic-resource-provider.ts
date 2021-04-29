@@ -8,6 +8,7 @@ export interface State {
     status: pulumi.Input<string> //'COMPLETED' | 'FAILED'
     failureMessage: pulumi.Input<string>
     desiredTaskDef: pulumi.Input<string>
+    timeoutMs: pulumi.Input<number>
 }
 
 export interface Inputs {
@@ -22,7 +23,7 @@ export interface Inputs {
 export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
     create: async (inputs: Inputs) => ({
         id: cuid(),
-        outs: await waitForService(inputs, inputs.timeoutMs),
+        outs: await waitForService(inputs),
     }),
     update: async (_id: unknown, _olds: unknown, news: Inputs) => ({
         outs: await waitForService(news),
@@ -36,7 +37,9 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
  * @param timeoutMs timeout
  * @returns a State object representing the deployment result.
  */
-export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
+export async function waitForService(inputs: Inputs) {
+    const timeoutMs = inputs.timeoutMs ?? 180000
+    pulumi.log.warn('waitForService timeout is ' + timeoutMs)
     const retval = await Promise.race([
         // current circuit breakers don't catch all error conditions,
         // eg https://github.com/aws/containers-roadmap/issues/1206 --
@@ -53,6 +56,7 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
                     clusterName: inputs.clusterName,
                     serviceName: inputs.serviceName,
                     desiredTaskDef: inputs.desiredTaskDef,
+                    timeoutMs,
                 }
                 // note that this is _always_ printed
                 //TODO cancel this timeout when the main promise resolves!
@@ -119,6 +123,7 @@ export async function waitForService(inputs: Inputs, timeoutMs = 180000) {
                 desiredTaskDef: inputs.desiredTaskDef,
                 failureMessage,
                 status,
+                timeoutMs,
             }
 
             pulumi.log.debug(`successful return: ${JSON.stringify(result)}`)

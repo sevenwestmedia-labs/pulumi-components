@@ -11,22 +11,27 @@ export interface EcsWaiterProps {
 }
 
 export class EcsWaiter extends pulumi.dynamic.Resource {
+    public readonly clusterName!: pulumi.Output<string>
+    public readonly serviceName!: pulumi.Output<string>
+    public readonly desiredTaskDef!: pulumi.Output<string>
     public readonly status!: pulumi.Output<string>
     public readonly failureMessage!: pulumi.Output<string>
+    public readonly timeoutMs!: pulumi.Output<number>
 
     constructor(
         name: string,
         props: EcsWaiterProps,
         opts?: pulumi.CustomResourceOptions,
     ) {
-        props.timeoutMs = props.timeoutMs ?? 180000
-
         super(
             dynamicProvider,
             name,
             {
                 status: undefined,
                 failureMessage: undefined,
+                timeoutMs: undefined,
+                awsRegion: undefined,
+                assumeRole: undefined,
                 ...props,
             },
             opts,
