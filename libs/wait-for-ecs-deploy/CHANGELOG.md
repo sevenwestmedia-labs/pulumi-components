@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.1.8
+
+### Patch Changes
+
+- bba33e9: add extra debug logs, move timeout into state
+
 ## 0.1.7
 
 ### Patch Changes
