@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.1.9
+
+### Patch Changes
+
+- d8b67d3: improve logging
+
 ## 0.1.8
 
 ### Patch Changes
