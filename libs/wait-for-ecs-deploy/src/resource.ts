@@ -39,5 +39,44 @@ export class WaitForEcsDeployment extends pulumi.ComponentResource {
         this.timeoutMs = args.timeoutMs
             ? pulumi.output(args.timeoutMs)
             : undefined
+
+        if (this.timeoutMs !== undefined) {
+            pulumi
+                .output(this.timeoutMs)
+                .apply((timeout) =>
+                    pulumi.log.debug(`timeoutMs is ${timeout}`, this),
+                )
+        }
+
+        pulumi
+            .all([
+                this.status,
+                this.failureMessage,
+                this.clusterName,
+                this.serviceName,
+                this.desiredTaskDef,
+                this.timeoutMs,
+            ])
+            .apply(
+                ([
+                    status,
+                    failureMessage,
+                    clusterName,
+                    serviceName,
+                    desiredTaskDef,
+                ]) =>
+                    pulumi.log.debug(
+                        `dynamic resource is done, got outputs ${JSON.stringify(
+                            {
+                                status,
+                                failureMessage,
+                                clusterName,
+                                serviceName,
+                                desiredTaskDef,
+                            },
+                        )}`,
+                        this,
+                    ),
+            )
     }
 }
