@@ -140,14 +140,12 @@ describe('#waitForServices', () => {
 
         for (const cluster of clusters) {
             for (const service of cluster.services) {
-                const result = waitForService(
-                    {
-                        clusterName: cluster.clusterName,
-                        serviceName: service.serviceName,
-                        desiredTaskDef: service.taskDefinition,
-                    },
-                    10 /* timeout: 10ms */,
-                )
+                const result = waitForService({
+                    clusterName: cluster.clusterName,
+                    serviceName: service.serviceName,
+                    desiredTaskDef: service.taskDefinition,
+                    timeoutMs: 10,
+                })
                 await expect(result).resolves.toHaveProperty('status', 'FAILED')
             }
         }
