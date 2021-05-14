@@ -1,5 +1,13 @@
 import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
+import { Thresholds, MetricAlarms } from './metric-alarms'
+
+/**
+ * - removes sumo logging
+ * - adds a default execution role (but still allows it to be overridden)
+ * - updates default runtime node12 --> node14
+ * - removes all aws.lambda.Permission (allowInvocationBy)
+ */
 
 export class LambdaFunction extends pulumi.ComponentResource {
     readonly function: aws.lambda.Function
@@ -18,12 +26,30 @@ export class LambdaFunction extends pulumi.ComponentResource {
             ) => {
                 [key: string]: pulumi.Input<string>
             }
+
             /**
              * Log groups are automatically created by lambda,
              * if you need to import an existing log group an existing log group resource id can be specified here
              * Once imported, this param needs to be removed
              **/
             logGroupImport?: string
+
+            /**
+             * If enabled, metric alarms will be created, and alerts will be raised to the
+             * SNS topic provided. Optional thresholds can be set.
+             * Default: disabled
+             */
+            monitoring?:
+                | {
+                      enabled: true
+                      thresholds?: Thresholds
+                      snsTopicArn: pulumi.Input<string>
+                  }
+                | {
+                      enabled: false
+                      thresholds?: undefined
+                      snsTopicArn?: undefined
+                  }
         },
         opts?: pulumi.ComponentResourceOptions | undefined,
     ) {
@@ -103,5 +129,13 @@ export class LambdaFunction extends pulumi.ComponentResource {
                 dependsOn: [this.logGroup],
             },
         )
+
+        if (args.monitoring?.enabled) {
+            new MetricAlarms(name, {
+                snsTopicArn: args.monitoring.snsTopicArn,
+                thresholds: args.monitoring.thresholds,
+                lambdaFunctionName: this.function.name,
+            })
+        }
     }
 }
