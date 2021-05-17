@@ -42,7 +42,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
             monitoring?:
                 | {
                       enabled: true
-                      thresholds?: Thresholds
+                      thresholds?: Omit<Thresholds, 'timeoutMs'>
                       snsTopicArn: pulumi.Input<string>
                   }
                 | {
@@ -133,7 +133,12 @@ export class LambdaFunction extends pulumi.ComponentResource {
         if (args.monitoring?.enabled) {
             new MetricAlarms(name, {
                 snsTopicArn: args.monitoring.snsTopicArn,
-                thresholds: args.monitoring.thresholds,
+                thresholds: {
+                    ...(args.monitoring?.thresholds ?? {}),
+                    timeoutMs: pulumi
+                        .output(this.function.timeout)
+                        .apply((timeout) => (timeout ?? 3) * 1000),
+                },
                 lambdaFunctionName: this.function.name,
             })
         }
