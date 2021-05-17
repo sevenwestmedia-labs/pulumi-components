@@ -2,13 +2,6 @@ import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 import { Thresholds, MetricAlarms } from './metric-alarms'
 
-/**
- * - removes sumo logging
- * - adds a default execution role (but still allows it to be overridden)
- * - updates default runtime node12 --> node14
- * - removes all aws.lambda.Permission (allowInvocationBy)
- */
-
 export class LambdaFunction extends pulumi.ComponentResource {
     readonly function: aws.lambda.Function
     readonly executionRole: aws.iam.Role
