@@ -17,11 +17,11 @@ export interface Thresholds {
     avgDurationMs?: pulumi.Input<number>
     /**
      * Alert if the max duration is greater than this
-     * Default: not used (undefined) if timeoutMs is set
+     * Default: not used (undefined)
      */
     maxDurationMs?: pulumi.Input<number>
     /**
-     * Alert if the max duration
+     * Alert if the max duration is greater than this
      * Default: not used (undefined)
      */
     timeoutMs?: pulumi.Input<number>
@@ -161,10 +161,7 @@ export class MetricAlarms extends pulumi.ComponentResource {
             },
         )
 
-        if (
-            args.thresholds?.maxDurationMs ??
-            args.thresholds?.timeoutMs === undefined
-        ) {
+        if (args.thresholds?.maxDurationMs) {
             new aws.cloudwatch.MetricAlarm(
                 `${name}-duration-max`,
                 {
@@ -198,7 +195,7 @@ export class MetricAlarms extends pulumi.ComponentResource {
             )
         }
 
-        if (args.thresholds?.timeoutMs !== undefined) {
+        if (args.thresholds?.timeoutMs) {
             new aws.cloudwatch.MetricAlarm(
                 `${name}-timeout`,
                 {
