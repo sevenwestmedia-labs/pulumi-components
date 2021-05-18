@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     if: github.event.review.state == 'approved'
     steps:
       - name: Repository Dispatch
