@@ -18,6 +18,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
             ) => {
                 [key: string]: pulumi.Input<string>
             }
+
             /**
              * Log groups are automatically created by lambda,
              * if you need to import an existing log group an existing log group resource id can be specified here
