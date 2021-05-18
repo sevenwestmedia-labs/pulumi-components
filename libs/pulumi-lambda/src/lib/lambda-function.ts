@@ -26,23 +26,6 @@ export class LambdaFunction extends pulumi.ComponentResource {
              * Once imported, this param needs to be removed
              **/
             logGroupImport?: string
-
-            /**
-             * If enabled, metric alarms will be created, and alerts will be raised to the
-             * SNS topic provided. Optional thresholds can be set.
-             * Default: disabled
-             */
-            monitoring?:
-                | {
-                      enabled: true
-                      thresholds?: Omit<Thresholds, 'timeoutMs'>
-                      snsTopicArn: pulumi.Input<string>
-                  }
-                | {
-                      enabled: false
-                      thresholds?: undefined
-                      snsTopicArn?: undefined
-                  }
         },
         opts?: pulumi.ComponentResourceOptions | undefined,
     ) {
@@ -122,18 +105,5 @@ export class LambdaFunction extends pulumi.ComponentResource {
                 dependsOn: [this.logGroup],
             },
         )
-
-        if (args.monitoring?.enabled) {
-            new MetricAlarms(name, {
-                snsTopicArn: args.monitoring.snsTopicArn,
-                thresholds: {
-                    ...(args.monitoring?.thresholds ?? {}),
-                    timeoutMs: pulumi
-                        .output(this.function.timeout)
-                        .apply((timeout) => (timeout ?? 3) * 1000),
-                },
-                lambdaFunctionName: this.function.name,
-            })
-        }
     }
 }

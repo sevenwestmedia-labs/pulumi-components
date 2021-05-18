@@ -9,7 +9,7 @@ This ensures logging costs are tagged appropriately.
 ```ts
 import { LambdaFunction } from '@wanews/pulumi-lambda'
 
-new LambdaFunction(`my-lambda`, {
+const lambda = new LambdaFunction(`my-lambda`, {
   lambdaOptions: {
     // See https://www.pulumi.com/docs/reference/pkg/aws/lambda/function/#inputs
   },
@@ -22,26 +22,15 @@ new LambdaFunction(`my-lambda`, {
 To enable monitoring:
 
 ```ts
-import { LambdaFunction } from '@wanews/pulumi-lambda'
+import { MetricAlarms } from '@wanews/pulumi-lambda'
 
-new LambdaFunction(`my-lambda`, {
-  lambdaOptions: {
-    // See https://www.pulumi.com/docs/reference/pkg/aws/lambda/function/#inputs
+new MetricAlarms(name, {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>>',
+  thresholds: {
+    timeoutMs: pulumi
+      .output(lambda.function.timeout)
+      .apply((timeout) => (timeout ?? 3) * 1000),
   },
-  monitoring: {
-    enabled: true,
-    snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
-    // optional, but recommended: override thresholds
-    thresholds: {
-      avgDurationMs: 3000, // 3 seconds
-      maxDurationMs: 15000, // 15 seconds
-      errorRatePercent: 2, // 2 percent
-      throttles: 1,
-      concurrents: 450,
-    },
-  },
-  getTags(name) {
-    return { name }
-  },
+  lambdaFunctionName: lambda.function.name,
 })
 ```
