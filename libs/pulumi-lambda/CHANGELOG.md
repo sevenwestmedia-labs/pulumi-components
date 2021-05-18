@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.5.0
+
+### Minor Changes
+
+- f19f985: add optional metric alarms
+
 ## 0.4.0
 
 ### Minor Changes
