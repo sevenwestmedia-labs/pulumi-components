@@ -1,6 +1,5 @@
 import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
-import { Thresholds, MetricAlarms } from './metric-alarms'
 
 export class LambdaFunction extends pulumi.ComponentResource {
     readonly function: aws.lambda.Function
