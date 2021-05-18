@@ -32,5 +32,8 @@ new MetricAlarms(name, {
       .apply((timeout) => (timeout ?? 3) * 1000),
   },
   lambdaFunctionName: lambda.function.name,
+  getTags(name) {
+    return { name }
+  },
 })
 ```

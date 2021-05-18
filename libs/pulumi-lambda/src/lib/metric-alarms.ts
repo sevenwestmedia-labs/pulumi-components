@@ -64,13 +64,23 @@ export class MetricAlarms extends pulumi.ComponentResource {
              * Set custom thresholds for the alarms
              */
             thresholds?: Thresholds
+            /**
+             * a callback function that returns tags for
+             * each resource
+             */
+            getTags: (
+                name: string,
+            ) => {
+                [key: string]: pulumi.Input<string>
+            }
         },
         opts?: pulumi.ComponentResourceOptions,
     ) {
         super('wanews:lambda/MetricAlarms', name, {}, opts)
 
+        const errorRateName = `${name}-err-rate`
         new aws.cloudwatch.MetricAlarm(
-            `${name}-err-rate`,
+            errorRateName,
             {
                 metricQueries: [
                     {
@@ -122,6 +132,7 @@ export class MetricAlarms extends pulumi.ComponentResource {
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
                 treatMissingData: 'notBreaching',
+                tags: args.getTags(errorRateName),
             },
             {
                 parent: this,
@@ -129,8 +140,9 @@ export class MetricAlarms extends pulumi.ComponentResource {
             },
         )
 
+        const avgDurationName = `${name}-duration-avg`
         new aws.cloudwatch.MetricAlarm(
-            `${name}-duration-avg`,
+            avgDurationName,
             {
                 namespace: 'AWS/Lambda',
                 metricName: 'Duration',
@@ -154,6 +166,7 @@ export class MetricAlarms extends pulumi.ComponentResource {
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
                 treatMissingData: 'missing',
+                tags: args.getTags(avgDurationName),
             },
             {
                 parent: this,
@@ -162,8 +175,9 @@ export class MetricAlarms extends pulumi.ComponentResource {
         )
 
         if (args.thresholds?.maxDurationMs) {
+            const maxDurationName = `${name}-duration-max`
             new aws.cloudwatch.MetricAlarm(
-                `${name}-duration-max`,
+                maxDurationName,
                 {
                     namespace: 'AWS/Lambda',
                     metricName: 'Duration',
@@ -187,6 +201,7 @@ export class MetricAlarms extends pulumi.ComponentResource {
                     okActions: [args.snsTopicArn],
                     insufficientDataActions: [args.snsTopicArn],
                     treatMissingData: 'missing',
+                    tags: args.getTags(maxDurationName),
                 },
                 {
                     parent: this,
@@ -196,8 +211,9 @@ export class MetricAlarms extends pulumi.ComponentResource {
         }
 
         if (args.thresholds?.timeoutMs) {
+            const timeoutName = `${name}-timeout`
             new aws.cloudwatch.MetricAlarm(
-                `${name}-timeout`,
+                timeoutName,
                 {
                     namespace: 'AWS/Lambda',
                     metricName: 'Duration',
@@ -216,6 +232,7 @@ export class MetricAlarms extends pulumi.ComponentResource {
                     okActions: [args.snsTopicArn],
                     insufficientDataActions: [args.snsTopicArn],
                     treatMissingData: 'missing',
+                    tags: args.getTags(timeoutName),
                 },
                 {
                     parent: this,
@@ -224,8 +241,9 @@ export class MetricAlarms extends pulumi.ComponentResource {
             )
         }
 
+        const throttlesName = `${name}-throttles`
         new aws.cloudwatch.MetricAlarm(
-            `${name}-throttles`,
+            throttlesName,
             {
                 namespace: 'AWS/Lambda',
                 metricName: 'Throttles',
@@ -247,6 +265,7 @@ export class MetricAlarms extends pulumi.ComponentResource {
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
                 treatMissingData: 'notBreaching',
+                tags: args.getTags(throttlesName),
             },
             {
                 parent: this,
@@ -254,8 +273,9 @@ export class MetricAlarms extends pulumi.ComponentResource {
             },
         )
 
+        const concurrentsName = `${name}-concurrents`
         new aws.cloudwatch.MetricAlarm(
-            `${name}-concurrents`,
+            concurrentsName,
             {
                 namespace: 'AWS/Lambda',
                 metricName: 'ConcurrentExecutions',
@@ -279,6 +299,7 @@ export class MetricAlarms extends pulumi.ComponentResource {
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
                 treatMissingData: 'notBreaching',
+                tags: args.getTags(concurrentsName),
             },
             {
                 parent: this,
