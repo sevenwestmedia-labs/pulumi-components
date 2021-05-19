@@ -45,33 +45,49 @@ export class RecommendedAlarms extends pulumi.ComponentResource {
     ) {
         super('wanews:lambda/RecommendedAlarms', name, {}, opts)
 
-        new FunctionTimeoutAlarm(name, {
-            snsTopicArn: args.snsTopicArn,
-            lambdaFunctionName: args.lambdaFunctionName,
-            getTags: args.getTags,
-            timeoutMs: args.thresholds.timeoutMs,
-        })
+        new FunctionTimeoutAlarm(
+            name,
+            {
+                snsTopicArn: args.snsTopicArn,
+                lambdaFunctionName: args.lambdaFunctionName,
+                getTags: args.getTags,
+                timeoutMs: args.thresholds.timeoutMs,
+            },
+            { parent: this },
+        )
 
-        new ErrorRateAlarm(name, {
-            snsTopicArn: args.snsTopicArn,
-            lambdaFunctionName: args.lambdaFunctionName,
-            getTags: args.getTags,
-            errorRatePercent: args.thresholds.errorRatePercent,
-        })
+        new ErrorRateAlarm(
+            name,
+            {
+                snsTopicArn: args.snsTopicArn,
+                lambdaFunctionName: args.lambdaFunctionName,
+                getTags: args.getTags,
+                errorRatePercent: args.thresholds.errorRatePercent,
+            },
+            { parent: this },
+        )
 
-        new ConcurrentExecutionsAlarm(name, {
-            snsTopicArn: args.snsTopicArn,
-            lambdaFunctionName: args.lambdaFunctionName,
-            getTags: args.getTags,
-            concurrents: args.thresholds.concurrents,
-        })
+        new ConcurrentExecutionsAlarm(
+            name,
+            {
+                snsTopicArn: args.snsTopicArn,
+                lambdaFunctionName: args.lambdaFunctionName,
+                getTags: args.getTags,
+                concurrents: args.thresholds.concurrents,
+            },
+            { parent: this },
+        )
 
-        new FunctionThrottledAlarm(name, {
-            snsTopicArn: args.snsTopicArn,
-            lambdaFunctionName: args.lambdaFunctionName,
-            getTags: args.getTags,
-            throttles: args.thresholds.throttles,
-        })
+        new FunctionThrottledAlarm(
+            name,
+            {
+                snsTopicArn: args.snsTopicArn,
+                lambdaFunctionName: args.lambdaFunctionName,
+                getTags: args.getTags,
+                throttles: args.thresholds.throttles,
+            },
+            { parent: this },
+        )
     }
 }
 
