@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.5.1
+
+### Patch Changes
+
+- b354dbb: fix missing `{parent: this}` in RecommendedAlarms
+
 ## 0.5.0
 
 ### Minor Changes
