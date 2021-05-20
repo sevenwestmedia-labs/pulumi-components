@@ -240,7 +240,7 @@ export class FunctionTimeoutAlarm extends pulumi.ComponentResource {
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
-                treatMissingData: 'missing',
+                treatMissingData: 'notBreaching',
                 tags: args.getTags(resourceName),
             },
             {
@@ -438,7 +438,7 @@ export class MaxDurationAlarm extends pulumi.ComponentResource {
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
-                treatMissingData: 'missing',
+                treatMissingData: 'notBreaching',
                 tags: args.getTags(resourceName),
             },
             {
@@ -503,7 +503,7 @@ export class AvgDurationAlarm extends pulumi.ComponentResource {
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
-                treatMissingData: 'missing',
+                treatMissingData: 'notBreaching',
                 tags: args.getTags(resourceName),
             },
             {
