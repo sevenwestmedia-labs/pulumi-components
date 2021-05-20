@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.7.0
+
+### Minor Changes
+
+- ef71abd: Allow role object to be passed as well as name to fix race condition where role hasn't been created yet
+
 ## 0.6.0
 
 ### Minor Changes
