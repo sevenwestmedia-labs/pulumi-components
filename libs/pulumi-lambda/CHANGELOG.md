@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.6.0
+
+### Minor Changes
+
+- b66f5d5: Fixed being unable to import existing role
+
 ## 0.5.1
 
 ### Patch Changes

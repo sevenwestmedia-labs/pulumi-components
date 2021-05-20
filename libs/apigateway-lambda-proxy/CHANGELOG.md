@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.7.0
+
+### Minor Changes
+
+- b66f5d5: Fixed being unable to import existing role
+
 ## 0.6.0
 
 ### Minor Changes
