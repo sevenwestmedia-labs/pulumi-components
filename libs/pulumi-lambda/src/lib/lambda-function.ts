@@ -1,5 +1,6 @@
 import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
+import { ResourceError } from '@pulumi/pulumi'
 
 export class LambdaFunction extends pulumi.ComponentResource {
     readonly function: aws.lambda.Function
@@ -11,7 +12,13 @@ export class LambdaFunction extends pulumi.ComponentResource {
         args: {
             lambdaOptions: Omit<aws.lambda.FunctionArgs, 'role'>
 
-            executionRoleName?: pulumi.Input<string>
+            /**
+             * Role must already exist, otherwise preview will fail
+             *
+             * If you are creating the role in the same program, use executionRole
+             */
+            executionRoleName?: string
+            executionRole?: aws.iam.Role
 
             getTags: (
                 name: string,
@@ -55,6 +62,13 @@ export class LambdaFunction extends pulumi.ComponentResource {
             },
         )
 
+        if (args.executionRole && args.executionRoleName) {
+            throw new ResourceError(
+                'Cannot specify both executionRole and executionRoleName',
+                this,
+            )
+        }
+
         const roleName = `${name}-role`
 
         this.executionRole = args.executionRoleName
@@ -74,6 +88,8 @@ export class LambdaFunction extends pulumi.ComponentResource {
                           parent: this,
                       }),
                   )
+            : args.executionRole
+            ? pulumi.output(args.executionRole)
             : pulumi.output(
                   new aws.iam.Role(
                       roleName,
