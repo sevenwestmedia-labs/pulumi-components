@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.8.0
+
+### Minor Changes
+
+- 9c47835: allow existing resources to be moved into this module using aliases
+
 ## 0.7.0
 
 ### Minor Changes
