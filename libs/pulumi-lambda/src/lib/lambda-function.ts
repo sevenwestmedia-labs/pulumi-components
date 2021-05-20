@@ -69,7 +69,11 @@ export class LambdaFunction extends pulumi.ComponentResource {
                           },
                       ),
                   )
-                  .apply((result) => aws.iam.Role.get(result.name, result.id))
+                  .apply((result) =>
+                      aws.iam.Role.get(result.name, result.id, undefined, {
+                          parent: this,
+                      }),
+                  )
             : pulumi.output(
                   new aws.iam.Role(
                       roleName,
