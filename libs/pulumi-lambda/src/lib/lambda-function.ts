@@ -33,7 +33,38 @@ export class LambdaFunction extends pulumi.ComponentResource {
              **/
             logGroupImport?: string
         },
-        opts?: pulumi.ComponentResourceOptions | undefined,
+        opts?:
+            | (pulumi.ComponentResourceOptions & {
+                  /**
+                   * Some versions of pulumi and/or aws-sdk are unable to delete log groups D:<
+                   * This provides a way to alias them, so they don't need to be deleted &
+                   * recreated. More info:
+                   * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+                   */
+                  logGroupAliases?: pulumi.ComponentResourceOptions['aliases']
+
+                  /**
+                   * Allow an existing aws.iam.Role resource to be migrated into this module,
+                   * without module without being deleted & recreated. More info:
+                   * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+                   */
+                  executionRoleAliases?: pulumi.ComponentResourceOptions['aliases']
+
+                  /**
+                   * Allow an existing aws.iam.RolePolicyAttachment resource to be migrated
+                   * into this module without being deleted & recreated. More info:
+                   * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+                   */
+                  rolePolicyAttachmentAliases?: pulumi.ComponentResourceOptions['aliases']
+
+                  /**
+                   * Allow an existing aws.lambda.Function resource to be migrated
+                   * into this module without being deleted & recreated. More info:
+                   * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+                   */
+                  functionAliases?: pulumi.ComponentResourceOptions['aliases']
+              })
+            | undefined,
     ) {
         super('wanews:lambda', name, {}, opts)
 
@@ -59,6 +90,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
             {
                 parent: this,
                 import: args.logGroupImport,
+                aliases: opts?.logGroupAliases,
             },
         )
 
@@ -108,7 +140,10 @@ export class LambdaFunction extends pulumi.ComponentResource {
                           },
                           tags: args.getTags(name),
                       },
-                      { parent: this },
+                      {
+                          parent: this,
+                          aliases: opts?.executionRoleAliases,
+                      },
                   ),
               )
 
@@ -118,7 +153,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
                 role: this.executionRole.name,
                 policyArn: aws.iam.ManagedPolicies.AWSLambdaBasicExecutionRole,
             },
-            { parent: this },
+            { parent: this, aliases: opts?.rolePolicyAttachmentAliases },
         )
 
         this.function = new aws.lambda.Function(
@@ -133,6 +168,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
             {
                 parent: this,
                 dependsOn: [this.logGroup],
+                aliases: opts?.functionAliases,
             },
         )
     }
