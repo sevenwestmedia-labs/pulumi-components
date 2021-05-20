@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.8.1
+
+### Patch Changes
+
+- da3dcd1: fix noisy timeout/avg/maxDuration alarms
+
 ## 0.8.0
 
 ### Minor Changes
