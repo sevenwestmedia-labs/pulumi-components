@@ -11,7 +11,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
     publicHostname: pulumi.Output<string>
     apiGatewayDomainName: aws.apigatewayv2.DomainName | undefined
     apiGatewayHostname: pulumi.Output<string>
-    lambdaExecutionRole: aws.iam.Role
+    lambdaExecutionRole: pulumi.Output<aws.iam.Role>
 
     constructor(
         name: string,

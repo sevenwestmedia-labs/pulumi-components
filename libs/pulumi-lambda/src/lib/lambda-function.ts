@@ -3,7 +3,7 @@ import * as aws from '@pulumi/aws'
 
 export class LambdaFunction extends pulumi.ComponentResource {
     readonly function: aws.lambda.Function
-    readonly executionRole: aws.iam.Role
+    readonly executionRole: pulumi.Output<aws.iam.Role>
     readonly logGroup: aws.cloudwatch.LogGroup
 
     constructor(
@@ -11,7 +11,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
         args: {
             lambdaOptions: Omit<aws.lambda.FunctionArgs, 'role'>
 
-            executionRoleArn?: pulumi.Input<string>
+            executionRoleName?: pulumi.Input<string>
 
             getTags: (
                 name: string,
@@ -57,28 +57,43 @@ export class LambdaFunction extends pulumi.ComponentResource {
 
         const roleName = `${name}-role`
 
-        this.executionRole = args.executionRoleArn
-            ? aws.iam.Role.get(roleName, args.executionRoleArn, undefined, {
-                  parent: this,
-              })
-            : new aws.iam.Role(
-                  roleName,
-                  {
-                      assumeRolePolicy: {
-                          Version: '2012-10-17',
-                          Statement: [
-                              {
-                                  Action: 'sts:AssumeRole',
-                                  Principal: {
-                                      Service: 'lambda.amazonaws.com',
+        this.executionRole = args.executionRoleName
+            ? pulumi
+                  .output(args.executionRoleName)
+                  .apply((role) =>
+                      aws.iam.getRole(
+                          { name: role },
+                          {
+                              parent: this,
+                              async: true,
+                          },
+                      ),
+                  )
+                  .apply((result) =>
+                      aws.iam.Role.get(result.name, result.id, undefined, {
+                          parent: this,
+                      }),
+                  )
+            : pulumi.output(
+                  new aws.iam.Role(
+                      roleName,
+                      {
+                          assumeRolePolicy: {
+                              Version: '2012-10-17',
+                              Statement: [
+                                  {
+                                      Action: 'sts:AssumeRole',
+                                      Principal: {
+                                          Service: 'lambda.amazonaws.com',
+                                      },
+                                      Effect: 'Allow',
                                   },
-                                  Effect: 'Allow',
-                              },
-                          ],
+                              ],
+                          },
+                          tags: args.getTags(name),
                       },
-                      tags: args.getTags(name),
-                  },
-                  { parent: this },
+                      { parent: this },
+                  ),
               )
 
         new aws.iam.RolePolicyAttachment(
