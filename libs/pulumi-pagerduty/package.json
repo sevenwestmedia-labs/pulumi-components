@@ -1,0 +1,24 @@
+{
+    "name": "@wanews/pulumi-pagerduty",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "module": "dist/esm/index.js",
+    "author": "Seven West Media WA",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sevenwestmedia-labs/pulumi-components.git"
+    },
+    "keywords": [
+        "Pulumi"
+    ],
+    "bugs": {
+        "url": "https://github.com/sevenwestmedia-labs/pulumi-components/issues"
+    },
+    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/pulumi-lambda#readme",
+    "dependencies": {
+        "@pulumi/aws": "^4.5.1",
+        "@pulumi/pagerduty": "^2.0.0",
+        "@pulumi/pulumi": "^3.3.0"
+    }
+}
