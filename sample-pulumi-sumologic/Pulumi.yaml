@@ -1,0 +1,6 @@
+name: foo
+runtime: nodejs
+description: A minimal TypeScript Pulumi program
+backend:
+  url: 's3://pulumi-state.swmdigital.io'
+
