@@ -107,7 +107,7 @@ async function putFilesIntoS3(
         region: awsRegion,
         credentials: assumeRole
             ? new aws.sdk.TemporaryCredentials({
-                  RoleSessionName: 'TheGameStaticAssetsS3',
+                  RoleSessionName: 'ThrowFilesInS3',
                   RoleArn: assumeRole,
               })
             : undefined,

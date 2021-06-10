@@ -1,1 +1,1 @@
-export * from './invoke-lambda'
+export * from './lambda-invocation'
