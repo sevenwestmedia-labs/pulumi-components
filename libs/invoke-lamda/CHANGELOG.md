@@ -1,5 +1,11 @@
 # @wanews/pulumi-invoke-lambda
 
+## 0.1.0
+
+### Minor Changes
+
+- 06ad3b7: Add payload for invoke lambda
+
 ## 0.0.3
 
 ### Patch Changes
