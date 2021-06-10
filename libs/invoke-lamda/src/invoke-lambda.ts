@@ -3,7 +3,7 @@ import * as pulumi from '@pulumi/pulumi'
 
 export interface InvokeLambdaArgs {
     functionName: string
-    assumeRoleArn: string
+    assumeRoleArn?: string
     region?: string
 }
 

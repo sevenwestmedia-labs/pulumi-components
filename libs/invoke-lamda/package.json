@@ -1,5 +1,18 @@
 {
-  "name": "@wanews/pulumi-invoke-lambda",
-  "version": "0.0.2",
-  "main": "dist/index.js"
+    "name": "@wanews/pulumi-invoke-lambda",
+    "version": "0.0.2",
+    "main": "dist/index.js",
+    "author": "Seven West Media WA",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sevenwestmedia-labs/pulumi-components.git"
+    },
+    "keywords": [
+        "Pulumi"
+    ],
+    "bugs": {
+        "url": "https://github.com/sevenwestmedia-labs/pulumi-components/issues"
+    },
+    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/invoke-lambda#readme"
 }

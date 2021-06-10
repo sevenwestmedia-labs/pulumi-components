@@ -2,4 +2,12 @@
 
 Invokes a lambda as part of the `up` process.
 
-## Getting started
+## Usage
+
+```ts
+import { LambdaInvocation } from '@wanews/pulumi-invoke-lambda'
+
+new LambdaInvocation(`invoke-lambda`, {
+  functionName: myLambda.arn,
+})
+```
