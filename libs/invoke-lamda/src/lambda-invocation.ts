@@ -1,8 +1,10 @@
 import * as pulumi from '@pulumi/pulumi'
+import { _Blob } from 'aws-sdk/clients/lambda'
 import { invokeLambdaProvider } from './invoke-lambda-provider'
 
 export interface LambdaInvocationResourceInputs {
     functionName: pulumi.Input<string>
+    payload?: pulumi.Input<_Blob>
     assumeRoleArn?: pulumi.Input<string>
     region?: pulumi.Input<string>
 }

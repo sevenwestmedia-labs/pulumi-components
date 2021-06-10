@@ -1,14 +1,17 @@
 import { Lambda, TemporaryCredentials } from 'aws-sdk'
 import * as pulumi from '@pulumi/pulumi'
+import { _Blob } from 'aws-sdk/clients/lambda'
 
 export interface InvokeLambdaArgs {
     functionName: string
+    payload?: _Blob
     assumeRoleArn?: string
     region?: string
 }
 
 export async function invokeLambda({
     functionName,
+    payload,
     assumeRoleArn,
     region = 'ap-southeast-2',
 }: InvokeLambdaArgs) {
@@ -25,6 +28,7 @@ export async function invokeLambda({
         const result = await lambda
             .invoke({
                 FunctionName: functionName,
+                Payload: payload,
             })
             .promise()
 
