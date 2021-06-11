@@ -5,8 +5,6 @@ const namespace = 'AWS/ApiGateway'
 
 /**
  * Dimensions to identify an HTTP API in CloudWatch.
- *
- * The main difference is REST APIs are identified by name, while HTTP APIs are identified by id.
  */
 export type HttpGateway = {
     /**
@@ -17,7 +15,6 @@ export type HttpGateway = {
     /**
      * The API name to monitor.
      *
-     * For REST endpoints, this must be the name of the API created in AWS.
      * For HTTP endpoints, this can be anything (it's only used in alerts).
      */
     name: pulumi.Input<string> | undefined
@@ -27,11 +24,6 @@ export type HttpGateway = {
      */
     stage?: pulumi.Input<string>
 }
-
-/**
- * Dimensions to identify an API in CloudWatch.
- */
-export type ApiGateway = HttpGateway
 
 /**
  * Provides an opinionated set of recommended alarms for an API Gateway stage.
@@ -60,7 +52,7 @@ export class RecommendedAlarms extends pulumi.ComponentResource {
             /**
              * The API Gateway to monitor
              */
-            apiGateway: ApiGateway
+            apiGateway: HttpGateway
             /**
              * a callback function that returns tags for
              * each resource
@@ -111,42 +103,16 @@ export class RecommendedAlarms extends pulumi.ComponentResource {
 }
 
 /**
- * Check if an ApiGateway is a REST API
- *
- * @param api the APIGateway to test
- * @returns true if api.id is undefined
- */
-function isRestApi(api: ApiGateway) {
-    return api.id === undefined
-}
-
-/**
- * Check if an ApiGateway is an HTTP API
- *
- * @param api the APIGateway to test
- * @returns true if api.id is defined
- */
-function isHttpApi(api: ApiGateway) {
-    return !isRestApi(api)
-}
-
-/**
  * Get dimensions for a cloudwatch alarm
  *
  * @param api the APIGateway to test
  * @returns the dimensions for passing to CloudWatch alarms
  */
-function getDimensions(api: ApiGateway) {
+function getDimensions(api: HttpGateway) {
     return pulumi
         .all([api.id, api.name, api.stage])
         .apply(([id, name, stage]) => ({
-            ...(isHttpApi(api)
-                ? {
-                      ApiId: id,
-                  }
-                : {
-                      ApiName: name,
-                  }),
+            ApiId: id,
             ...(stage
                 ? {
                       Stage: stage,
@@ -167,7 +133,7 @@ export class ErrorRate5xxAlarm extends pulumi.ComponentResource {
             /**
              * The API Gateway to monitor
              */
-            apiGateway: ApiGateway
+            apiGateway: HttpGateway
             /**
              * Alert if the 5xx error rate exceeds this
              * (default: 2 percent)
@@ -187,7 +153,7 @@ export class ErrorRate5xxAlarm extends pulumi.ComponentResource {
     ) {
         super('wanews:apigateway/ErrorRate5xxAlarm', name, {}, opts)
 
-        const metricName = isHttpApi(args.apiGateway) ? '5xx' : '5XXError'
+        const metricName = '5xx'
         const dimensions = getDimensions(args.apiGateway)
         const thresholdPercent = args.errorRate5xxPercent ?? 2
         const threshold = pulumi
@@ -235,7 +201,7 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
             /**
              * The API Gateway to monitor
              */
-            apiGateway: ApiGateway
+            apiGateway: HttpGateway
             /**
              * Alert if the 4xx error rate exceeds this
              * (default: 2 percent)
@@ -255,7 +221,7 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
     ) {
         super('wanews:apigateway/ErrorRate4xxAlarm', name, {}, opts)
 
-        const metricName = isHttpApi(args.apiGateway) ? '4xx' : '4XXError'
+        const metricName = '4xx'
         const dimensions = getDimensions(args.apiGateway)
         const thresholdPercent = args.errorRate4xxPercent ?? 50
         const threshold = pulumi
@@ -303,7 +269,7 @@ export class IntegrationLatencyAlarm extends pulumi.ComponentResource {
             /**
              * The API Gateway to monitor
              */
-            apiGateway: ApiGateway
+            apiGateway: HttpGateway
             /**
              * The number of standard deviations to use for the anomaly detection.
              *
