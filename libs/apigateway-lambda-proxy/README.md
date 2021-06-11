@@ -65,3 +65,102 @@ new ApiGatewayLambdaProxy(`my-api`, {
   },
 })
 ```
+
+### Monitoring
+
+```ts
+import {
+  ApiGatewayLambdaProxy,
+  RecommendedAlarms,
+} from '@wanews/pulumi-apigateway-lambda-proxy'
+
+const gw = new ApiGatewayLambdaProxy('apigw-prod', {
+  /* ... */
+})
+
+new RecommendedAlarms('alarms', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    id: gw.apiGateway.id,
+    name: httpApi.name,
+    stage: gw.stage?.name,
+})
+```
+
+You can also create alarms for APIs created elsewhere:
+
+```ts
+import * as aws from '@pulumi/aws'
+import { RecommendedAlarms } from '@wanews/pulumi-apigateway-lambda-proxy'
+
+const httpApi = new aws.apigatewayv2.Api('apigw-http', {
+  /* ... */
+})
+
+new RecommendedAlarms('alarms', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    id: httpApi.id,
+    name: httpApi.name,
+    stage: gw.stage?.name,
+  },
+})
+```
+
+You can also set up monitoring of REST APIs, make sure you leave apiGateway.id undefined:
+
+```ts
+import * as aws from '@pulumi/aws'
+import { RecommendedAlarms } from '@wanews/pulumi-apigateway-lambda-proxy'
+
+const restApi = new aws.apigatewayv2.Api('apigw-http', {
+  /* ... */
+})
+
+new RecommendedAlarms('alarms', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    name: restApi.name,
+    stage: gw.stage?.name,
+  },
+})
+```
+
+By default, the following metrics are monitored:
+
+- 5xx error rate
+- 4xx error rate
+- integration latency
+
+However, if you're not happy with the defaults, you can override the default thresholds, or create individual alarms instead:
+
+```ts
+import {
+  ApiGatewayLambdaProxy,
+  RecommendedAlarms,
+} from '@wanews/pulumi-apigateway-lambda-proxy'
+
+const gw = new ApiGatewayLambdaProxy('apigw-prod', {
+  /* ... */
+})
+
+new RecommendedAlarms('alarms', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    name: restApi.name,
+    stage: gw.stage?.name,
+  },
+  thresholds: {
+    errorRate5xxPercent: 0,
+  },
+})
+
+new ErrorRate5xxAlarm('alarm', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    id: gw.apiGateway.id,
+    name: httpApi.name,
+    stage: gw.stage?.name,
+  },
+})
+```
