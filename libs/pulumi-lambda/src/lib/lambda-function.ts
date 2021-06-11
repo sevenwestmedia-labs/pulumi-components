@@ -32,6 +32,12 @@ export class LambdaFunction extends pulumi.ComponentResource {
              * Once imported, this param needs to be removed
              **/
             logGroupImport?: string
+
+            /**
+             * If you are making IAM policy changes, you can delay the
+             * update/create of the lambda to ensure they are consistent
+             */
+            delayLambdaDeployment?: boolean
         },
         opts?:
             | (pulumi.ComponentResourceOptions & {
@@ -161,7 +167,15 @@ export class LambdaFunction extends pulumi.ComponentResource {
             {
                 name,
                 runtime: 'nodejs14.x',
-                role: this.executionRole.arn,
+                role: this.executionRole.arn.apply(async (arn) => {
+                    if (args.delayLambdaDeployment) {
+                        console.log('waiting for IAM changes to propagate')
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, 30_000),
+                        )
+                    }
+                    return arn
+                }),
                 ...(args.lambdaOptions || {}),
                 tags: args.getTags(name),
             },

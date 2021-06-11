@@ -19,6 +19,11 @@ const lambda = new LambdaFunction(`my-lambda`, {
 })
 ```
 
+## IAM Updates
+
+IAM is eventually consistent, `delayLambdaDeployment` will add a 30second delay to your lambda being updated to ensure it
+gets the latest version of your role
+
 ## Monitoring
 
 `RecommendedAlarms` provides an opinionated set of alarms for a lambda function:
