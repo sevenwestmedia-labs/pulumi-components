@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.9.0
+
+### Minor Changes
+
+- a1c7ba8: Allow delay of lambda update so IAM is consistent using delayLambdaDeployment
+
 ## 0.8.1
 
 ### Patch Changes
