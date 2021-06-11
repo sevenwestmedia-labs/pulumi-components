@@ -107,6 +107,10 @@ new RecommendedAlarms('alarms', {
 })
 ```
 
+Note that the name is only used for cosmetic purposes. You should set it to a value that easily identifies the API.
+
+Note that, despite REST APIs using name instead of id, this module does not support REST APIs, only HTTP APIs.
+
 By default, the following metrics are monitored:
 
 - 5xx error rate
