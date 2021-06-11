@@ -107,25 +107,6 @@ new RecommendedAlarms('alarms', {
 })
 ```
 
-You can also set up monitoring of REST APIs, make sure you leave apiGateway.id undefined:
-
-```ts
-import * as aws from '@pulumi/aws'
-import { RecommendedAlarms } from '@wanews/pulumi-apigateway-lambda-proxy'
-
-const restApi = new aws.apigatewayv2.Api('apigw-http', {
-  /* ... */
-})
-
-new RecommendedAlarms('alarms', {
-  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
-  apiGateway: {
-    name: restApi.name,
-    stage: gw.stage?.name,
-  },
-})
-```
-
 By default, the following metrics are monitored:
 
 - 5xx error rate

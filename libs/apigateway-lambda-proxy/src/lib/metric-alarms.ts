@@ -29,32 +29,9 @@ export type HttpGateway = {
 }
 
 /**
- * Dimensions to identify a REST API in CloudWatch.
- *
- * The main difference is REST APIs are identified by name, while HTTP APIs are identified by id.
- */
-export type RestGateway = {
-    /**
-     * The API Gateway ID to monitor. Only valid for HTTP endpoints.
-     */
-    id: undefined
-
-    /**
-     * For REST endpoints, this must be the name of the API created in AWS.
-     * For HTTP endpoints, this can be anything (it's only used in alerts).
-     */
-    name: pulumi.Input<string>
-
-    /**
-     * The stage to monitor
-     */
-    stage?: pulumi.Input<string>
-}
-
-/**
  * Dimensions to identify an API in CloudWatch.
  */
-export type ApiGateway = HttpGateway | RestGateway
+export type ApiGateway = HttpGateway
 
 /**
  * Provides an opinionated set of recommended alarms for an API Gateway stage.
