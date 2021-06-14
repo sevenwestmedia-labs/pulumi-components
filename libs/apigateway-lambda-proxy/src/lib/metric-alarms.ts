@@ -13,13 +13,6 @@ export type HttpGateway = {
     id: pulumi.Input<string>
 
     /**
-     * The API name to monitor.
-     *
-     * For HTTP endpoints, this can be anything (it's only used in alerts).
-     */
-    name: pulumi.Input<string> | undefined
-
-    /**
      * The stage to monitor
      */
     stage?: pulumi.Input<string>
@@ -173,7 +166,7 @@ export class ErrorRate5xxAlarm extends pulumi.ComponentResource {
                 threshold,
                 statistic: 'Average',
                 alarmDescription: pulumi.interpolate`threshold: 5xx rate >= ${thresholdPercent}%: ${
-                    args.apiGateway.name ?? args.apiGateway.id
+                    args.apiGateway.id
                 }`,
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
@@ -204,7 +197,7 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
             apiGateway: HttpGateway
             /**
              * Alert if the 4xx error rate exceeds this
-             * (default: 2 percent)
+             * (default: 50 percent)
              */
             errorRate4xxPercent?: pulumi.Input<number>
             /**
@@ -241,7 +234,7 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
                 threshold,
                 statistic: 'Average',
                 alarmDescription: pulumi.interpolate`threshold: 4xx rate >= ${thresholdPercent}%: ${
-                    args.apiGateway.name ?? args.apiGateway.id
+                    args.apiGateway.id
                 }`,
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
