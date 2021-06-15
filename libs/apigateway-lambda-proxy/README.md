@@ -65,3 +65,85 @@ new ApiGatewayLambdaProxy(`my-api`, {
   },
 })
 ```
+
+### Monitoring
+
+```ts
+import {
+  ApiGatewayLambdaProxy,
+  RecommendedAlarms,
+} from '@wanews/pulumi-apigateway-lambda-proxy'
+
+const gw = new ApiGatewayLambdaProxy('apigw-prod', {
+  /* ... */
+})
+
+new RecommendedAlarms('alarms', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    id: gw.apiGateway.id,
+    name: httpApi.name,
+    stage: gw.stage?.name,
+})
+```
+
+You can also create alarms for APIs created elsewhere:
+
+```ts
+import * as aws from '@pulumi/aws'
+import { RecommendedAlarms } from '@wanews/pulumi-apigateway-lambda-proxy'
+
+const httpApi = new aws.apigatewayv2.Api('apigw-http', {
+  /* ... */
+})
+
+new RecommendedAlarms('alarms', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    id: httpApi.id,
+    name: httpApi.name,
+    stage: gw.stage?.name,
+  },
+})
+```
+
+Note that the name is only used for cosmetic purposes. You should set it to a value that easily identifies the API.
+
+By default, the following metrics are monitored:
+
+- 5xx error rate
+- 4xx error rate
+- integration latency
+
+However, if you're not happy with the defaults, you can override the default thresholds, or create individual alarms instead:
+
+```ts
+import {
+  ApiGatewayLambdaProxy,
+  RecommendedAlarms,
+} from '@wanews/pulumi-apigateway-lambda-proxy'
+
+const gw = new ApiGatewayLambdaProxy('apigw-prod', {
+  /* ... */
+})
+
+new RecommendedAlarms('alarms', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    name: restApi.name,
+    stage: gw.stage?.name,
+  },
+  thresholds: {
+    errorRate5xxPercent: 1,
+  },
+})
+
+new ErrorRate5xxAlarm('alarm', {
+  snsTopicArn: 'arn:aws:sns:<region>:<account>:<topic>',
+  apiGateway: {
+    id: gw.apiGateway.id,
+    name: httpApi.name,
+    stage: gw.stage?.name,
+  },
+})
+```
