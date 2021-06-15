@@ -84,7 +84,10 @@ importers:
       typescript: 4.2.4
 
   libs/apigateway-lambda-proxy:
-    specifiers: {}
+    specifiers:
+      '@wanews/pulumi-lambda': 0.9.0
+    dependencies:
+      '@wanews/pulumi-lambda': 0.9.0
 
   libs/buildstep:
     specifiers: {}
@@ -1842,7 +1845,7 @@ packages:
     dev: false
 
   /@pulumi/query/0.3.0:
-    resolution: {integrity: sha512-xfo+yLRM2zVjVEA4p23IjQWzyWl1ZhWOGobsBqRpIarzLvwNH/RAGaoehdxlhx4X92302DrpdIFgTICMN4P38w==}
+    resolution: {integrity: sha512-xfo+yLRM2zVjVEA4p23IjQWzyWl1ZhWOGobsBqRpIarzLvwNH/RAGaoehdxlhx4X92302DrpdIFgTICMN4P38w==, tarball: '@pulumi/query/-/query-0.3.0.tgz'}
 
   /@pulumi/random/4.0.0:
     resolution: {integrity: sha512-ZjCmHVOLfzkzRvbpa9RtLfYobStq8LhWcjCvjSjOOJZAgBrMkl3CJYnFdrr/DEqrTwQ5HJnG8jU/StOkOQka3g==, tarball: '@pulumi/random/-/random-4.0.0.tgz'}
@@ -2111,6 +2114,10 @@ packages:
       '@types/fs-extra': 9.0.11
       execa: 5.0.0
     dev: true
+
+  /@wanews/pulumi-lambda/0.9.0:
+    resolution: {integrity: sha512-zCXqYyJCMA2SbA/H8Cll/jSr5KYdASGsdThZVeqpnbj3MZEbBrAxDfqSP5Ge/fcbBZO7QnrTLE7422x77eyzeg==}
+    dev: false
 
   /abab/2.0.5:
     resolution: {integrity: sha512-9IK9EadsbHo6jLWIpxpR6pL0sazTXV6+SQv25ZB+F7Bj9mJNaOc4nCRabwd5M/JwmUa8idz6Eci6eKfJryPs6Q==}
