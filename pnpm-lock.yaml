@@ -87,7 +87,7 @@ importers:
     specifiers:
       '@wanews/pulumi-lambda': 0.9.0
     dependencies:
-      '@wanews/pulumi-lambda': 0.9.0
+      '@wanews/pulumi-lambda': link:../pulumi-lambda
 
   libs/buildstep:
     specifiers: {}
@@ -2114,10 +2114,6 @@ packages:
       '@types/fs-extra': 9.0.11
       execa: 5.0.0
     dev: true
-
-  /@wanews/pulumi-lambda/0.9.0:
-    resolution: {integrity: sha512-zCXqYyJCMA2SbA/H8Cll/jSr5KYdASGsdThZVeqpnbj3MZEbBrAxDfqSP5Ge/fcbBZO7QnrTLE7422x77eyzeg==}
-    dev: false
 
   /abab/2.0.5:
     resolution: {integrity: sha512-9IK9EadsbHo6jLWIpxpR6pL0sazTXV6+SQv25ZB+F7Bj9mJNaOc4nCRabwd5M/JwmUa8idz6Eci6eKfJryPs6Q==}
