@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.8.0
+
+### Minor Changes
+
+- fe06604: add metric alarms for API Gateway
+
 ## 0.7.0
 
 ### Minor Changes
