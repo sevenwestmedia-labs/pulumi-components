@@ -102,16 +102,14 @@ export class RecommendedAlarms extends pulumi.ComponentResource {
  * @returns the dimensions for passing to CloudWatch alarms
  */
 function getDimensions(api: HttpGateway) {
-    return pulumi
-        .all([api.id, api.name, api.stage])
-        .apply(([id, name, stage]) => ({
-            ApiId: id,
-            ...(stage
-                ? {
-                      Stage: stage,
-                  }
-                : {}),
-        }))
+    return pulumi.all([api.id, api.stage]).apply(([id, stage]) => ({
+        ApiId: id,
+        ...(stage
+            ? {
+                  Stage: stage,
+              }
+            : {}),
+    }))
 }
 
 /** raise an alarm if the 5xx error rate exceeds errorRate5xxPercent */
@@ -159,15 +157,13 @@ export class ErrorRate5xxAlarm extends pulumi.ComponentResource {
             {
                 evaluationPeriods: 2,
                 datapointsToAlarm: 2,
-                comparisonOperator: 'GreaterThanOrEqualToThreshold',
+                comparisonOperator: 'GreaterThanThreshold',
                 namespace,
                 metricName,
                 dimensions,
                 threshold,
                 statistic: 'Average',
-                alarmDescription: pulumi.interpolate`threshold: 5xx rate >= ${thresholdPercent}%: ${
-                    args.apiGateway.id
-                }`,
+                alarmDescription: pulumi.interpolate`threshold: 5xx rate >= ${thresholdPercent}%: ${args.apiGateway.id}`,
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
@@ -227,15 +223,13 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
             {
                 evaluationPeriods: 2,
                 datapointsToAlarm: 2,
-                comparisonOperator: 'GreaterThanOrEqualToThreshold',
+                comparisonOperator: 'GreaterThanThreshold',
                 namespace,
                 metricName,
                 dimensions,
                 threshold,
                 statistic: 'Average',
-                alarmDescription: pulumi.interpolate`threshold: 4xx rate >= ${thresholdPercent}%: ${
-                    args.apiGateway.id
-                }`,
+                alarmDescription: pulumi.interpolate`threshold: 4xx rate >= ${thresholdPercent}%: ${args.apiGateway.id}`,
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
@@ -294,7 +288,7 @@ export class IntegrationLatencyAlarm extends pulumi.ComponentResource {
                 period: 60,
                 evaluationPeriods: 2,
                 datapointsToAlarm: 2,
-                comparisonOperator: 'GreaterThanOrEqualToThreshold',
+                comparisonOperator: 'GreaterThanUpperThreshold',
                 metricQueries: [
                     {
                         id: 'e1',
@@ -315,11 +309,7 @@ export class IntegrationLatencyAlarm extends pulumi.ComponentResource {
                     },
                 ],
                 thresholdMetricId: 'e1',
-                alarmDescription: pulumi.interpolate`anomaly: ${metricName} (${
-                    args.stdDeviations
-                } standard deviations): ${
-                    args.apiGateway.name ?? args.apiGateway.id
-                }`,
+                alarmDescription: pulumi.interpolate`anomaly: ${metricName} (${args.stdDeviations} standard deviations): ${args.apiGateway.id}`,
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
