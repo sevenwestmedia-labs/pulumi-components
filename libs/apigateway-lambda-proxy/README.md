@@ -134,7 +134,7 @@ new RecommendedAlarms('alarms', {
     stage: gw.stage?.name,
   },
   thresholds: {
-    errorRate5xxPercent: 0,
+    errorRate5xxPercent: 1,
   },
 })
 
