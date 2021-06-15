@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.9.0
+
+### Minor Changes
+
+- ce5aebc: fix ConflictsWith error in @wanews/pulumi-apigateway-lambda-proxy
+
 ## 0.8.0
 
 ### Minor Changes
