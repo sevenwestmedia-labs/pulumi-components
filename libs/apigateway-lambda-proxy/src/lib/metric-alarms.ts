@@ -163,7 +163,7 @@ export class ErrorRate5xxAlarm extends pulumi.ComponentResource {
                 dimensions,
                 threshold,
                 statistic: 'Average',
-                alarmDescription: pulumi.interpolate`threshold: 5xx rate >= ${thresholdPercent}%: ${args.apiGateway.id}`,
+                alarmDescription: pulumi.interpolate`threshold: 5xx rate > ${thresholdPercent}%: ${args.apiGateway.id}`,
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
@@ -229,7 +229,7 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
                 dimensions,
                 threshold,
                 statistic: 'Average',
-                alarmDescription: pulumi.interpolate`threshold: 4xx rate >= ${thresholdPercent}%: ${args.apiGateway.id}`,
+                alarmDescription: pulumi.interpolate`threshold: 4xx rate > ${thresholdPercent}%: ${args.apiGateway.id}`,
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
                 insufficientDataActions: [args.snsTopicArn],
@@ -285,20 +285,19 @@ export class IntegrationLatencyAlarm extends pulumi.ComponentResource {
         new aws.cloudwatch.MetricAlarm(
             resourceName,
             {
-                period: 60,
                 evaluationPeriods: 2,
                 datapointsToAlarm: 2,
                 comparisonOperator: 'GreaterThanUpperThreshold',
                 metricQueries: [
                     {
-                        id: 'e1',
-                        expression: pulumi.interpolate`ANOMALY_DETECTION_BAND(m1, ${args.stdDeviations})`,
-                        label: `${metricName} (expected)`,
-                        returnData: true,
-                    },
-                    {
                         id: 'm1',
-                        returnData: false,
+
+                        // Counter-intuitively, BOTH metrics need to returnData
+                        // when using anomaly detection alarms. This is
+                        // contrary to the AWS documentation!
+                        // https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricAlarm.htmlAPI_PutMetricAlarm_Example_3
+                        returnData: true,
+
                         metric: {
                             metricName,
                             dimensions,
@@ -307,8 +306,14 @@ export class IntegrationLatencyAlarm extends pulumi.ComponentResource {
                             period: 60,
                         },
                     },
+                    {
+                        id: 't1',
+                        expression: pulumi.interpolate`ANOMALY_DETECTION_BAND(m1, ${args.stdDeviations})`,
+                        label: `${metricName} (expected)`,
+                        returnData: true,
+                    },
                 ],
-                thresholdMetricId: 'e1',
+                thresholdMetricId: 't1',
                 alarmDescription: pulumi.interpolate`anomaly: ${metricName} (${args.stdDeviations} standard deviations): ${args.apiGateway.id}`,
                 alarmActions: [args.snsTopicArn],
                 okActions: [args.snsTopicArn],
