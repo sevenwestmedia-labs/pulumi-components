@@ -42,6 +42,12 @@ export class RecommendedAlarms extends pulumi.ComponentResource {
                 errorRate4xxPercent?: pulumi.Input<number>
                 integrationLatencyStdDeviations?: pulumi.Input<number>
             }
+            /** Set periods for the alarms, in seconds */
+            periods?: {
+                errorRate5xxPeriod?: pulumi.Input<number>
+                errorRate4xxPeriod?: pulumi.Input<number>
+                integrationLatencyPeriod?: pulumi.Input<number>
+            }
             /**
              * The API Gateway to monitor
              */
@@ -67,6 +73,7 @@ export class RecommendedAlarms extends pulumi.ComponentResource {
                 apiGateway: args.apiGateway,
                 getTags: args.getTags,
                 errorRate5xxPercent: args.thresholds?.errorRate5xxPercent,
+                period: args.periods?.errorRate5xxPeriod,
             },
             { parent: this },
         )
@@ -78,6 +85,7 @@ export class RecommendedAlarms extends pulumi.ComponentResource {
                 apiGateway: args.apiGateway,
                 getTags: args.getTags,
                 errorRate4xxPercent: args.thresholds?.errorRate4xxPercent,
+                period: args.periods?.errorRate4xxPeriod,
             },
             { parent: this },
         )
@@ -89,6 +97,7 @@ export class RecommendedAlarms extends pulumi.ComponentResource {
                 apiGateway: args.apiGateway,
                 getTags: args.getTags,
                 stdDeviations: args.thresholds?.integrationLatencyStdDeviations,
+                period: args.periods?.integrationLatencyPeriod,
             },
             { parent: this },
         )
@@ -131,6 +140,11 @@ export class ErrorRate5xxAlarm extends pulumi.ComponentResource {
              */
             errorRate5xxPercent?: pulumi.Input<number>
             /**
+             * The length of each sampling period, in seconds
+             * (default: 60 seconds)
+             */
+            period?: pulumi.Input<number>
+            /**
              * a callback function that returns tags for
              * each resource
              */
@@ -150,12 +164,13 @@ export class ErrorRate5xxAlarm extends pulumi.ComponentResource {
         const threshold = pulumi
             .output(thresholdPercent)
             .apply((percent) => percent / 100)
+        const period = args.period ?? 60
         const resourceName = `${name}-5xx-rate`
 
         new aws.cloudwatch.MetricAlarm(
             resourceName,
             {
-                period: 300,
+                period,
                 evaluationPeriods: 2,
                 datapointsToAlarm: 2,
                 comparisonOperator: 'GreaterThanThreshold',
@@ -198,6 +213,11 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
              */
             errorRate4xxPercent?: pulumi.Input<number>
             /**
+             * The length of each sampling period, in seconds
+             * (default: 60 seconds)
+             */
+            period?: pulumi.Input<number>
+            /**
              * a callback function that returns tags for
              * each resource
              */
@@ -217,12 +237,13 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
         const threshold = pulumi
             .output(thresholdPercent)
             .apply((percent) => percent / 100)
+        const period = args.period ?? 60
         const resourceName = `${name}-4xx-rate`
 
         new aws.cloudwatch.MetricAlarm(
             resourceName,
             {
-                period: 300,
+                period,
                 evaluationPeriods: 2,
                 datapointsToAlarm: 2,
                 comparisonOperator: 'GreaterThanThreshold',
@@ -266,6 +287,11 @@ export class IntegrationLatencyAlarm extends pulumi.ComponentResource {
              */
             stdDeviations?: pulumi.Input<number>
             /**
+             * The length of each sampling period, in seconds
+             * (default: 60 seconds)
+             */
+            period?: pulumi.Input<number>
+            /**
              * a callback function that returns tags for
              * each resource
              */
@@ -283,6 +309,7 @@ export class IntegrationLatencyAlarm extends pulumi.ComponentResource {
         const metricName = 'IntegrationLatency'
         const dimensions = getDimensions(args.apiGateway)
         args.stdDeviations = args.stdDeviations ?? 5
+        const period = args.period ?? 60
 
         new aws.cloudwatch.MetricAlarm(
             resourceName,
@@ -305,7 +332,7 @@ export class IntegrationLatencyAlarm extends pulumi.ComponentResource {
                             dimensions,
                             namespace,
                             stat: 'Average',
-                            period: 60,
+                            period,
                         },
                     },
                     {
