@@ -1,5 +1,15 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.10.0
+
+### Minor Changes
+
+- dc6d4be: allow overriding default periods of API Gateway metric alarms
+
+### Patch Changes
+
+- 06ea1ce: fix ValidationError due to missing period
+
 ## 0.9.0
 
 ### Minor Changes
