@@ -155,6 +155,7 @@ export class ErrorRate5xxAlarm extends pulumi.ComponentResource {
         new aws.cloudwatch.MetricAlarm(
             resourceName,
             {
+                period: 300,
                 evaluationPeriods: 2,
                 datapointsToAlarm: 2,
                 comparisonOperator: 'GreaterThanThreshold',
@@ -221,6 +222,7 @@ export class ErrorRate4xxAlarm extends pulumi.ComponentResource {
         new aws.cloudwatch.MetricAlarm(
             resourceName,
             {
+                period: 300,
                 evaluationPeriods: 2,
                 datapointsToAlarm: 2,
                 comparisonOperator: 'GreaterThanThreshold',
