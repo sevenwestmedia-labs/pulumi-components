@@ -12,6 +12,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
     apiGatewayDomainName: aws.apigatewayv2.DomainName | undefined
     apiGatewayHostname: pulumi.Output<string>
     lambdaExecutionRole: pulumi.Output<aws.iam.Role>
+    lambdaFunction: LambdaFunction
 
     constructor(
         name: string,
@@ -77,7 +78,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             ? pulumi.output(hostname)
             : this.apiGatewayHostname
 
-        const lambdaFunction = new LambdaFunction(
+        this.lambdaFunction = new LambdaFunction(
             name,
             {
                 getTags,
@@ -85,18 +86,18 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             },
             { parent: this },
         )
-        this.lambdaExecutionRole = lambdaFunction.executionRole
+        this.lambdaExecutionRole = this.lambdaFunction.executionRole
 
         new aws.lambda.Permission(
             `${name}-permission`,
             {
                 action: 'lambda:InvokeFunction',
                 principal: 'apigateway.amazonaws.com',
-                function: lambdaFunction.function,
+                function: this.lambdaFunction.function,
                 sourceArn: pulumi.interpolate`${this.apiGateway.executionArn}/*/*`,
             },
             {
-                dependsOn: [this.apiGateway, lambdaFunction.function],
+                dependsOn: [this.apiGateway, this.lambdaFunction.function],
                 parent: this,
             },
         )
@@ -106,7 +107,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             {
                 apiId: this.apiGateway.id,
                 integrationType: 'AWS_PROXY',
-                integrationUri: lambdaFunction.function.arn,
+                integrationUri: this.lambdaFunction.function.arn,
             },
             { parent: this },
         )
@@ -125,7 +126,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             ? new aws.cloudwatch.LogGroup(
                   `${name}-api-logs`,
                   {
-                      name: `/aws/lambda/apigateway-${lambdaFunction.function.name}`,
+                      name: `/aws/lambda/apigateway-${this.lambdaFunction.function.name}`,
                       retentionInDays: 14,
                   },
                   {
