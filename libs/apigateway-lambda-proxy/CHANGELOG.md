@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.11.0
+
+### Minor Changes
+
+- aa190ee: Expose lambdaFunction from apigateway-lambda-proxy
+
 ## 0.10.0
 
 ### Minor Changes
