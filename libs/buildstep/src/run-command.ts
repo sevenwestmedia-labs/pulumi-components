@@ -208,7 +208,7 @@ export async function runCommandThatCanFail({
             // received some sort of real error.  push the message of that error to our stdErr
             // stream (so it will get reported) and then move this promise to the resolved, 1-code
             // state to indicate failure.
-            stdErrChunks.push(new Buffer(err.message))
+            stdErrChunks.push(Buffer.from(err.message))
             finish(/*code: */ 1)
         })
 

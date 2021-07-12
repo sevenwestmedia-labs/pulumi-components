@@ -22,6 +22,12 @@ export interface BuildStepArgs {
     env?: {
         [key: string]: pulumi.Input<string>
     }
+
+    /**
+     * If set to false, will run during up phase
+     * @default true
+     */
+    runInDryRun?: boolean
 }
 
 export class BuildStep extends pulumi.ComponentResource {
@@ -34,12 +40,17 @@ export class BuildStep extends pulumi.ComponentResource {
         opts?: pulumi.ComponentResourceOptions,
     ) {
         super('build-step', name, {}, opts)
+        const runInDryRun = args.runInDryRun ?? true
 
         const buildStdOut = pulumi.output(args).apply(async (buildArgs) => {
+            if (pulumi.runtime.isTestModeEnabled()) {
+                return ''
+            }
+
             // Only run during preview step
             if (
-                pulumi.runtime.isDryRun() &&
-                !pulumi.runtime.isTestModeEnabled()
+                (runInDryRun && pulumi.runtime.isDryRun()) ||
+                (!runInDryRun && !pulumi.runtime.isDryRun())
             ) {
                 const stdOut = await runCommandThatMustSucceed({
                     cmd: buildArgs.command,
@@ -53,7 +64,7 @@ export class BuildStep extends pulumi.ComponentResource {
                 return stdOut
             }
 
-            return 'Build run during preview'
+            return 'Skipped during this phase'
         })
 
         this.buildStdOut = buildStdOut
