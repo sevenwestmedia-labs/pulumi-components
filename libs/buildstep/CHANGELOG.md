@@ -1,6 +1,13 @@
 # @wanews/pulumi-buildstep
 
+## 0.2.0
+
+### Minor Changes
+
+- 334752c: Allow buildstep to run during up phase
+
 ## 0.1.0
+
 ### Minor Changes
 
 - ada1d3e: Initial release of buildstep project
