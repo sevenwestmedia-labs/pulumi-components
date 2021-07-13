@@ -1,0 +1,8 @@
+secretsprovider: awskms://alias/pulumi?region=ap-southeast-2
+encryptedkey: AQICAHios5WA0pEWp4V6Jkqk4IKBA1XT3syZNjwP9uDt5I9/EgFzj7RUhYuVq5hjq2N7ifcqAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOQk0wIRV0KZ/Y0fVAgEQgDvaEcxXStwGY5QKGymmc5z1loszqNaFpTieMKZVjmsqe3KcDlynvuGh+wYJ9Xizj7TpBwTFq1qW/B9f6g==
+config:
+  sumologic:accessId:
+    secure: v1:Y/H2J4EEx6x4n95w:1hv3NKjQRZMUdYcsbWV2JljJ6G/3eT0sL8A5puFG
+  sumologic:accessKey:
+    secure: v1:HhiRoMSAv0Iuy9R8:jG5SV3o4SDhY9oFK9DxSU79OLksPYX/1ef1fO8zhzr01vtOSvjszrUQOwLSSAJeTb2YNsjUYSHmD5CRA59V7kMrh+VIACJyTd6U1RLPwsOs=
+  sumologic:environment: au

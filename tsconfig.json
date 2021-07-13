@@ -12,6 +12,9 @@
     },
     {
       "path": "libs/apigateway-lambda-proxy"
+    },
+    {
+      "path": "./libs/pulumi-sumologic"
     }
   ]
 }
