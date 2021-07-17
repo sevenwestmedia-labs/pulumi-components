@@ -1,5 +1,11 @@
 # @wanews/pulumi-buildstep
 
+## 0.3.0
+
+### Minor Changes
+
+- b82d590: Add reportErrorAsWarning prop
+
 ## 0.2.0
 
 ### Minor Changes
