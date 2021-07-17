@@ -28,6 +28,12 @@ export interface BuildStepArgs {
      * @default true
      */
     runInDryRun?: boolean
+
+    /**
+     * Reports output to stderr as error
+     * @default false
+     */
+    reportErrorAsWarning?: boolean
 }
 
 export class BuildStep extends pulumi.ComponentResource {

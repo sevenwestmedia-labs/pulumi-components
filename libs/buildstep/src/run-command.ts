@@ -69,6 +69,7 @@ export async function runCommandThatMustSucceed({
     stdin,
     env,
     cwd,
+    reportErrorAsWarning = false,
 }: {
     cmd: string
     args: string[]
@@ -77,13 +78,14 @@ export async function runCommandThatMustSucceed({
     stdin?: string
     env?: { [name: string]: string }
     cwd?: string
+    reportErrorAsWarning?: boolean
 }): Promise<string> {
     const { code, stdout } = await runCommandThatCanFail({
         cmd,
         args,
         logResource,
         reportFullCommandLine,
-        /*reportErrorAsWarning:*/ reportErrorAsWarning: false,
+        reportErrorAsWarning,
         stdin,
         env,
         cwd,
