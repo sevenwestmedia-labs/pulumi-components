@@ -1,5 +1,11 @@
 # @wanews/pulumi-buildstep
 
+## 0.4.1
+
+### Patch Changes
+
+- 142d250: Fixed incorrectly reported error
+
 ## 0.4.0
 
 ### Minor Changes
