@@ -214,7 +214,7 @@ export async function runCommandThatCanFail({
         })
 
         p.on('close', (code) => {
-            finish(code || -1)
+            finish(code ?? -1)
         })
 
         if (stdin) {
