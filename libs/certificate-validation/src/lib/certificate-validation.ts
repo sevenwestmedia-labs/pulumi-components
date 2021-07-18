@@ -1,7 +1,5 @@
 import * as pulumi from '@pulumi/pulumi'
-import * as route53 from '@pulumi/aws/route53'
-import { Certificate, CertificateValidation } from '@pulumi/aws/acm'
-import { ProviderResource, ResourceError } from '@pulumi/pulumi'
+import * as aws from '@pulumi/aws'
 
 /** Validates a certificate using DNS */
 export class ValidateCertificate extends pulumi.ComponentResource {
@@ -10,7 +8,7 @@ export class ValidateCertificate extends pulumi.ComponentResource {
     constructor(
         name: string,
         args: {
-            cert: Certificate
+            cert: aws.acm.Certificate
             /**
              * A lookup for the domains, and which zone they live in
              * @example [{ domain: 'thewest.com.au', zoneId: westZoneId }, { domain: 'countryman.com.au': countrymanZoneId }]
@@ -18,7 +16,7 @@ export class ValidateCertificate extends pulumi.ComponentResource {
             zones: Array<{
                 domain: string | pulumi.Input<string>
                 zoneId: string | pulumi.Input<string>
-                provider?: ProviderResource
+                provider?: pulumi.ProviderResource
             }>
         },
         opts?: pulumi.ComponentResourceOptions | undefined,
@@ -34,13 +32,13 @@ export class ValidateCertificate extends pulumi.ComponentResource {
                     )
 
                     if (!zoneConfig) {
-                        throw new ResourceError(
+                        throw new pulumi.ResourceError(
                             `Cannot find zone info for ${validationOption.domainName}`,
                             this,
                         )
                     }
 
-                    const validationRecord = new route53.Record(
+                    const validationRecord = new aws.route53.Record(
                         `${name}-validation-record-${validationOption.domainName}`,
                         {
                             zoneId: zoneConfig.zoneId,
@@ -61,7 +59,7 @@ export class ValidateCertificate extends pulumi.ComponentResource {
                 }),
             )
 
-        const validation = new CertificateValidation(
+        const validation = new aws.acm.CertificateValidation(
             `${name}-validation`,
             {
                 certificateArn: args.cert.arn,

@@ -1,7 +1,5 @@
 import * as aws from '@pulumi/aws'
-import { ApiArgs } from '@pulumi/aws/apigatewayv2/api'
 import * as pulumi from '@pulumi/pulumi'
-import { ResourceError } from '@pulumi/pulumi'
 import { LambdaFunction } from '@wanews/pulumi-lambda'
 
 export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
@@ -37,7 +35,10 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
              */
             lambdaOptions: Omit<aws.lambda.FunctionArgs, 'role'>
 
-            apiGatewayOptions?: Omit<ApiArgs, 'protocolType' | 'tags'>
+            apiGatewayOptions?: Omit<
+                aws.apigatewayv2.ApiArgs,
+                'protocolType' | 'tags'
+            >
 
             /** Callback to create tags for the resources created */
             getTags: (
@@ -166,7 +167,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
 
         if (hostname) {
             if (!apiGatewayCertificateArn) {
-                throw new ResourceError(
+                throw new pulumi.ResourceError(
                     'Must specify apiGatewayCertificateArn if desiredHostname is set',
                     this,
                 )

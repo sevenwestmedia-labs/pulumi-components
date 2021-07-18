@@ -25,7 +25,7 @@ importers:
       '@types/node-fetch': ^2.5.10
       '@typescript-eslint/eslint-plugin': 4.22.0
       '@typescript-eslint/parser': 4.22.0
-      '@wanews/nx-typescript-project-references': ^0.4.0
+      '@wanews/nx-typescript-project-references': ^0.12.1
       aws-sdk: ^2.889.0
       cuid: ^2.1.8
       debug: ^4.3.1
@@ -65,7 +65,7 @@ importers:
       '@types/node-fetch': 2.5.10
       '@typescript-eslint/eslint-plugin': 4.22.0_9acede93a3623dd7abe65c65a7010e73
       '@typescript-eslint/parser': 4.22.0_eslint@7.24.0+typescript@4.2.4
-      '@wanews/nx-typescript-project-references': 0.4.0
+      '@wanews/nx-typescript-project-references': 0.12.1_@nrwl+jest@12.0.8
       aws-sdk: 2.889.0
       cuid: 2.1.8
       debug: 4.3.1
@@ -1904,7 +1904,7 @@ packages:
   /@types/fs-extra/9.0.11:
     resolution: {integrity: sha512-mZsifGG4QeQ7hlkhO56u7zt/ycBgGxSVsFI/6lGTU34VtwkiqrrSDgw0+ygs8kFGWcXnFQWMrzF2h7TtDFNixA==}
     dependencies:
-      '@types/node': 14.14.41
+      '@types/node': 15.6.0
     dev: true
 
   /@types/graceful-fs/4.1.5:
@@ -1970,7 +1970,6 @@ packages:
 
   /@types/node/15.6.0:
     resolution: {integrity: sha512-gCYSfQpy+LYhOFTKAeE8BkyGqaxmlFxe+n4DKM6DR0wzw/HISUE/hAmkC/KT8Sw5PCJblqg062b3z9gucv3k0A==}
-    dev: false
 
   /@types/normalize-package-data/2.4.0:
     resolution: {integrity: sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==}
@@ -2108,9 +2107,12 @@ packages:
       eslint-visitor-keys: 2.0.0
     dev: true
 
-  /@wanews/nx-typescript-project-references/0.4.0:
-    resolution: {integrity: sha512-sopSXinXnTPpVkXukSB80vYTd2pggIR03qyJpFWERI/P3+ptZTZlcep6EdMkQFyVOPJimgbGXACDk08+g+hOYg==}
+  /@wanews/nx-typescript-project-references/0.12.1_@nrwl+jest@12.0.8:
+    resolution: {integrity: sha512-Lqcql7+2IqftkaztLlMGURNY8VwJASHMgOLaeN9Lx32Cz+WTXFhCqiGHryfggTnDRm7CzTAG42KYLVBahebziQ==}
+    peerDependencies:
+      '@nrwl/jest': '>12.0.0'
     dependencies:
+      '@nrwl/jest': 12.0.8
       '@types/fs-extra': 9.0.11
       execa: 5.0.0
     dev: true

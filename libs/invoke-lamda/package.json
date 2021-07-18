@@ -4,6 +4,10 @@
     "main": "dist/index.js",
     "author": "Seven West Media WA",
     "license": "MIT",
+    "peerDependencies": {
+        "@pulumi/pulumi": "^3.0.0",
+        "aws-sdk": "^2.800.0"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/sevenwestmedia-labs/pulumi-components.git"

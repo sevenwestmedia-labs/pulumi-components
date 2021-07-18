@@ -1,8 +1,26 @@
 {
-  "name": "@wanews/pulumi-wait-for-ecs-deploy",
-  "version": "0.1.9",
-  "main": "dist/index.js",
-  "dependencies": {
-    "aws-sdk": "^2.891.0"
-  }
+    "name": "@wanews/pulumi-wait-for-ecs-deploy",
+    "version": "0.1.9",
+    "main": "dist/index.js",
+    "author": "Seven West Media WA",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sevenwestmedia-labs/pulumi-components.git"
+    },
+    "keywords": [
+        "Pulumi"
+    ],
+    "bugs": {
+        "url": "https://github.com/sevenwestmedia-labs/pulumi-components/issues"
+    },
+    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/wait-for-ecs-deploy#readme",
+    "peerDependencies": {
+        "@pulumi/aws": "^4.0.0",
+        "@pulumi/pulumi": "^3.0.0",
+        "aws-sdk": "^2.800.0"
+    },
+    "dependencies": {
+        "cuid": "^2.0.0"
+    }
 }

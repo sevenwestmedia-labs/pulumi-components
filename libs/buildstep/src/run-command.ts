@@ -1,5 +1,4 @@
 import * as pulumi from '@pulumi/pulumi'
-import { ResourceError } from '@pulumi/pulumi/errors'
 
 import * as child_process from 'child_process'
 import * as readline from 'readline'
@@ -97,7 +96,7 @@ export async function runCommandThatMustSucceed({
         //
         // Note: a message about the command failing will have already been ephemerally reported to
         // the status column.
-        throw new ResourceError(
+        throw new pulumi.ResourceError(
             `${getFailureMessage(
                 cmd,
                 args,

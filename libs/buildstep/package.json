@@ -1,5 +1,19 @@
 {
     "name": "@wanews/pulumi-buildstep",
     "version": "0.3.0",
-    "main": "dist/index.js"
+    "main": "dist/index.js",
+    "peerDependencies": {
+        "@pulumi/pulumi": "^3.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sevenwestmedia-labs/pulumi-components.git"
+    },
+    "keywords": [
+        "Pulumi"
+    ],
+    "bugs": {
+        "url": "https://github.com/sevenwestmedia-labs/pulumi-components/issues"
+    },
+    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/pulumi-lambda#readme"
 }
