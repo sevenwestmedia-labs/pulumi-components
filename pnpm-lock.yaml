@@ -87,7 +87,7 @@ importers:
 
   libs/apigateway-lambda-proxy:
     specifiers:
-      '@wanews/pulumi-lambda': 0.9.0
+      '@wanews/pulumi-lambda': 0.10.0
     dependencies:
       '@wanews/pulumi-lambda': link:../pulumi-lambda
 
@@ -1776,7 +1776,7 @@ packages:
     dev: true
 
   /@pulumi/pagerduty/2.0.2:
-    resolution: {integrity: sha512-BCEZ1tRjtFQK9uGjbFoHesmscDDKeAOWR8mkuH3sIKO65sSgIe8qkqfMtpHMqRgr7paFuzP71YdCyF5x6fh1hw==}
+    resolution: {integrity: sha512-BCEZ1tRjtFQK9uGjbFoHesmscDDKeAOWR8mkuH3sIKO65sSgIe8qkqfMtpHMqRgr7paFuzP71YdCyF5x6fh1hw==, tarball: '@pulumi/pagerduty/-/pagerduty-2.0.2.tgz'}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.3.0
