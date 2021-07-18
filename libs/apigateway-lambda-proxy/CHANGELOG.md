@@ -1,5 +1,16 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.12.0
+
+### Minor Changes
+
+- 95db968: Fixed dependencies being bundled, package.json incorrectly defined dependencies and missing information
+
+### Patch Changes
+
+- Updated dependencies [95db968]
+  - @wanews/pulumi-lambda@0.10.0
+
 ## 0.11.0
 
 ### Minor Changes

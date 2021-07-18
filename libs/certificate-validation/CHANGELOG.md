@@ -1,5 +1,11 @@
 # @wanews/pulumi-certificate-validation
 
+## 0.4.0
+
+### Minor Changes
+
+- 95db968: Fixed dependencies being bundled, package.json incorrectly defined dependencies and missing information
+
 ## 0.3.0
 
 ### Minor Changes
