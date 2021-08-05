@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.12.1
+
+### Patch Changes
+
+- afd3eaa: Fixed bug in api gateway log group when apiGatewayAccessLoggingEnabled is turned on
+
 ## 0.12.0
 
 ### Minor Changes
