@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.12.2
+
+### Patch Changes
+
+- 8e34103: Fix region in apiGatewayHostname
+
 ## 0.12.1
 
 ### Patch Changes
