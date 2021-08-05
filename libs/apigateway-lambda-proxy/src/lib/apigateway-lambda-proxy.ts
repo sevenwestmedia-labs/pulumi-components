@@ -73,7 +73,8 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             ? pulumi.interpolate`https://${hostname}`
             : pulumi.interpolate`${this.apiGateway.apiEndpoint}`
 
-        this.apiGatewayHostname = pulumi.interpolate`${this.apiGateway.id}.execute-api.ap-southeast-2.amazonaws.com`
+        const region = pulumi.output(aws.getRegion({}, { parent: this }))
+        this.apiGatewayHostname = pulumi.interpolate`${this.apiGateway.id}.execute-api.${region.name}.amazonaws.com`
 
         this.publicHostname = hostname
             ? pulumi.output(hostname)
