@@ -127,7 +127,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             ? new aws.cloudwatch.LogGroup(
                   `${name}-api-logs`,
                   {
-                      name: `/aws/lambda/apigateway-${this.lambdaFunction.function.name}`,
+                      name: pulumi.interpolate`/aws/lambda/apigateway-${this.lambdaFunction.function.name}`,
                       retentionInDays: 14,
                   },
                   {
