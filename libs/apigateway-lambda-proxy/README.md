@@ -39,7 +39,7 @@ const cert = new Certificate(`${name}-cert`, {
 })
 
 // Get the route53 zone
-const zone = pulumi.output(aws.route53.getZone({ name: 'customdomain.net' }))
+const zoneId = pulumi.output(aws.route53.getZone({ name: 'customdomain.net' }))
   .zoneId
 
 // Use @wanews/pulumi-certificate-validation to perform dns validation
@@ -53,9 +53,19 @@ const validCertificate = new ValidateCertificate(`cert-validation`, {
   ],
 })
 
+function getTags(name: string) {
+    // Use whatever logic you like to construct your tags
+    return {
+      Name: name,
+      Product: 'my-product',
+      /* ... */
+    }
+}
+
 new ApiGatewayLambdaProxy(`my-api`, {
   hostname: 'my.customdomain.net',
   apiGatewayCertificateArn: validCertificate.validCertificateArn,
+  getTags,
 
   lambdaOptions: {
     code: new pulumi.asset.FileArchive('path/to/code/'),
