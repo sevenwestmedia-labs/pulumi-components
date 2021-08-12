@@ -19,6 +19,8 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             hostname,
 
             lambdaOptions,
+            executionRoleName,
+            executionRole,
             apiGatewayOptions = {},
             getTags,
 
@@ -39,6 +41,14 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
                 aws.apigatewayv2.ApiArgs,
                 'protocolType' | 'tags'
             >
+
+            /**
+             * Role must already exist, otherwise preview will fail
+             *
+             * If you are creating the role in the same program, use executionRole
+             */
+            executionRoleName?: string;
+            executionRole?: aws.iam.Role;
 
             /** Callback to create tags for the resources created */
             getTags: (
@@ -85,6 +95,8 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             {
                 getTags,
                 lambdaOptions,
+                executionRole,
+                executionRoleName,
             },
             { parent: this },
         )
