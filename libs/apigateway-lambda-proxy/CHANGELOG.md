@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.13.0
+
+### Minor Changes
+
+- d652454: Allow clients to set an execution role on lambda proxy
+
 ## 0.12.2
 
 ### Patch Changes
