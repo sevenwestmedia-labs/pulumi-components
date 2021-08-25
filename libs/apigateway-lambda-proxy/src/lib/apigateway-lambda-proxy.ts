@@ -65,7 +65,28 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
              */
             apiGatewayAccessLoggingEnabled?: boolean
         },
-        opts?: pulumi.ResourceOptions,
+        opts?: pulumi.ComponentResourceOptions & {
+            /**
+             * Allow an existing aws.apigatewayv2.Api resource to be migrated
+             * into this module without being deleted & recreated. More info:
+             * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+             */
+            apiGatewayAliases?: pulumi.ComponentResourceOptions['aliases']
+
+            /**
+             * Allow an existing aws.apigatewayv2.DomainName resource to be migrated
+             * into this module without being deleted & recreated. More info:
+             * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+             */
+            domainNameAliases?: pulumi.ComponentResourceOptions['aliases']
+
+            /**
+             * Allow an existing aws.apigatewayv2.ApiMapping resource to be migrated
+             * into this module without being deleted & recreated. More info:
+             * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+             */
+            apiMappingAliases?: pulumi.ComponentResourceOptions['aliases']
+        },
     ) {
         super('lambda-apigateway-proxy', name, {}, opts)
 
@@ -76,7 +97,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
                 protocolType: 'HTTP',
                 tags: getTags(name),
             },
-            { parent: this },
+            { parent: this, aliases: opts?.apiGatewayAliases },
         )
 
         this.invokeUrl = hostname
@@ -196,7 +217,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
                     },
                     tags: getTags(name),
                 },
-                { parent: this },
+                { parent: this, aliases: opts?.domainNameAliases },
             )
 
             new aws.apigatewayv2.ApiMapping(
@@ -206,7 +227,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
                     domainName: this.apiGatewayDomainName.id,
                     stage: this.stage.name,
                 },
-                { parent: this },
+                { parent: this, aliases: opts?.apiMappingAliases },
             )
         }
 
