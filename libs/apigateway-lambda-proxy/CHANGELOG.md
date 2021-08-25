@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.13.1
+
+### Patch Changes
+
+- ad9c1f6: Add aliases to existing component resources to allow using this module
+
 ## 0.13.0
 
 ### Minor Changes
