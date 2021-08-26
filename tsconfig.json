@@ -5,13 +5,16 @@
   },
   "references": [
     {
-      "path": "libs/pulumi-lambda"
+      "path": "./libs/invoke-step-function"
+    },
+    {
+      "path": "libs/apigateway-lambda-proxy"
     },
     {
       "path": "libs/certificate-validation"
     },
     {
-      "path": "libs/apigateway-lambda-proxy"
+      "path": "libs/pulumi-lambda"
     }
   ]
 }

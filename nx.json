@@ -23,6 +23,7 @@
     "throw-files-in-s3": { "tags": [] },
     "invoke-lamda": { "tags": [] },
     "wait-for-ecs-deploy": { "tags": [] },
-    "pulumi-pagerduty": { "tags": [] }
+    "pulumi-pagerduty": { "tags": [] },
+    "invoke-step-function": { "tags": [] }
   }
 }
