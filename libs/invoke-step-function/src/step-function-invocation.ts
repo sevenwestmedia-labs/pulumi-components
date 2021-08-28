@@ -1,10 +1,9 @@
 import * as pulumi from '@pulumi/pulumi'
-import { _Blob } from 'aws-sdk/clients/lambda'
 import { invokeStepFunctionProvider } from './invoke-step-function-provider'
 
 export interface StepFunctionInvocationResourceInputs {
     stateMachineArn: pulumi.Input<string>
-    payload?: pulumi.Input<_Blob>
+    input?: pulumi.Input<string>
     assumeRoleArn?: pulumi.Input<string>
     region?: pulumi.Input<string>
 }
@@ -16,6 +15,7 @@ export class StepFunctionInvocation extends pulumi.dynamic.Resource {
             stateMachineArn: pulumi.Input<string>
             assumeRoleArn?: pulumi.Input<string>
             region?: pulumi.Input<string>
+            input?: pulumi.Input<string>
         },
         opts?: pulumi.CustomResourceOptions,
     ) {
@@ -23,6 +23,7 @@ export class StepFunctionInvocation extends pulumi.dynamic.Resource {
             stateMachineArn: args.stateMachineArn,
             assumeRoleArn: args.assumeRoleArn,
             region: args.region,
+            input: args.input,
         }
 
         super(
