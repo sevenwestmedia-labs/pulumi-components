@@ -1,6 +1,6 @@
 {
     "name": "@wanews/pulumi-invoke-step-function",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "main": "out-tsc/index.js",
     "module": "src/index.ts",
     "publishConfig": {
