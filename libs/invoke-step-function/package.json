@@ -1,0 +1,27 @@
+{
+    "name": "@wanews/pulumi-invoke-step-function",
+    "version": "0.0.1",
+    "main": "out-tsc/index.js",
+    "module": "src/index.ts",
+    "publishConfig": {
+        "main": "dist/index.js",
+        "module": "dist/esm/index.js"
+    },
+    "author": "Seven West Media WA",
+    "license": "MIT",
+    "peerDependencies": {
+        "@pulumi/pulumi": "^3.0.0",
+        "aws-sdk": "^2.800.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sevenwestmedia-labs/pulumi-components.git"
+    },
+    "keywords": [
+        "Pulumi"
+    ],
+    "bugs": {
+        "url": "https://github.com/sevenwestmedia-labs/pulumi-components/issues"
+    },
+    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/invoke-step-function#readme"
+}
