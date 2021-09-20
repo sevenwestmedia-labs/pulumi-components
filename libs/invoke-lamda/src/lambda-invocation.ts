@@ -16,6 +16,7 @@ export class LambdaInvocation extends pulumi.dynamic.Resource {
             functionName: pulumi.Input<string>
             assumeRoleArn?: pulumi.Input<string>
             region?: pulumi.Input<string>
+            payload?: pulumi.Input<_Blob>
         },
         opts?: pulumi.CustomResourceOptions,
     ) {
