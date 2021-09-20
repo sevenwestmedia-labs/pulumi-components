@@ -1,5 +1,11 @@
 # @wanews/pulumi-invoke-lambda
 
+## 0.3.0
+
+### Minor Changes
+
+- 07acd05: Expose payload in resource args
+
 ## 0.2.0
 
 ### Minor Changes
