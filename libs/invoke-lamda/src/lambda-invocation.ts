@@ -24,6 +24,7 @@ export class LambdaInvocation extends pulumi.dynamic.Resource {
             functionName: args.functionName,
             assumeRoleArn: args.assumeRoleArn,
             region: args.region,
+            payload: args.payload,
         }
 
         super(
