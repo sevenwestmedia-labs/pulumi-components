@@ -1,5 +1,11 @@
 # @wanews/pulumi-invoke-lambda
 
+## 0.3.1
+
+### Patch Changes
+
+- b99d4e9: Fixed payload not being passed through
+
 ## 0.3.0
 
 ### Minor Changes
