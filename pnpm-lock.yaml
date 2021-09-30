@@ -16,7 +16,7 @@ importers:
       '@nrwl/tao': 12.0.8
       '@nrwl/workspace': 12.0.8
       '@pulumi/aws': ^4.0.0
-      '@pulumi/pagerduty': ^2.0.2
+      '@pulumi/pagerduty': ^2.2.0
       '@pulumi/pulumi': ^3.0.0
       '@pulumi/random': ^4.0.0
       '@types/debug': ^4.1.5
@@ -58,7 +58,7 @@ importers:
       '@nrwl/tao': 12.0.8
       '@nrwl/workspace': 12.0.8_debug@4.3.1+prettier@2.2.1
       '@pulumi/aws': 4.0.0
-      '@pulumi/pagerduty': 2.0.2
+      '@pulumi/pagerduty': 2.2.0
       '@pulumi/pulumi': 3.0.0
       '@types/debug': 4.1.5
       '@types/jest': 26.0.22
@@ -98,6 +98,9 @@ importers:
     specifiers: {}
 
   libs/invoke-lamda:
+    specifiers: {}
+
+  libs/invoke-step-function:
     specifiers: {}
 
   libs/pulumi-lambda:
@@ -1775,8 +1778,8 @@ packages:
       - supports-color
     dev: true
 
-  /@pulumi/pagerduty/2.0.2:
-    resolution: {integrity: sha512-BCEZ1tRjtFQK9uGjbFoHesmscDDKeAOWR8mkuH3sIKO65sSgIe8qkqfMtpHMqRgr7paFuzP71YdCyF5x6fh1hw==, tarball: '@pulumi/pagerduty/-/pagerduty-2.0.2.tgz'}
+  /@pulumi/pagerduty/2.2.0:
+    resolution: {integrity: sha512-fEc+1DshCIerGOEl3XSGDuU/YQHFP2qw5DQ2dyjpgeqwiZ3Az+Cp9H9bKy8VHPh4q3a5L9N/KG1ilpwBM9FAYQ==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.3.0
