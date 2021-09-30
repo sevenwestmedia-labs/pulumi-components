@@ -2,8 +2,10 @@
 
 # compiled output
 /dist
+**/dist/
 /tmp
 /out-tsc
+**/out-tsc/**
 tsconfig.tsbuildinfo
 
 # dependencies
@@ -39,4 +41,4 @@ testem.log
 .DS_Store
 Thumbs.db
 
-dist/
+
