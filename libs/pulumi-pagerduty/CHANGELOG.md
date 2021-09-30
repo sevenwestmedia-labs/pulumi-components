@@ -1,5 +1,11 @@
 # @wanews/pulumi-pagerduty
 
+## 1.1.1
+
+### Patch Changes
+
+- 6ff0478: Updates deps and readme
+
 ## 1.1.0
 
 ### Minor Changes
