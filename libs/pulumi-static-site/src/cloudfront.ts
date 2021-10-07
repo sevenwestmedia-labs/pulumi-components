@@ -10,9 +10,6 @@ const managedCorsS3OriginRequestPolicyId =
 const managedCachingOptimizedCachePolicyId =
     '658327ea-f89d-4fab-a63d-7e88639e58f6'
 
-const defaultManagedWebAcl =
-    'FMManagedWebACLe21c2ecb-0057-4788-a990-0c79c9b05254'
-
 export interface CfDistributionOptions {
     priceClass?: pulumi.Input<string>
     cachePolicyId?: pulumi.Input<string>
@@ -41,7 +38,9 @@ export class Distribution extends pulumi.ComponentResource {
     constructor(
         name: string,
         args: DistributionArgs,
-        opts?: pulumi.ComponentResourceOptions,
+        opts?: pulumi.ComponentResourceOptions & {
+            distributionIgnoreChanges?: pulumi.ComponentResourceOptions['ignoreChanges']
+        },
     ) {
         super(
             'swm:pulumi-static-site:distribution/Distribution',
@@ -106,20 +105,13 @@ export class Distribution extends pulumi.ComponentResource {
                     minimumProtocolVersion: 'TLSv1.2_2019',
                     sslSupportMethod: 'sni-only',
                 },
-                webAclId:
-                    args.webAclId ??
-                    pulumi.output(
-                        aws.waf.getWebAcl(
-                            { name: defaultManagedWebAcl },
-                            { parent: this },
-                        ),
-                    ).id,
+                webAclId: args.webAclId,
                 comment: pulumi.interpolate`Static Site Distribution for ${pulumi
                     .output(args.domains)
                     .apply((domains) => domains.join(', '))}`,
                 tags: args.getTags(name),
             },
-            { parent: this },
+            { parent: this, ignoreChanges: opts?.distributionIgnoreChanges },
         )
     }
 }
