@@ -2,19 +2,42 @@ import * as aws from '@pulumi/aws'
 import * as pulumi from '@pulumi/pulumi'
 import * as random from '@pulumi/random'
 
+// https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html
+const managedCorsS3OriginRequestPolicyId =
+    '88a5eaf4-2fd4-4709-b370-b4c650ea3fcf'
+
+// https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+const managedCachingOptimizedCachePolicyId =
+    '658327ea-f89d-4fab-a63d-7e88639e58f6'
+
+const defaultManagedWebAcl =
+    'FMManagedWebACLe21c2ecb-0057-4788-a990-0c79c9b05254'
+
+export interface CfDistributionOptions {
+    priceClass?: pulumi.Input<string>
+    cachePolicyId?: pulumi.Input<string>
+    originRequestPolicyId?: pulumi.Input<string>
+    webAclId?: pulumi.Input<string>
+}
+
+interface DistributionArgs extends CfDistributionOptions {
+    acmCertificateArn: pulumi.Input<string>
+    domains: pulumi.Input<string>[] | pulumi.Input<string[]>
+    originDomainName: pulumi.Input<string>
+    refererValue: pulumi.Input<string>
+    getTags: (
+        name: string,
+    ) => {
+        [key: string]: pulumi.Input<string>
+    }
+}
+
 export class Distribution extends pulumi.ComponentResource {
     distribution: aws.cloudfront.Distribution
 
     constructor(
         name: string,
-        args: {
-            acmCertificateArn?: pulumi.Input<string>
-            domains: pulumi.Input<string>[] | pulumi.Input<string[]>
-            originDomainName: pulumi.Input<string>
-            priceClass?: pulumi.Input<string>
-            cachePolicyId?: pulumi.Input<string>
-            originRequestPolicyId?: pulumi.Input<string>
-        },
+        args: DistributionArgs,
         opts?: pulumi.ComponentResourceOptions,
     ) {
         super(
@@ -34,38 +57,6 @@ export class Distribution extends pulumi.ComponentResource {
             { parent: this },
         )
 
-        const cachePolicyId = pulumi
-            .all([
-                args.cachePolicyId,
-                pulumi.output(
-                    aws.cloudfront.getCachePolicy(
-                        {
-                            name: 'Managed-CachingOptimized',
-                        },
-                        { parent: this },
-                    ),
-                ).id,
-            ])
-            .apply(
-                ([cachePolicyId, defaultCachePolicyId]) =>
-                    cachePolicyId ?? defaultCachePolicyId,
-            )
-
-        const originRequestPolicyId = pulumi
-            .all([
-                args.originRequestPolicyId,
-                pulumi.output(
-                    aws.cloudfront.getOriginRequestPolicy(
-                        { name: 'Managed-CORS-S3Origin' },
-                        { parent: this },
-                    ),
-                ).id,
-            ])
-            .apply(
-                ([originRequestPolicyId, defaultOriginRequestPolicyId]) =>
-                    originRequestPolicyId ?? defaultOriginRequestPolicyId,
-            )
-
         this.distribution = new aws.cloudfront.Distribution(
             name,
             {
@@ -83,6 +74,9 @@ export class Distribution extends pulumi.ComponentResource {
                             httpsPort: 443,
                             originSslProtocols: ['TLSv1.2'],
                         },
+                        customHeaders: [
+                            { name: 'Referer', value: args.refererValue },
+                        ],
                     },
                 ],
                 defaultRootObject: 'index.html',
@@ -91,31 +85,35 @@ export class Distribution extends pulumi.ComponentResource {
                     allowedMethods: ['GET', 'HEAD', 'OPTIONS'],
                     cachedMethods: ['GET', 'HEAD', 'OPTIONS'],
                     viewerProtocolPolicy: 'redirect-to-https',
-                    ...(cachePolicyId ? { cachePolicyId } : {}),
-                    ...(args.originRequestPolicyId
-                        ? { originRequestPolicyId }
-                        : {}),
+                    cachePolicyId:
+                        args.cachePolicyId ??
+                        managedCachingOptimizedCachePolicyId,
+                    originRequestPolicyId:
+                        args.originRequestPolicyId ??
+                        managedCorsS3OriginRequestPolicyId,
                 },
                 restrictions: {
                     geoRestriction: {
                         restrictionType: 'none',
                     },
                 },
-                viewerCertificate: pulumi
+                viewerCertificate: {
+                    acmCertificateArn: args.acmCertificateArn,
+                    minimumProtocolVersion: 'TLSv1.2_2019',
+                    sslSupportMethod: 'sni-only',
+                },
+                webAclId:
+                    args.webAclId ??
+                    pulumi.output(
+                        aws.waf.getWebAcl(
+                            { name: defaultManagedWebAcl },
+                            { parent: this },
+                        ),
+                    ).id,
+                comment: pulumi.interpolate`Static Site Distribution for ${pulumi
                     .output(args.domains)
-                    .apply((domains) =>
-                        domains.length > 0
-                            ? {
-                                  acmCertificateArn: args.acmCertificateArn,
-                                  minimumProtocolVersion: 'TLSv1.2_2019',
-                                  sslSupportMethod: 'sni-only',
-                              }
-                            : {
-                                  cloudfrontDefaultCertificate: true,
-                                  minimumProtocolVersion: 'TLSv1',
-                                  sslSupportMethod: 'sni-only',
-                              },
-                    ),
+                    .apply((domains) => domains.join(', '))}`,
+                tags: args.getTags(name),
             },
             { parent: this },
         )

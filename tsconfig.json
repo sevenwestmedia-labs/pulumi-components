@@ -5,7 +5,7 @@
     },
     "references": [
         {
-            "path": "./apps/sample-pulumi-static-site"
+            "path": "libs/pulumi-static-site"
         },
         {
             "path": "./libs/invoke-step-function"

@@ -1,7 +1,7 @@
 {
     "extends": "../../tsconfig.settings.json",
     "compilerOptions": {
-        "outDir": "./bin",
+        "outDir": "./dist",
         "rootDir": "./src",
         "types": ["jest", "node"]
     },
