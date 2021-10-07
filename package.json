@@ -51,6 +51,7 @@
         "@types/node-fetch": "^2.5.10",
         "@typescript-eslint/eslint-plugin": "4.22.0",
         "@typescript-eslint/parser": "4.22.0",
+        "@wanews/nx-pulumi": "^0.16.0",
         "@wanews/nx-typescript-project-references": "^0.12.1",
         "aws-sdk": "^2.889.0",
         "cuid": "^2.1.8",

@@ -1,0 +1,4 @@
+name: sample-pulumi-static-site
+runtime: nodejs
+backend:
+  url: file:///.pulumi
