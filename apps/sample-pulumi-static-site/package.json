@@ -4,6 +4,6 @@
   "version": "0.0.2",
   "main": "src/index.ts",
   "dependencies": {
-    "@wanews/pulumi-static-site": "workspace:^0.0.2"
+    "@wanews/pulumi-static-site": "workspace:^"
   }
 }
