@@ -9,6 +9,7 @@ import { ValidateCertificate } from '@wanews/pulumi-certificate-validation'
 
 interface StaticSiteArgs {
     primaryDomain: pulumi.Input<string>
+    primaryHostname: pulumi.Input<string>
     getTags: (
         name: string,
     ) => {
@@ -54,7 +55,7 @@ export class StaticSite extends pulumi.ComponentResource {
         const cert = new aws.acm.Certificate(
             `${name}-cert`,
             {
-                domainName: args.primaryDomain,
+                domainName: args.primaryHostname,
                 validationMethod: 'DNS',
             },
             { parent: this, provider: providerUsEast1 },
@@ -66,7 +67,7 @@ export class StaticSite extends pulumi.ComponentResource {
                 cert,
                 zones: [
                     {
-                        domain: args.primaryDomain,
+                        domain: args.primaryHostname,
                         zoneId: primaryDomainZone.id,
                     },
                 ],
@@ -102,7 +103,7 @@ export class StaticSite extends pulumi.ComponentResource {
             {
                 ...args.distributionOptions,
                 acmCertificateArn: validateCertificate.validCertificateArn,
-                domains: [args.primaryDomain],
+                domains: [args.primaryHostname],
                 originDomainName: this.primaryBucket.websiteEndpoint,
                 refererValue: refererSecret.result,
                 getTags: args.getTags,
@@ -114,7 +115,7 @@ export class StaticSite extends pulumi.ComponentResource {
         new aws.route53.Record(
             `${name}-primary-dns-A`,
             {
-                name: args.primaryDomain,
+                name: args.primaryHostname,
                 type: 'A',
                 aliases: [
                     {
@@ -131,7 +132,7 @@ export class StaticSite extends pulumi.ComponentResource {
         new aws.route53.Record(
             `${name}-primary-dns-AAAA`,
             {
-                name: args.primaryDomain,
+                name: args.primaryHostname,
                 type: 'AAAA',
                 aliases: [
                     {

@@ -41,6 +41,7 @@ importers:
       tmp-promise: ^3.0.2
       ts-jest: ^26.5.5
       ts-node: ~9.1.1
+      tsconfig-paths: ^3.11.0
       tslib: ^2.2.0
       tsup: ^4.9.1
       typescript: 4.2.4
@@ -83,6 +84,7 @@ importers:
       tmp-promise: 3.0.2
       ts-jest: 26.5.5_jest@26.6.3+typescript@4.2.4
       ts-node: 9.1.1_typescript@4.2.4
+      tsconfig-paths: 3.11.0
       tslib: 2.2.0
       tsup: 4.9.1_typescript@4.2.4
       typescript: 4.2.4
@@ -1938,6 +1940,10 @@ packages:
 
   /@types/json-schema/7.0.7:
     resolution: {integrity: sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==}
+    dev: true
+
+  /@types/json5/0.0.29:
+    resolution: {integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=}
     dev: true
 
   /@types/long/4.0.1:
@@ -4959,6 +4965,13 @@ packages:
     resolution: {integrity: sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=}
     dev: true
 
+  /json5/1.0.1:
+    resolution: {integrity: sha512-aKS4WQjPenRxiQsC93MNfjx+nbF4PAdYzmd/1JIj8HYzqfbu86beTuNgXDzPknWk0n0uARlyewZo4s++ES36Ow==}
+    hasBin: true
+    dependencies:
+      minimist: 1.2.5
+    dev: true
+
   /json5/2.2.0:
     resolution: {integrity: sha512-f+8cldu7X/y7RAJurMEJmdoKXGB/X550w2Nr3tTbezL6RwEE/iMcm+tZnXeoZtKuOq6ft8+CqzEkrIgx1fPoQA==}
     engines: {node: '>=6'}
@@ -6819,6 +6832,15 @@ packages:
       source-map-support: 0.5.19
       typescript: 4.2.4
       yn: 3.1.1
+    dev: true
+
+  /tsconfig-paths/3.11.0:
+    resolution: {integrity: sha512-7ecdYDnIdmv639mmDwslG6KQg1Z9STTz1j7Gcz0xa+nshh/gKDAHcPxRbWOsA3SPp0tXP2leTcY9Kw+NAkfZzA==}
+    dependencies:
+      '@types/json5': 0.0.29
+      json5: 1.0.1
+      minimist: 1.2.5
+      strip-bom: 3.0.0
     dev: true
 
   /tslib/1.14.1:
