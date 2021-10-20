@@ -1,6 +1,6 @@
 {
     "name": "@wanews/pulumi-static-site",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "main": "dist/index.js",
     "module": "dist/esm/index.js",
     "author": "Seven West Media WA",
