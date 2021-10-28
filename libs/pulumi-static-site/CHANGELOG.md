@@ -1,5 +1,13 @@
 # @wanews/pulumi-static-site
 
+## 0.0.6
+
+### Patch Changes
+
+- 2b31a24: `bucketOptions` pulumi input accepts every aws.s3.Bucket pulumi input
+  Added `additionalOrigins` and `orderedCacheBehaviours` options to the `distributionOptions` pulumi input
+  Added aliases for the route53 records for easy module migrations
+
 ## 0.0.5
 
 ### Patch Changes
