@@ -29,6 +29,8 @@ export class StaticSite extends pulumi.ComponentResource {
         opts?: pulumi.ComponentResourceOptions & {
             distributionIgnoreChanges?: pulumi.ComponentResourceOptions['ignoreChanges']
             providerUsEast1?: pulumi.ProviderResource
+            route53DnsARecordAliases?: pulumi.ComponentResourceOptions['aliases']
+            route53DnsAAAARecordAliases?: pulumi.ComponentResourceOptions['aliases']
         },
     ) {
         super('swm:pulumi-static-site:static-site/StaticSite', name, {}, opts)
@@ -130,7 +132,7 @@ export class StaticSite extends pulumi.ComponentResource {
                 ],
                 zoneId: primaryDomainZone.id,
             },
-            { parent: this },
+            { parent: this, aliases: opts?.route53DnsARecordAliases },
         )
 
         new aws.route53.Record(
@@ -147,7 +149,7 @@ export class StaticSite extends pulumi.ComponentResource {
                 ],
                 zoneId: primaryDomainZone.id,
             },
-            { parent: this },
+            { parent: this, aliases: opts?.route53DnsAAAARecordAliases },
         )
     }
 }
