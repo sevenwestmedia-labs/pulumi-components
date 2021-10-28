@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.0.5
+
+### Patch Changes
+
+- fecaea7: Removed hard coded webAclId and added `distributionIgnoreChanges`
+
 ## 0.0.4
 
 ### Patch Changes
