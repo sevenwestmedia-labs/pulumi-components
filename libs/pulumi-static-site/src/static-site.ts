@@ -27,6 +27,7 @@ export class StaticSite extends pulumi.ComponentResource {
         name: string,
         args: StaticSiteArgs,
         opts?: pulumi.ComponentResourceOptions & {
+            distributionIgnoreChanges?: pulumi.ComponentResourceOptions['ignoreChanges']
             providerUsEast1?: pulumi.ProviderResource
         },
     ) {
@@ -108,7 +109,10 @@ export class StaticSite extends pulumi.ComponentResource {
                 refererValue: refererSecret.result,
                 getTags: args.getTags,
             },
-            { parent: this },
+            {
+                parent: this,
+                distributionIgnoreChanges: opts?.distributionIgnoreChanges,
+            },
         ).distribution
 
         // Add DNS records for the domain to point to the CF distribution
