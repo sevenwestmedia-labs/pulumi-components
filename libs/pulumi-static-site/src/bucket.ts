@@ -1,9 +1,7 @@
 import * as aws from '@pulumi/aws'
 import * as pulumi from '@pulumi/pulumi'
 
-export interface S3BucketOptions {
-    website?: aws.s3.BucketArgs['website']
-}
+export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>>
 
 interface BucketArgs extends S3BucketOptions {
     refererValue: pulumi.Input<string>
@@ -24,20 +22,23 @@ export class Bucket extends pulumi.ComponentResource {
     ) {
         super('swm:pulumi-static-site:bucket/Bucket', name, {}, opts)
 
+        const { refererValue, getTags, website, ...bucketOptions } = args
+
         this.bucket = new aws.s3.Bucket(
             name,
             {
-                website: pulumi.output(args.website).apply((website) => ({
+                ...bucketOptions,
+                website: pulumi.output(website).apply((website) => ({
                     indexDocument: 'index.html',
                     ...website,
                 })),
-                tags: args.getTags(name),
+                tags: getTags(name),
             },
             { parent: this },
         )
 
         const policy = pulumi
-            .all([this.bucket.arn, args.refererValue])
+            .all([this.bucket.arn, refererValue])
             .apply(([bucketArn, refererValue]) =>
                 aws.iam.getPolicyDocument(
                     {

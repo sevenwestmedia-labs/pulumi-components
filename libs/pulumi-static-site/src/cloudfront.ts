@@ -21,6 +21,12 @@ export interface CfDistributionOptions {
     lambdaFunctionAssociations?: pulumi.Input<
         pulumi.Input<aws.types.input.cloudfront.DistributionDefaultCacheBehaviorLambdaFunctionAssociation>[]
     >
+    additionalOrigins?: pulumi.Input<
+        pulumi.Input<aws.types.input.cloudfront.DistributionOrigin>[]
+    >
+    orderedCacheBehaviors?: pulumi.Input<
+        pulumi.Input<aws.types.input.cloudfront.DistributionOrderedCacheBehavior>[]
+    >
 }
 
 interface DistributionArgs extends CfDistributionOptions {
@@ -67,21 +73,24 @@ export class Distribution extends pulumi.ComponentResource {
                 isIpv6Enabled: true,
                 aliases: args.domains,
                 priceClass: args.priceClass ?? 'PriceClass_All',
-                origins: [
-                    {
-                        originId: originId.result,
-                        domainName: args.originDomainName,
-                        customOriginConfig: {
-                            originProtocolPolicy: 'http-only',
-                            httpPort: 80,
-                            httpsPort: 443,
-                            originSslProtocols: ['TLSv1.2'],
+                origins: pulumi
+                    .output(args.additionalOrigins)
+                    .apply((origins) => [
+                        {
+                            originId: originId.result,
+                            domainName: args.originDomainName,
+                            customOriginConfig: {
+                                originProtocolPolicy: 'http-only',
+                                httpPort: 80,
+                                httpsPort: 443,
+                                originSslProtocols: ['TLSv1.2'],
+                            },
+                            customHeaders: [
+                                { name: 'Referer', value: args.refererValue },
+                            ],
                         },
-                        customHeaders: [
-                            { name: 'Referer', value: args.refererValue },
-                        ],
-                    },
-                ],
+                        ...(origins || []),
+                    ]),
                 defaultRootObject: 'index.html',
                 defaultCacheBehavior: {
                     targetOriginId: originId.result,
@@ -96,6 +105,7 @@ export class Distribution extends pulumi.ComponentResource {
                         managedCorsS3OriginRequestPolicyId,
                     lambdaFunctionAssociations: args.lambdaFunctionAssociations,
                 },
+                orderedCacheBehaviors: args.orderedCacheBehaviors,
                 restrictions: {
                     geoRestriction: {
                         restrictionType: 'none',
