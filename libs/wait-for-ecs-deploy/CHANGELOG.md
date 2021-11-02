@@ -1,5 +1,12 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 0.2.1
+
+### Patch Changes
+
+- eb5213c: Fixed an issue where the wait for servicesStable ECS API call times out before the timeoutMs
+  Display error messages raised from the dynamic provider
+
 ## 0.2.0
 
 ### Minor Changes
