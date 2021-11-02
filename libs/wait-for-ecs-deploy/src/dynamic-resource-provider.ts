@@ -34,110 +34,77 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
  * Wait for ECS to stabilize, then check to see if the latest deployment(s)
  * were successful. A timeout is treated as a failed deployment.
  * @param inputs inputs
- * @param timeoutMs timeout
  * @returns a State object representing the deployment result.
  */
 export async function waitForService(inputs: Inputs) {
     const timeoutMs = inputs.timeoutMs ?? 180000
     pulumi.log.debug(`waitForService: timeoutMs is ${timeoutMs}`)
-    const retval = await Promise.race([
-        // current circuit breakers don't catch all error conditions,
-        // eg https://github.com/aws/containers-roadmap/issues/1206 --
-        // this timeout will cause a deployment to fail after a certain
-        // amount of time.
-        new Promise<pulumi.UnwrappedObject<State>>((resolve) => {
-            const timer = setTimeout(() => {
-                clearTimeout(timer)
-                const result: pulumi.UnwrappedObject<State> = {
-                    status: 'FAILED',
-                    failureMessage: `Timed out after ${
-                        timeoutMs / 1000
-                    } seconds`,
-                    clusterName: inputs.clusterName,
-                    serviceName: inputs.serviceName,
-                    desiredTaskDef: inputs.desiredTaskDef,
-                    timeoutMs,
-                }
-                // note that this is _always_ printed
-                //TODO cancel this timeout when the main promise resolves!
-                pulumi.log.debug(
-                    `waitForService: reached timeout, returning ${JSON.stringify(
-                        result,
-                    )}`,
-                )
-                resolve(result)
-            }, timeoutMs)
-        }),
-        (async () => {
-            const ecs = new aws.ECS({
-                region: inputs.awsRegion,
-                credentials: inputs.assumeRole
-                    ? new aws.TemporaryCredentials({
-                          RoleArn: inputs.assumeRole,
-                          RoleSessionName: `wait-for-ecs.ecs.${cuid()}`,
-                      })
-                    : undefined,
-            })
 
-            await ecs
-                .waitFor('servicesStable', {
-                    cluster: inputs.clusterName,
-                    services: [inputs.serviceName],
-                })
-                .promise()
-                .catch((err) => {
-                    throw new pulumi.RunError(err)
-                })
+    const ecs = new aws.ECS({
+        region: inputs.awsRegion,
+        credentials: inputs.assumeRole
+            ? new aws.TemporaryCredentials({
+                  RoleArn: inputs.assumeRole,
+                  RoleSessionName: `wait-for-ecs.ecs.${cuid()}`,
+              })
+            : undefined,
+    })
 
-            pulumi.log.debug(`waitForService: services are stable`)
+    // current circuit breakers don't catch all error conditions,
+    // eg https://github.com/aws/containers-roadmap/issues/1206 --
+    // this timeout will cause a deployment to fail after a certain
+    // amount of time.
+    await ecs
+        .waitFor('servicesStable', {
+            cluster: inputs.clusterName,
+            services: [inputs.serviceName],
+            $waiter: {
+                delay: 6,
+                maxAttempts: Math.max(1, Math.round(timeoutMs / (1000 * 6))),
+            },
+        })
+        .promise()
 
-            const services = await ecs
-                .describeServices({
-                    cluster: inputs.clusterName,
-                    services: [inputs.serviceName],
-                })
-                .promise()
-                .then((result) => result.services)
-                .catch((err) => {
-                    throw new pulumi.RunError(err)
-                })
+    pulumi.log.debug(`waitForService: services are stable`)
 
-            if (!services) {
-                throw new pulumi.RunError('No services found!')
-            }
+    const services = await ecs
+        .describeServices({
+            cluster: inputs.clusterName,
+            services: [inputs.serviceName],
+        })
+        .promise()
+        .then((result) => result.services)
 
-            const failedServices = services.filter((s) =>
-                hasFailed(s, inputs.desiredTaskDef),
-            )
+    if (!services) {
+        throw new Error('No services found!')
+    }
 
-            const failureMessage =
-                failedServices.length > 0
-                    ? `One or more services failed to deploy: ${failedServices.map(
-                          (service) => service.serviceName,
-                      )}`
-                    : ''
+    const failedServices = services.filter((s) =>
+        hasFailed(s, inputs.desiredTaskDef),
+    )
 
-            const status = failedServices.length > 0 ? 'FAILED' : 'COMPLETED'
+    const failureMessage =
+        failedServices.length > 0
+            ? `One or more services failed to deploy: ${failedServices.map(
+                  (service) => service.serviceName,
+              )}`
+            : ''
 
-            const result: pulumi.UnwrappedObject<State> = {
-                clusterName: inputs.clusterName,
-                serviceName: inputs.serviceName,
-                desiredTaskDef: inputs.desiredTaskDef,
-                failureMessage,
-                status,
-                timeoutMs,
-            }
+    const status = failedServices.length > 0 ? 'FAILED' : 'COMPLETED'
 
-            pulumi.log.debug(
-                `waitForService: successful return: ${JSON.stringify(result)}`,
-            )
+    const retval: pulumi.UnwrappedObject<State> = {
+        clusterName: inputs.clusterName,
+        serviceName: inputs.serviceName,
+        desiredTaskDef: inputs.desiredTaskDef,
+        failureMessage,
+        status,
+        timeoutMs,
+    }
 
-            return result
-        })().catch((err) => {
-            throw err
-        }),
-    ])
-    pulumi.log.debug(`waitForService: return retval: ${JSON.stringify(retval)}`)
+    pulumi.log.debug(
+        `waitForService: successful return: ${JSON.stringify(retval)}`,
+    )
+
     return retval
 }
 
