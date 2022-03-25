@@ -14,6 +14,14 @@ export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>> & {
      * the request includes a Referer header containing refererValue.
      */
     permittedAccounts?: pulumi.Input<string[]>
+
+    /**
+     * If true, objects in the bucket will be owned by the bucket owner.
+     *
+     * If false, objects in the bucket will be owned by the object writer
+     * (this is the default).
+     */
+    bucketOwnerPreferred?: pulumi.Input<boolean>
 }
 
 interface BucketArgs extends S3BucketOptions {
@@ -53,6 +61,27 @@ export class Bucket extends pulumi.ComponentResource {
                     ...website,
                 })),
                 tags: getTags(name),
+            },
+            { parent: this },
+        )
+
+        new aws.s3.BucketOwnershipControls(
+            name,
+            {
+                bucket: this.bucket.id,
+                rule: {
+                    objectOwnership: pulumi
+                        .output(args.bucketOwnerPreferred)
+                        .apply(
+                            (bucketOwnerPreferred) =>
+                                bucketOwnerPreferred ?? false,
+                        )
+                        .apply((bucketOwnerPreferred) =>
+                            bucketOwnerPreferred
+                                ? 'BucketOwnerPreferred'
+                                : 'ObjectWriter',
+                        ),
+                },
             },
             { parent: this },
         )
