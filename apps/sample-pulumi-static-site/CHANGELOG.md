@@ -1,5 +1,12 @@
 # sample-pulumi-static-site
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [3092562]
+  - @wanews/pulumi-static-site@0.1.1
+
 ## 0.0.3
 
 ### Patch Changes

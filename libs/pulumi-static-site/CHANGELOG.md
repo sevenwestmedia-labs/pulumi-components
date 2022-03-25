@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.1.1
+
+### Patch Changes
+
+- 3092562: Fix conflicting operation error when bucket policy and ownership controls are applied simultaneously
+
 ## 0.1.0
 
 ### Minor Changes
