@@ -1,5 +1,27 @@
 # @wanews/pulumi-static-site
 
+## 0.1.0
+
+### Minor Changes
+
+- a5392a3: Add permittedAccounts to S3BucketOptions
+
+  Usage:
+
+  ```
+  new Bucket('bucket', {
+     ...
+     bucketOptions: {
+       pertmittedAccounts: [
+         '11111111',
+         '22222222',
+       ],
+     },
+  })
+  ```
+
+- 63801e5: allow bucket ownership to be set to BucketOwnerPreferred
+
 ## 0.0.6
 
 ### Patch Changes
