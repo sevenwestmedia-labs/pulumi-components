@@ -12,6 +12,8 @@ export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>> & {
      * Note that any accounts NOT in this list will be unable to perform
      * s3:GetObject, even if they would be otherwise permitted by ACLs, UNLESS
      * the request includes a Referer header containing refererValue.
+     *
+     * Requires `alwaysDenyBadReferer: false`
      */
     permittedAccounts?: pulumi.Input<string[]>
 
@@ -22,6 +24,16 @@ export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>> & {
      * (this is the default).
      */
     bucketOwnerPreferred?: pulumi.Input<boolean>
+
+    /**
+     * If true, deny requests with a bad Referer, even if they would otherwise
+     * be permitted. Note that this will also affect you! So it may not be
+     * desired. For backwards compatibility, is the default behaviour.
+     *
+     * If false, only deny requests with a bad Referer if they would not
+     * otherwise be allowed. Required for permittedAccounts
+     */
+    alwaysDenyBadReferer?: pulumi.Input<boolean>
 }
 
 interface BucketArgs extends S3BucketOptions {
@@ -51,6 +63,25 @@ export class Bucket extends pulumi.ComponentResource {
         super('swm:pulumi-static-site:bucket/Bucket', name, {}, opts)
 
         const { refererValue, getTags, website, ...bucketOptions } = args
+
+        pulumi
+            .all([args.permittedAccounts, args.alwaysDenyBadReferer])
+            .apply(([permittedAccounts, alwaysDenyBadReferer]) => {
+                if (
+                    (alwaysDenyBadReferer ?? true) &&
+                    (permittedAccounts ?? []).length > 0
+                ) {
+                    pulumi.log.warn(
+                        '`permittedAccounts` requires ' +
+                            '`alwaysDenyBadReferer: false`, otherwise ' +
+                            '`permittedAccounts` will not be able to get ' +
+                            'objects unless the referer is also set in ' +
+                            'the request headers. To suppress this ' +
+                            'warning, set `alwaysDenyBadReferer: false` ' +
+                            'in `bucketOptions`.',
+                    )
+                }
+            })
 
         this.bucket = new aws.s3.Bucket(
             name,
@@ -91,7 +122,7 @@ export class Bucket extends pulumi.ComponentResource {
                 this.bucket.arn,
                 refererValue,
                 args.permittedAccounts,
-
+                args.alwaysDenyBadReferer,
                 // This is not used, but hopefully fixes the error below.
                 //
                 // OperationAborted: A conflicting conditional operation is
@@ -104,6 +135,7 @@ export class Bucket extends pulumi.ComponentResource {
                     bucketArn,
                     refererValue,
                     permittedAccounts,
+                    alwaysDenyBadReferer,
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     _ownershipId,
                 ]) =>
@@ -111,32 +143,51 @@ export class Bucket extends pulumi.ComponentResource {
                         {
                             version: '2012-10-17',
                             statements: [
-                                {
-                                    sid: 'AllowCloudFrontReadGetObject',
-                                    effect: 'Deny',
-                                    principals: [
-                                        { type: '*', identifiers: ['*'] },
-                                    ],
-                                    actions: ['s3:GetObject'],
-                                    resources: [`${bucketArn}/*`],
-                                    conditions: [
-                                        {
-                                            test: 'StringNotEquals',
-                                            variable: 'aws:Referer',
-                                            values: [refererValue],
-                                        },
-                                        ...((permittedAccounts ?? []).length > 0
-                                            ? [
+                                ...(alwaysDenyBadReferer ?? true
+                                    ? [
+                                          {
+                                              sid:
+                                                  'AllowCloudFrontReadGetObject',
+                                              effect: 'Deny',
+                                              principals: [
+                                                  {
+                                                      type: '*',
+                                                      identifiers: ['*'],
+                                                  },
+                                              ],
+                                              actions: ['s3:GetObject'],
+                                              resources: [`${bucketArn}/*`],
+                                              conditions: [
                                                   {
                                                       test: 'StringNotEquals',
-                                                      variable:
-                                                          'aws:SourceAccount',
-                                                      values: permittedAccounts,
+                                                      variable: 'aws:Referer',
+                                                      values: [refererValue],
                                                   },
-                                              ]
-                                            : []),
-                                    ],
-                                },
+                                              ],
+                                          },
+                                      ]
+                                    : [
+                                          {
+                                              sid:
+                                                  'AllowCloudFrontReadGetObject',
+                                              effect: 'Allow',
+                                              principals: [
+                                                  {
+                                                      type: '*',
+                                                      identifiers: ['*'],
+                                                  },
+                                              ],
+                                              actions: ['s3:GetObject'],
+                                              resources: [`${bucketArn}/*`],
+                                              conditions: [
+                                                  {
+                                                      test: 'StringEquals',
+                                                      variable: 'aws:Referer',
+                                                      values: [refererValue],
+                                                  },
+                                              ],
+                                          },
+                                      ]),
                                 ...((permittedAccounts ?? []).length > 0
                                     ? [
                                           {
