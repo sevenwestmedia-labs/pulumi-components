@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.2.0
+
+### Minor Changes
+
+- e086603: allow overriding bucket policy to make the Referer Allowed instead of Deny
+
 ## 0.1.1
 
 ### Patch Changes
