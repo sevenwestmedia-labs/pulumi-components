@@ -65,7 +65,7 @@ export class Bucket extends pulumi.ComponentResource {
             { parent: this },
         )
 
-        new aws.s3.BucketOwnershipControls(
+        const ownershipControls = new aws.s3.BucketOwnershipControls(
             name,
             {
                 bucket: this.bucket.id,
@@ -87,67 +87,88 @@ export class Bucket extends pulumi.ComponentResource {
         )
 
         const policy = pulumi
-            .all([this.bucket.arn, refererValue, args.permittedAccounts])
-            .apply(([bucketArn, refererValue, permittedAccounts]) =>
-                aws.iam.getPolicyDocument(
-                    {
-                        version: '2012-10-17',
-                        statements: [
-                            {
-                                sid: 'AllowCloudFrontReadGetObject',
-                                effect: 'Deny',
-                                principals: [{ type: '*', identifiers: ['*'] }],
-                                actions: ['s3:GetObject'],
-                                resources: [`${bucketArn}/*`],
-                                conditions: [
-                                    {
-                                        test: 'StringNotEquals',
-                                        variable: 'aws:Referer',
-                                        values: [refererValue],
-                                    },
-                                    ...((permittedAccounts ?? []).length > 0
-                                        ? [
-                                              {
-                                                  test: 'StringNotEquals',
-                                                  variable: 'aws:SourceAccount',
-                                                  values: permittedAccounts,
-                                              },
-                                          ]
-                                        : []),
-                                ],
-                            },
-                            ...((permittedAccounts ?? []).length > 0
-                                ? [
-                                      {
-                                          sid: 'AllowIAMAccessToBucket',
-                                          effect: 'Allow',
-                                          principals: [
-                                              {
-                                                  type: 'AWS',
-                                                  identifiers: permittedAccounts,
-                                              },
-                                          ],
-                                          actions: ['s3:*'],
-                                          resources: [`${bucketArn}/*`],
-                                      },
-                                      {
-                                          sid: 'AllowIAMAccessToListBucket',
-                                          effect: 'Allow',
-                                          principals: [
-                                              {
-                                                  type: 'AWS',
-                                                  identifiers: permittedAccounts,
-                                              },
-                                          ],
-                                          actions: ['s3:ListBucket'],
-                                          resources: [bucketArn],
-                                      },
-                                  ]
-                                : []),
-                        ],
-                    },
-                    { parent: this },
-                ),
+            .all([
+                this.bucket.arn,
+                refererValue,
+                args.permittedAccounts,
+
+                // This is not used, but hopefully fixes the error below.
+                //
+                // OperationAborted: A conflicting conditional operation is
+                // currently in progress against this resource. Please try
+                // again.
+                ownershipControls.id,
+            ])
+            .apply(
+                ([
+                    bucketArn,
+                    refererValue,
+                    permittedAccounts,
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    _ownershipId,
+                ]) =>
+                    aws.iam.getPolicyDocument(
+                        {
+                            version: '2012-10-17',
+                            statements: [
+                                {
+                                    sid: 'AllowCloudFrontReadGetObject',
+                                    effect: 'Deny',
+                                    principals: [
+                                        { type: '*', identifiers: ['*'] },
+                                    ],
+                                    actions: ['s3:GetObject'],
+                                    resources: [`${bucketArn}/*`],
+                                    conditions: [
+                                        {
+                                            test: 'StringNotEquals',
+                                            variable: 'aws:Referer',
+                                            values: [refererValue],
+                                        },
+                                        ...((permittedAccounts ?? []).length > 0
+                                            ? [
+                                                  {
+                                                      test: 'StringNotEquals',
+                                                      variable:
+                                                          'aws:SourceAccount',
+                                                      values: permittedAccounts,
+                                                  },
+                                              ]
+                                            : []),
+                                    ],
+                                },
+                                ...((permittedAccounts ?? []).length > 0
+                                    ? [
+                                          {
+                                              sid: 'AllowIAMAccessToBucket',
+                                              effect: 'Allow',
+                                              principals: [
+                                                  {
+                                                      type: 'AWS',
+                                                      identifiers: permittedAccounts,
+                                                  },
+                                              ],
+                                              actions: ['s3:*'],
+                                              resources: [`${bucketArn}/*`],
+                                          },
+                                          {
+                                              sid: 'AllowIAMAccessToListBucket',
+                                              effect: 'Allow',
+                                              principals: [
+                                                  {
+                                                      type: 'AWS',
+                                                      identifiers: permittedAccounts,
+                                                  },
+                                              ],
+                                              actions: ['s3:ListBucket'],
+                                              resources: [bucketArn],
+                                          },
+                                      ]
+                                    : []),
+                            ],
+                        },
+                        { parent: this },
+                    ),
             )
 
         new aws.s3.BucketPolicy(
