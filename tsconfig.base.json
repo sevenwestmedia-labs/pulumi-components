@@ -20,18 +20,18 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
         "paths": {
-            "@wanews/pulumi-lambda": ["libs/pulumi-lambda/src/index.ts"],
-            "@wanews/pulumi-certificate-validation": [
-                "libs/certificate-validation/src/index.ts"
-            ],
             "@wanews/pulumi-apigateway-lambda-proxy": [
                 "libs/apigateway-lambda-proxy/src/index.ts"
             ],
-            "@wanews/pulumi-static-site": [
-                "libs/pulumi-static-site/src/index.ts"
+            "@wanews/pulumi-certificate-validation": [
+                "libs/certificate-validation/src/index.ts"
             ],
             "@wanews/pulumi-invoke-step-function": [
                 "libs/invoke-step-function/src/index.ts"
+            ],
+            "@wanews/pulumi-lambda": ["libs/pulumi-lambda/src/index.ts"],
+            "@wanews/pulumi-static-site": [
+                "libs/pulumi-static-site/src/index.ts"
             ]
         }
     },
