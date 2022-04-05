@@ -6,7 +6,7 @@
     "author": "Seven West Media WA",
     "license": "MIT",
     "peerDependencies": {
-        "@pulumi/aws": "^4.0.0",
+        "@pulumi/aws": "^5.0.0",
         "@pulumi/pulumi": "^3.0.0"
     },
     "repository": {
