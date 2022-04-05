@@ -17,11 +17,11 @@
     },
     "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/wait-for-ecs-deploy#readme",
     "peerDependencies": {
-        "@pulumi/aws": "^4.0.0",
+        "@pulumi/aws": "^5.0.0",
         "@pulumi/pulumi": "^3.0.0",
         "aws-sdk": "^2.800.0"
     },
     "dependencies": {
-        "cuid": "^2.0.0"
+        "cuid": "^2.1.8"
     }
 }
