@@ -14,7 +14,6 @@ export interface CfDistributionOptions {
     priceClass?: pulumi.Input<string>
     cachePolicyId?: pulumi.Input<string>
     originRequestPolicyId?: pulumi.Input<string>
-    responseHeadersPolicyId?: pulumi.Input<string>
     webAclId?: pulumi.Input<string>
     lambdaFunctionAssociations?: pulumi.Input<
         pulumi.Input<aws.types.input.cloudfront.DistributionDefaultCacheBehaviorLambdaFunctionAssociation>[]
@@ -104,8 +103,6 @@ export class Distribution extends pulumi.ComponentResource {
                         args.originRequestPolicyId ??
                         managedCorsS3OriginRequestPolicyId,
                     lambdaFunctionAssociations: args.lambdaFunctionAssociations,
-                    responseHeadersPolicyId: args.responseHeadersPolicyId,
-                    
                 },
                 orderedCacheBehaviors: args.orderedCacheBehaviors,
                 restrictions: {
@@ -126,6 +123,5 @@ export class Distribution extends pulumi.ComponentResource {
             },
             { parent: this, ignoreChanges: opts?.distributionIgnoreChanges },
         )
-
     }
 }
