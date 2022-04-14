@@ -15,7 +15,7 @@ importers:
       '@nrwl/linter': 12.0.8
       '@nrwl/tao': 12.0.8
       '@nrwl/workspace': 12.0.8
-      '@pulumi/aws': ^4.1.0
+      '@pulumi/aws': ^4.0.0
       '@pulumi/pagerduty': ^2.2.0
       '@pulumi/pulumi': ^3.0.0
       '@pulumi/random': ^4.0.0
@@ -59,7 +59,7 @@ importers:
       '@nrwl/linter': 12.0.8
       '@nrwl/tao': 12.0.8
       '@nrwl/workspace': 12.0.8_debug@4.3.1+prettier@2.2.1
-      '@pulumi/aws': 4.38.1
+      '@pulumi/aws': 4.0.0
       '@pulumi/pagerduty': 2.2.0
       '@pulumi/pulumi': 3.0.0
       '@types/debug': 4.1.5
@@ -1780,20 +1780,22 @@ packages:
   /@protobufjs/utf8/1.1.0:
     resolution: {integrity: sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=}
 
-  /@pulumi/aws/4.38.1:
-    resolution: {integrity: sha512-WeOprXm/c9n8QmP5qLNEVk1FZTCa7KGgUj/P1drlazJr1LIvrq+KSWcUxayLeFJvpLCbYd19aI2jdyQqZJAjEw==}
+  /@pulumi/aws/4.0.0:
+    resolution: {integrity: sha512-zW4EiJhR09Mu6nwF4GUjRwQuA0l1RU2KyPM/JEOOCRh1FCpUvMu+mP+Iuv2R8CQgI7G2gkkEuMRmV08e5u9DEQ==, tarball: '@pulumi/aws/-/aws-4.0.0.tgz'}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.3.0
+      '@pulumi/pulumi': 3.0.0
       aws-sdk: 2.889.0
       builtin-modules: 3.0.0
       mime: 2.5.2
       read-package-tree: 5.3.1
       resolve: 1.20.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@pulumi/pagerduty/2.2.0:
-    resolution: {integrity: sha512-fEc+1DshCIerGOEl3XSGDuU/YQHFP2qw5DQ2dyjpgeqwiZ3Az+Cp9H9bKy8VHPh4q3a5L9N/KG1ilpwBM9FAYQ==}
+    resolution: {integrity: sha512-fEc+1DshCIerGOEl3XSGDuU/YQHFP2qw5DQ2dyjpgeqwiZ3Az+Cp9H9bKy8VHPh4q3a5L9N/KG1ilpwBM9FAYQ==, tarball: '@pulumi/pagerduty/-/pagerduty-2.2.0.tgz'}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.3.0
@@ -1845,10 +1847,10 @@ packages:
     dev: true
 
   /@pulumi/query/0.3.0:
-    resolution: {integrity: sha512-xfo+yLRM2zVjVEA4p23IjQWzyWl1ZhWOGobsBqRpIarzLvwNH/RAGaoehdxlhx4X92302DrpdIFgTICMN4P38w==}
+    resolution: {integrity: sha512-xfo+yLRM2zVjVEA4p23IjQWzyWl1ZhWOGobsBqRpIarzLvwNH/RAGaoehdxlhx4X92302DrpdIFgTICMN4P38w==, tarball: '@pulumi/query/-/query-0.3.0.tgz'}
 
   /@pulumi/random/4.0.0:
-    resolution: {integrity: sha512-ZjCmHVOLfzkzRvbpa9RtLfYobStq8LhWcjCvjSjOOJZAgBrMkl3CJYnFdrr/DEqrTwQ5HJnG8jU/StOkOQka3g==}
+    resolution: {integrity: sha512-ZjCmHVOLfzkzRvbpa9RtLfYobStq8LhWcjCvjSjOOJZAgBrMkl3CJYnFdrr/DEqrTwQ5HJnG8jU/StOkOQka3g==, tarball: '@pulumi/random/-/random-4.0.0.tgz'}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.0.0
