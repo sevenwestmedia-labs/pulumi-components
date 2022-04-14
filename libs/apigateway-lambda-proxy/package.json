@@ -20,7 +20,7 @@
         "@wanews/pulumi-lambda": "0.10.0"
     },
     "peerDependencies": {
-        "@pulumi/aws": "^4.0.0",
+        "@pulumi/aws": "^4.1.0",
         "@pulumi/pulumi": "^3.0.0"
     }
 }
