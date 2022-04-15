@@ -16,6 +16,7 @@ importers:
       '@nrwl/linter': 13.9.6
       '@nrwl/workspace': 13.9.6
       '@pulumi/aws': ^5.1.0
+      '@pulumi/aws-native': ^0.15.0
       '@pulumi/pagerduty': ^3.3.0
       '@pulumi/pulumi': ^3.28.0
       '@pulumi/random': ^4.4.2
@@ -61,6 +62,7 @@ importers:
       '@nrwl/linter': 13.9.6_ac05dd2799c3b83e4ec5f1e40cd819ea
       '@nrwl/workspace': 13.9.6_6322cfd23f6bfbae767e7f615df794b2
       '@pulumi/aws': 5.1.0
+      '@pulumi/aws-native': 0.15.0
       '@pulumi/pagerduty': 3.3.0
       '@pulumi/pulumi': 3.28.0
       '@types/debug': 4.1.7
@@ -95,18 +97,27 @@ importers:
     specifiers:
       '@wanews/pulumi-static-site': workspace:^0.2.0
     dependencies:
-      '@wanews/pulumi-static-site': link:../../libs/pulumi-static-site
+      '@wanews/pulumi-static-site': link:../../libs/pulumi-static-site-native
 
   libs/apigateway-lambda-proxy:
     specifiers:
       '@wanews/pulumi-lambda': workspace:0.10.0
     dependencies:
-      '@wanews/pulumi-lambda': link:../pulumi-lambda
+      '@wanews/pulumi-lambda': link:../pulumi-lambda-native
+
+  libs/apigateway-lambda-proxy-native:
+    specifiers:
+      '@wanews/pulumi-lambda': workspace:0.10.0
+    dependencies:
+      '@wanews/pulumi-lambda': link:../pulumi-lambda-native
 
   libs/buildstep:
     specifiers: {}
 
   libs/certificate-validation:
+    specifiers: {}
+
+  libs/certificate-validation-native:
     specifiers: {}
 
   libs/invoke-lamda:
@@ -118,6 +129,9 @@ importers:
   libs/pulumi-lambda:
     specifiers: {}
 
+  libs/pulumi-lambda-native:
+    specifiers: {}
+
   libs/pulumi-pagerduty:
     specifiers: {}
 
@@ -125,7 +139,13 @@ importers:
     specifiers:
       '@wanews/pulumi-certificate-validation': workspace:^0.4.0
     dependencies:
-      '@wanews/pulumi-certificate-validation': link:../certificate-validation
+      '@wanews/pulumi-certificate-validation': link:../certificate-validation-native
+
+  libs/pulumi-static-site-native:
+    specifiers:
+      '@wanews/pulumi-certificate-validation': workspace:^0.4.0
+    dependencies:
+      '@wanews/pulumi-certificate-validation': link:../certificate-validation-native
 
   libs/throw-files-in-s3:
     specifiers:
@@ -2924,6 +2944,22 @@ packages:
   /@protobufjs/utf8/1.1.0:
     resolution: {integrity: sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=}
 
+  /@pulumi/aws-native/0.15.0:
+    resolution: {integrity: sha512-gYQr6F/VYAAh7IRH8bhY8+qquJ0+L0Gaz0fG/hRRe84sAY19ty1YYiIBOEepf4v/NeMcllpOPUm9fRosDPNZsA==}
+    requiresBuild: true
+    dependencies:
+      '@pulumi/pulumi': 3.28.0
+      '@types/glob': 5.0.37
+      '@types/node-fetch': 2.6.1
+      '@types/tmp': 0.0.33
+      glob: 7.2.0
+      node-fetch: 2.6.7
+      shell-quote: 1.7.3
+      tmp: 0.0.33
+    transitivePeerDependencies:
+      - encoding
+    dev: true
+
   /@pulumi/aws/5.1.0:
     resolution: {integrity: sha512-cQyrUUKBRc4KpS5AOIZsHcaaqO2aYfQ2BiAISTQadKv9b/Pmaj48BjLOywmUSzZrQfNcjK0xTXIhj0VvICHHZw==}
     requiresBuild: true
@@ -3206,6 +3242,13 @@ packages:
       '@types/ms': 0.7.31
     dev: true
 
+  /@types/glob/5.0.37:
+    resolution: {integrity: sha512-ATA/xrS7CZ3A2WCPVY4eKdNpybq56zqlTirnHhhyOztZM/lPxJzusOBI3BsaXbu6FrUluqzvMlI4sZ6BDYMlMg==}
+    dependencies:
+      '@types/minimatch': 3.0.5
+      '@types/node': 17.0.23
+    dev: true
+
   /@types/graceful-fs/4.1.5:
     resolution: {integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==}
     dependencies:
@@ -3256,6 +3299,10 @@ packages:
     resolution: {integrity: sha512-Jus9s4CDbqwocc5pOAnh8ShfrnMcPHuJYzVcSUU7lrh8Ni5HuIqX3oilL86p3dlTrk0LzHRCgA/GQ7uNCw6l2Q==}
     dev: true
 
+  /@types/minimatch/3.0.5:
+    resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
+    dev: true
+
   /@types/minimist/1.2.2:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
@@ -3292,6 +3339,10 @@ packages:
 
   /@types/stack-utils/2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
+    dev: true
+
+  /@types/tmp/0.0.33:
+    resolution: {integrity: sha1-EHPEvIJHVK49EM+riKsCN7qWTk0=}
     dev: true
 
   /@types/yargs-parser/21.0.0:
@@ -7067,6 +7118,10 @@ packages:
   /shebang-regex/3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+    dev: true
+
+  /shell-quote/1.7.3:
+    resolution: {integrity: sha512-Vpfqwm4EnqGdlsBFNmHhxhElJYrdfcxPThu+ryKS5J8L/fhAwLazFZtq+S+TWZ9ANj2piSQLGj6NQg+lKPmxrw==}
     dev: true
 
   /side-channel/1.0.4:

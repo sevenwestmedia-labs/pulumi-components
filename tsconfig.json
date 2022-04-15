@@ -14,10 +14,16 @@
             "path": "libs/apigateway-lambda-proxy"
         },
         {
+            "path": "libs/apigateway-lambda-proxy-native"
+        },
+        {
             "path": "libs/certificate-validation"
         },
         {
             "path": "libs/pulumi-lambda"
+        },
+        {
+            "path": "libs/pulumi-lambda-native"
         }
     ]
 }

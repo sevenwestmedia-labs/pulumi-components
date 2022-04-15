@@ -11,7 +11,10 @@
         "importHelpers": true,
         "target": "es2015",
         "module": "esnext",
-        "lib": ["es2019", "dom"],
+        "lib": [
+            "es2019",
+            "dom"
+        ],
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
@@ -29,11 +32,19 @@
             "@wanews/pulumi-invoke-step-function": [
                 "libs/invoke-step-function/src/index.ts"
             ],
-            "@wanews/pulumi-lambda": ["libs/pulumi-lambda/src/index.ts"],
+            "@wanews/pulumi-lambda": [
+                "libs/pulumi-lambda/src/index.ts"
+            ],
+            "@wanews/pulumi-lambda-native": [
+                "libs/pulumi-lambda-native/src/index.ts"
+            ],
             "@wanews/pulumi-static-site": [
                 "libs/pulumi-static-site/src/index.ts"
             ]
         }
     },
-    "exclude": ["node_modules", "tmp"]
+    "exclude": [
+        "node_modules",
+        "tmp"
+    ]
 }
