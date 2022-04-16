@@ -41,7 +41,8 @@ export async function invokeLambda({
         return {
             statusCode: result.StatusCode,
         }
-    } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
         await pulumi.log.error(e.message)
         throw e
     }
