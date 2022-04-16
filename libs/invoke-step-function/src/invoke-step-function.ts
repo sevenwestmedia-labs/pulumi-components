@@ -40,7 +40,8 @@ export async function invokeStepFunction({
             output: result.output,
             executionArn: result.executionArn,
         }
-    } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
         await pulumi.log.error(e.message)
         throw e
     }
