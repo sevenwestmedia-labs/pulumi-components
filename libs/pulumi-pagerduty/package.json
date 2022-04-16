@@ -17,8 +17,8 @@
     },
     "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/pulumi-pagerduty#readme",
     "peerDependencies": {
-        "@pulumi/aws": "^4.5.1",
-        "@pulumi/pagerduty": "^2.0.0",
+        "@pulumi/aws": "^5.0.0",
+        "@pulumi/pagerduty": "^3.0.0",
         "@pulumi/pulumi": "^3.3.0"
     }
 }
