@@ -16,45 +16,27 @@
     },
     "tasksRunnerOptions": {
         "default": {
-            "runner": "@nrwl/workspace/tasks-runners/default",
+            "runner": "nx/tasks-runners/default",
             "options": {
-                "cacheableOperations": ["build", "lint", "test", "e2e"]
+                "cacheableOperations": [
+                    "build",
+                    "lint",
+                    "test",
+                    "e2e"
+                ],
+                "parallel": 1
             }
         }
     },
-    "projects": {
-        "pulumi-lambda": {
-            "tags": []
-        },
-        "certificate-validation": {
-            "tags": []
-        },
-        "apigateway-lambda-proxy": {
-            "tags": []
-        },
-        "buildstep": {
-            "tags": []
-        },
-        "throw-files-in-s3": {
-            "tags": []
-        },
-        "invoke-lamda": {
-            "tags": []
-        },
-        "wait-for-ecs-deploy": {
-            "tags": []
-        },
-        "pulumi-pagerduty": {
-            "tags": []
-        },
-        "invoke-step-function": {
-            "tags": []
-        },
-        "pulumi-static-site": {
-            "tags": []
-        },
-        "sample-pulumi-static-site": {
-            "tags": []
-        }
+    "targetDependencies": {
+        "build": [
+            {
+                "target": "build",
+                "projects": "dependencies"
+            }
+        ]
+    },
+    "cli": {
+        "defaultCollection": "@nrwl/workspace"
     }
 }

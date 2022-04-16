@@ -17,10 +17,10 @@
     },
     "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/apigateway-lambda-proxy#readme",
     "dependencies": {
-        "@wanews/pulumi-lambda": "0.10.0"
+        "@wanews/pulumi-lambda": "workspace:0.10.0"
     },
     "peerDependencies": {
-        "@pulumi/aws": "^4.0.0",
+        "@pulumi/aws": "^5.0.0",
         "@pulumi/pulumi": "^3.0.0"
     }
 }

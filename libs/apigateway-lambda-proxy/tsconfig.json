@@ -6,5 +6,9 @@
         "types": ["jest", "node"]
     },
     "include": ["src/**/*.ts", "src/**/*.tsx"],
-    "references": [{ "path": "../pulumi-lambda" }]
+    "references": [
+        {
+            "path": "../pulumi-lambda"
+        }
+    ]
 }
