@@ -50,9 +50,8 @@ function mockedEcsDeploymentTimeout(describeServicesResponse: unknown) {
 }
 
 describe('#waitForServices', () => {
-    beforeEach(async (done) => {
+    beforeEach(async () => {
         jest.resetAllMocks()
-        done()
     })
 
     it('should return COMPLETED when a service is successfully deployed', async () => {

@@ -41,7 +41,8 @@ beforeAll(async () => {
     workspace.program = async function pulumiTestProgram() {
         const code = pulumi.output(
             new pulumi.asset.AssetArchive({
-                ['index.js']: new pulumi.asset.StringAsset(`exports.handler = async function(event) {
+                ['index.js']:
+                    new pulumi.asset.StringAsset(`exports.handler = async function(event) {
     return {
         headers: {
             'Content-Type': 'application/json',
@@ -86,17 +87,19 @@ beforeAll(async () => {
     }
 
     stack = await Stack.select(stackname, workspace)
+    let stackUpResult
     try {
-        const stackUpResult = await stack.up({
+        stackUpResult = await stack.up({
             onOutput: pulumiDebug,
         })
+
         outputs = stackUpResult.outputs
         pulumiDebug('Stack created: %O', {
             summary: stackUpResult.summary,
             outputs: stackUpResult.outputs,
         })
     } catch (err) {
-        console.error({ err }, 'Stack creation failed')
+        console.error({ err, stackUpResult }, 'Stack creation failed')
     }
 })
 
@@ -116,5 +119,5 @@ afterAll(async () => {
     if (workspace) {
         await workspace.removeStack(stackname)
     }
-    fs.rmdirSync(tmpPath.path, { recursive: true })
+    fs.rmSync(tmpPath.path, { recursive: true })
 })
