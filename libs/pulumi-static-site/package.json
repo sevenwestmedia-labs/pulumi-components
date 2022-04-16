@@ -1,6 +1,6 @@
 {
     "name": "@wanews/pulumi-static-site",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "main": "dist/index.js",
     "module": "dist/esm/index.js",
     "author": "Seven West Media WA",
@@ -17,7 +17,7 @@
     },
     "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/pulumi-static-site#readme",
     "dependencies": {
-        "@wanews/pulumi-certificate-validation": "workspace:^0.4.0"
+        "@wanews/pulumi-certificate-validation": "workspace:^0.5.0"
     },
     "peerDependencies": {
         "@pulumi/aws": "^5.0.0",

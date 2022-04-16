@@ -1,5 +1,16 @@
 # @wanews/pulumi-static-site
 
+## 0.4.0
+
+### Minor Changes
+
+- 115e942: Upgraded dependencies
+
+### Patch Changes
+
+- Updated dependencies [115e942]
+  - @wanews/pulumi-certificate-validation@0.5.0
+
 ## 0.3.0
 
 ### Minor Changes

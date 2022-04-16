@@ -1,5 +1,11 @@
 # @wanews/pulumi-certificate-validation
 
+## 0.5.0
+
+### Minor Changes
+
+- 115e942: Upgraded dependencies
+
 ## 0.4.0
 
 ### Minor Changes

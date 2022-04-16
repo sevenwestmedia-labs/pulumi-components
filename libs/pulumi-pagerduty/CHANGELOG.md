@@ -1,5 +1,11 @@
 # @wanews/pulumi-pagerduty
 
+## 1.2.0
+
+### Minor Changes
+
+- 115e942: Upgraded dependencies
+
 ## 1.1.1
 
 ### Patch Changes

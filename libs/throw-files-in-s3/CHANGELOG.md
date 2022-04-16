@@ -1,5 +1,11 @@
 # @wanews/pulumi-throw-files-in-s3
 
+## 0.3.0
+
+### Minor Changes
+
+- 115e942: Upgraded dependencies
+
 ## 0.2.0
 
 ### Minor Changes

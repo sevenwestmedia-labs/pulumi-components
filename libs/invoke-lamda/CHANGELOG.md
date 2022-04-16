@@ -1,5 +1,11 @@
 # @wanews/pulumi-invoke-lambda
 
+## 0.4.0
+
+### Minor Changes
+
+- 115e942: Upgraded dependencies
+
 ## 0.3.1
 
 ### Patch Changes

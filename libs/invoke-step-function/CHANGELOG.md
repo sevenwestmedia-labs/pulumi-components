@@ -1,5 +1,11 @@
 # @wanews/pulumi-invoke-step-function
 
+## 0.2.0
+
+### Minor Changes
+
+- 115e942: Upgraded dependencies
+
 ## 0.1.1
 
 ### Patch Changes

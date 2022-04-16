@@ -1,5 +1,16 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.14.0
+
+### Minor Changes
+
+- 115e942: Upgraded dependencies
+
+### Patch Changes
+
+- Updated dependencies [115e942]
+  - @wanews/pulumi-lambda@0.11.0
+
 ## 0.13.1
 
 ### Patch Changes

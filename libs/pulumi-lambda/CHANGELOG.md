@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.11.0
+
+### Minor Changes
+
+- 115e942: Upgraded dependencies
+
 ## 0.10.0
 
 ### Minor Changes
