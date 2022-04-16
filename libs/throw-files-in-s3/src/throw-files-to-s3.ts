@@ -180,7 +180,8 @@ async function putFilesIntoS3(
 
     try {
         await Promise.all(sentFiles)
-    } catch (err) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
         console.log('Failed to throw files to S3', err.message)
         throw new Error('Failed to throw files to S3')
     }
