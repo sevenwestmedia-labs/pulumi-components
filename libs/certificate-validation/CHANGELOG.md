@@ -1,5 +1,11 @@
 # @wanews/pulumi-certificate-validation
 
+## 0.5.1
+
+### Patch Changes
+
+- a92757e: Fixed incorrect peerDependencies
+
 ## 0.5.0
 
 ### Minor Changes

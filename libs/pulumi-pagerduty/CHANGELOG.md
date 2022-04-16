@@ -1,5 +1,11 @@
 # @wanews/pulumi-pagerduty
 
+## 1.2.1
+
+### Patch Changes
+
+- a92757e: Fixed incorrect peerDependencies
+
 ## 1.2.0
 
 ### Minor Changes
