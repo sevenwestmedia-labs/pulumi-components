@@ -1,0 +1,29 @@
+{
+    "projectType": "library",
+    "sourceRoot": "libs/invoke-step-function/src",
+    "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["libs/invoke-step-function/**/*.ts"]
+            },
+            "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "options": {
+                "jestConfig": "libs/invoke-step-function/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "outputs": ["coverage/libs/invoke-step-function"]
+        },
+        "package": {
+            "executor": "@wanews/nx-typescript-project-references:package",
+            "options": {
+                "main": "libs/invoke-step-function/src/index.ts",
+                "tsConfig": "libs/invoke-step-function/tsconfig.json"
+            }
+        }
+    },
+    "tags": []
+}

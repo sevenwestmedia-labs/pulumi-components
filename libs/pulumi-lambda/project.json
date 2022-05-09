@@ -1,0 +1,29 @@
+{
+    "sourceRoot": "libs/pulumi-lambda/src",
+    "projectType": "library",
+    "targets": {
+        "package": {
+            "executor": "@wanews/nx-typescript-project-references:package",
+            "options": {
+                "main": "libs/pulumi-lambda/src/index.ts",
+                "tsConfig": "libs/pulumi-lambda/tsconfig.json"
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["libs/pulumi-lambda/**/*.ts"]
+            },
+            "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/libs/pulumi-lambda"],
+            "options": {
+                "jestConfig": "libs/pulumi-lambda/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

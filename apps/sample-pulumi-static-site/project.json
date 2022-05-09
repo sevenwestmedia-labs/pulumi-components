@@ -1,0 +1,26 @@
+{
+    "projectType": "application",
+    "sourceRoot": "apps/sample-pulumi-static-site/src",
+    "targets": {
+        "up": {
+            "executor": "@wanews/nx-pulumi:up",
+            "options": {
+                "buildTargets": [
+                    {
+                        "configuration": "production",
+                        "project": "pulumi-static-site",
+                        "target": "package"
+                    }
+                ]
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["apps/sample-pulumi-static-site/**/*.ts"]
+            },
+            "outputs": ["{options.outputFile}"]
+        }
+    },
+    "tags": []
+}

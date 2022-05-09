@@ -1,0 +1,14 @@
+{
+    "projectType": "library",
+    "sourceRoot": "libs/throw-files-in-s3/src",
+    "targets": {
+        "package": {
+            "executor": "@wanews/nx-typescript-project-references:package",
+            "options": {
+                "main": "libs/throw-files-in-s3/src/index.ts",
+                "tsConfig": "libs/throw-files-in-s3/tsconfig.json"
+            }
+        }
+    },
+    "tags": []
+}

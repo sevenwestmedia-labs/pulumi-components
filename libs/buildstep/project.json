@@ -1,0 +1,14 @@
+{
+    "projectType": "library",
+    "sourceRoot": "libs/buildstep/src",
+    "targets": {
+        "package": {
+            "executor": "@wanews/nx-typescript-project-references:package",
+            "options": {
+                "main": "libs/buildstep/src/index.ts",
+                "tsConfig": "libs/buildstep/tsconfig.json"
+            }
+        }
+    },
+    "tags": []
+}
