@@ -17,7 +17,7 @@
     },
     "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/pulumi-static-site#readme",
     "dependencies": {
-        "@wanews/pulumi-certificate-validation": "workspace:^0.5.0"
+        "@wanews/pulumi-certificate-validation": "workspace:^0.5.1"
     },
     "peerDependencies": {
         "@pulumi/aws": "^5.0.0",
