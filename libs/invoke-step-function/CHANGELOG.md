@@ -1,5 +1,11 @@
 # @wanews/pulumi-invoke-step-function
 
+## 0.2.1
+
+### Patch Changes
+
+- 512a118: bump dependencies to fix tsc error
+
 ## 0.2.0
 
 ### Minor Changes

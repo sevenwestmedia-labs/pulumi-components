@@ -1,9 +1,9 @@
 {
     "name": "sample-pulumi-static-site",
     "private": true,
-    "version": "0.1.0",
+    "version": "0.1.1",
     "main": "src/init.ts",
     "dependencies": {
-        "@wanews/pulumi-static-site": "workspace:^0.4.0"
+        "@wanews/pulumi-static-site": "workspace:^0.4.2"
     }
 }

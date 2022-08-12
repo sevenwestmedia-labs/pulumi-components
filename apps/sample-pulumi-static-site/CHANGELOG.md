@@ -1,5 +1,13 @@
 # sample-pulumi-static-site
 
+## 0.1.1
+
+### Patch Changes
+
+- 512a118: bump dependencies to fix tsc error
+- Updated dependencies [512a118]
+  - @wanews/pulumi-static-site@0.4.2
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @wanews/pulumi-lambda
 
+## 0.11.1
+
+### Patch Changes
+
+- 512a118: bump dependencies to fix tsc error
+
 ## 0.11.0
 
 ### Minor Changes

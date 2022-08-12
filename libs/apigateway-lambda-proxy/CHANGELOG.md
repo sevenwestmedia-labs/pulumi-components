@@ -1,5 +1,13 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.14.1
+
+### Patch Changes
+
+- 512a118: bump dependencies to fix tsc error
+- Updated dependencies [512a118]
+  - @wanews/pulumi-lambda@0.11.1
+
 ## 0.14.0
 
 ### Minor Changes

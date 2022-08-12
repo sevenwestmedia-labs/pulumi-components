@@ -1,5 +1,11 @@
 # @wanews/pulumi-throw-files-in-s3
 
+## 0.3.1
+
+### Patch Changes
+
+- 512a118: bump dependencies to fix tsc error
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @wanews/pulumi-pagerduty
 
+## 1.2.2
+
+### Patch Changes
+
+- 512a118: bump dependencies to fix tsc error
+
 ## 1.2.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @wanews/pulumi-static-site
 
+## 0.4.2
+
+### Patch Changes
+
+- 512a118: bump dependencies to fix tsc error
+- Updated dependencies [512a118]
+  - @wanews/pulumi-certificate-validation@0.5.2
+
 ## 0.4.1
 
 ### Patch Changes
