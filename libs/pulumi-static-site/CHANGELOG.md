@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.4.1
+
+### Patch Changes
+
+- b6a2f11: export StaticSiteArgs
+
 ## 0.4.0
 
 ### Minor Changes
