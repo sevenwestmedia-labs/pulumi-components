@@ -7,7 +7,7 @@ import { CfDistributionOptions, Distribution } from './cloudfront'
 
 import { ValidateCertificate } from '@wanews/pulumi-certificate-validation'
 
-interface StaticSiteArgs {
+export interface StaticSiteArgs {
     primaryDomain: pulumi.Input<string>
     primaryHostname: pulumi.Input<string>
     getTags: (
