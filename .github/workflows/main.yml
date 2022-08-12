@@ -106,6 +106,6 @@ jobs:
       - name: Release packages
         uses: changesets/action@master
         with:
-          publish: pnpx changeset publish
+          publish: pnpm exec changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.SERVICE_ACCOUNT_PAT }}
