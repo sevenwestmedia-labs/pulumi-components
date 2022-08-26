@@ -89,10 +89,11 @@ export class StaticSite extends pulumi.ComponentResource {
                     {
                         domain: args.primaryHostname,
                         zoneId: primaryDomainZone.id,
+                        provider: dnsProvider,
                     },
                 ],
             },
-            { parent: this, provider: dnsProvider },
+            { parent: this, provider: providerUsEast1 },
         )
 
         // Generate referer secret
