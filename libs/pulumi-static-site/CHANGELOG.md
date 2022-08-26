@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.6.0
+
+### Minor Changes
+
+- 7e4ce26: allow the provider to be overridden for DNS records
+
 ## 0.5.4
 
 ### Patch Changes
