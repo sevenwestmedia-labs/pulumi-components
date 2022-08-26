@@ -34,6 +34,14 @@ export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>> & {
      * otherwise be allowed. Required for permittedAccounts
      */
     alwaysDenyBadReferer?: pulumi.Input<boolean>
+
+    /**
+     * Allows extra statements to be added to the bucket policy. The default
+     * policy will be merged with statements in this policy overriding those
+     * with the same sid in the default policy. Overrides can be created
+     * using `aws.iam.getPolicyDocument( ... ).then(doc => doc.json)`.
+     */
+     bucketPolicyOverrides?: aws.iam.GetPolicyDocumentArgs['overridePolicyDocuments']
 }
 
 export interface BucketArgs extends S3BucketOptions {
@@ -56,14 +64,6 @@ export interface BucketArgs extends S3BucketOptions {
      * allow importing the existing bucket without any changes.
      */
     overrideBucketArgs?: aws.s3.BucketArgs | undefined
-
-    /**
-     * Allows extra statements to be added to the bucket policy. The default
-     * policy will be merged with statements in this policy overriding those
-     * with the same sid in the default policy. Overrides can be created
-     * using `aws.iam.getPolicyDocument( ... ).then(doc => doc.json)`.
-     */
-    bucketPolicyOverrides?: aws.iam.GetPolicyDocumentArgs['overridePolicyDocuments']
 
     /**
      * Allows the bucket policy to be overridden. If possible, you should use
