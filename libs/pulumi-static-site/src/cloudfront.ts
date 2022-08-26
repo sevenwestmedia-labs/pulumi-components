@@ -25,6 +25,7 @@ export interface CfDistributionOptions {
     orderedCacheBehaviors?: pulumi.Input<
         pulumi.Input<aws.types.input.cloudfront.DistributionOrderedCacheBehavior>[]
     >
+    protect?: boolean
 }
 
 export interface DistributionArgs extends CfDistributionOptions {
@@ -134,6 +135,7 @@ export class Distribution extends pulumi.ComponentResource {
             name,
             distributionArgs,
             {
+                protect: args.protect,
                 parent: this,
                 ignoreChanges: opts?.distributionIgnoreChanges,
                 ...(args.importDistribution

@@ -41,7 +41,13 @@ export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>> & {
      * with the same sid in the default policy. Overrides can be created
      * using `aws.iam.getPolicyDocument( ... ).then(doc => doc.json)`.
      */
-     bucketPolicyOverrides?: aws.iam.GetPolicyDocumentArgs['overridePolicyDocuments']
+    bucketPolicyOverrides?: aws.iam.GetPolicyDocumentArgs['overridePolicyDocuments']
+
+    /**
+     * If true, the bucket will be protected from deletion. Default: do not
+     * protect the bucket.
+     */
+    protect?: boolean
 }
 
 export interface BucketArgs extends S3BucketOptions {
@@ -140,7 +146,10 @@ export class Bucket extends pulumi.ComponentResource {
                             ),
                     },
                 },
-                { parent: this },
+                {
+                    parent: this,
+                    protect: args.protect,
+                },
             )
 
             const policy = pulumi
