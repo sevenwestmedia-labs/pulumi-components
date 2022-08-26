@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.6.2
+
+### Patch Changes
+
+- 3d92918: fix permission error when creating a certificate with a DNS provider in a different account
+
 ## 0.6.1
 
 ### Patch Changes
