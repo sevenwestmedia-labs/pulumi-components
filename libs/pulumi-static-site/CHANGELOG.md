@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.5.3
+
+### Patch Changes
+
+- c6d13d4: Allow bucket and distribution to be protected from accidental deletion
+
 ## 0.5.2
 
 ### Patch Changes
