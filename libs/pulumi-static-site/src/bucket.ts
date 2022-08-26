@@ -38,13 +38,14 @@ export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>> & {
     /**
      * Allows extra statements to be added to the bucket policy. The default
      * policy will be merged with statements in this policy overriding those
-     * with the same sid in the default policy. Overrides can NOT be created
-     * using `aws.iam.getPolicyDocument( ... ).then(doc => doc.json)` -- it
-     * requires string[], not Promise<string> or Output<string> :(
+     * with the same sid in the default policy. Overrides can be created
+     * using `aws.iam.getPolicyDocument( ... ).then(doc => doc.json)`
      *
-     * Any instance of {{BUCKETARN}} will be replaced with the bucket arn.
+     * All instances of {{BUCKETARN}} will be replaced with the bucket arn.
      */
-    bucketPolicyOverrides?: aws.iam.GetPolicyDocumentArgs['overridePolicyDocuments']
+    bucketPolicyOverrides?: Promise<
+        aws.iam.GetPolicyDocumentArgs['overridePolicyDocuments']
+    >
 
     /**
      * If true, the bucket will be protected from deletion. Default: do not
@@ -270,24 +271,31 @@ export class Bucket extends pulumi.ComponentResource {
                             })
                             .then((result) => result.json)
 
-                        return await aws.iam
-                            .getPolicyDocument(
-                                {
-                                    version: '2012-10-17',
-                                    sourcePolicyDocuments: [basePolicy],
-                                    overridePolicyDocuments: [
-                                        ...(args.bucketPolicyOverrides?.map(
-                                            (policy) =>
-                                                policy.replace(
-                                                    /{{BUCKETARN}}/g,
-                                                    bucketArn,
-                                                ),
-                                        ) ?? []),
-                                    ],
-                                },
-                                { parent: this },
-                            )
-                            .then((result) => result.json)
+                        const bucketPolicyOverrides =
+                            args.bucketPolicyOverrides ??
+                            Promise.resolve(undefined)
+
+                        return await bucketPolicyOverrides?.then((overrides) =>
+                            aws.iam
+                                .getPolicyDocument(
+                                    {
+                                        version: '2012-10-17',
+                                        sourcePolicyDocuments: [basePolicy],
+                                        overridePolicyDocuments: overrides
+                                            ? [
+                                                  ...(overrides?.map((policy) =>
+                                                      policy.replace(
+                                                          /{{BUCKETARN}}/g,
+                                                          bucketArn,
+                                                      ),
+                                                  ) ?? []),
+                                              ]
+                                            : undefined,
+                                    },
+                                    { parent: this },
+                                )
+                                .then((doc) => doc.json),
+                        )
                     },
                 )
 
