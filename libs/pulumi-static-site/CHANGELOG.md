@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.5.1
+
+### Patch Changes
+
+- 859b0b1: Fix bucket policy overrides
+
 ## 0.5.0
 
 ### Minor Changes
