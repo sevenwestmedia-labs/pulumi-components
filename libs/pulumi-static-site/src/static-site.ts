@@ -10,13 +10,31 @@ import { ValidateCertificate } from '@wanews/pulumi-certificate-validation'
 export interface StaticSiteArgs {
     primaryDomain: pulumi.Input<string>
     primaryHostname: pulumi.Input<string>
-    getTags: (
-        name: string,
-    ) => {
+    getTags: (name: string) => {
         [key: string]: pulumi.Input<string>
     }
     distributionOptions?: CfDistributionOptions
     bucketOptions?: S3BucketOptions
+    importDistribution?: {
+        distributionId: string
+        overrideDistributionArgs?: aws.cloudfront.DistributionArgs | undefined
+    }
+    importPrimaryBucket?: {
+        bucketId?: string | undefined
+        skipPolicy?: boolean | undefined
+        overrideBucketArgs?: aws.s3.BucketArgs | undefined
+    },
+    dnsOptions?: {
+        skipDns?: boolean
+        allowOverwrite?: boolean
+    }
+}
+
+export interface StaticSiteOptions extends pulumi.ComponentResourceOptions {
+    distributionIgnoreChanges?: pulumi.ComponentResourceOptions['ignoreChanges']
+    providerUsEast1?: pulumi.ProviderResource
+    route53DnsARecordAliases?: pulumi.ComponentResourceOptions['aliases']
+    route53DnsAAAARecordAliases?: pulumi.ComponentResourceOptions['aliases']
 }
 
 export class StaticSite extends pulumi.ComponentResource {
@@ -26,12 +44,7 @@ export class StaticSite extends pulumi.ComponentResource {
     constructor(
         name: string,
         args: StaticSiteArgs,
-        opts?: pulumi.ComponentResourceOptions & {
-            distributionIgnoreChanges?: pulumi.ComponentResourceOptions['ignoreChanges']
-            providerUsEast1?: pulumi.ProviderResource
-            route53DnsARecordAliases?: pulumi.ComponentResourceOptions['aliases']
-            route53DnsAAAARecordAliases?: pulumi.ComponentResourceOptions['aliases']
-        },
+        opts?: StaticSiteOptions,
     ) {
         super('swm:pulumi-static-site:static-site/StaticSite', name, {}, opts)
 
@@ -92,6 +105,8 @@ export class StaticSite extends pulumi.ComponentResource {
         const primaryBucket = new Bucket(
             `${name}-primary`,
             {
+                importBucket: args.importPrimaryBucket?.bucketId,
+                overrideBucketArgs: args.importPrimaryBucket?.overrideBucketArgs,
                 ...args.bucketOptions,
                 getTags: args.getTags,
                 refererValue: refererSecret.result,
@@ -109,6 +124,8 @@ export class StaticSite extends pulumi.ComponentResource {
                 domains: [args.primaryHostname],
                 originDomainName: this.primaryBucket.websiteEndpoint,
                 refererValue: refererSecret.result,
+                importDistribution: args.importDistribution?.distributionId,
+                _overrideDistributionArgs: args.importDistribution?.overrideDistributionArgs,
                 getTags: args.getTags,
             },
             {
@@ -117,39 +134,42 @@ export class StaticSite extends pulumi.ComponentResource {
             },
         ).distribution
 
-        // Add DNS records for the domain to point to the CF distribution
-        new aws.route53.Record(
-            `${name}-primary-dns-A`,
-            {
-                name: args.primaryHostname,
-                type: 'A',
-                aliases: [
-                    {
-                        name: this.primaryDistribution.domainName,
-                        zoneId: this.primaryDistribution.hostedZoneId,
-                        evaluateTargetHealth: false,
-                    },
-                ],
-                zoneId: primaryDomainZone.id,
-            },
-            { parent: this, aliases: opts?.route53DnsARecordAliases },
-        )
+        if (!(args.dnsOptions?.skipDns)) {
+            // Add DNS records for the domain to point to the CF distribution
+            new aws.route53.Record(
+                `${name}-primary-dns-A`,
+                {
+                    name: args.primaryHostname,
+                    type: 'A',
+                    aliases: [
+                        {
+                            name: this.primaryDistribution.domainName,
+                            zoneId: this.primaryDistribution.hostedZoneId,
+                            evaluateTargetHealth: false,
+                        },
+                    ],
+                    zoneId: primaryDomainZone.id,
+                },
+                { parent: this, aliases: opts?.route53DnsARecordAliases },
+            )
 
-        new aws.route53.Record(
-            `${name}-primary-dns-AAAA`,
-            {
-                name: args.primaryHostname,
-                type: 'AAAA',
-                aliases: [
-                    {
-                        name: this.primaryDistribution.domainName,
-                        zoneId: this.primaryDistribution.hostedZoneId,
-                        evaluateTargetHealth: false,
-                    },
-                ],
-                zoneId: primaryDomainZone.id,
-            },
-            { parent: this, aliases: opts?.route53DnsAAAARecordAliases },
-        )
+            new aws.route53.Record(
+                `${name}-primary-dns-AAAA`,
+                {
+                    name: args.primaryHostname,
+                    type: 'AAAA',
+                    aliases: [
+                        {
+                            name: this.primaryDistribution.domainName,
+                            zoneId: this.primaryDistribution.hostedZoneId,
+                            evaluateTargetHealth: false,
+                        },
+                    ],
+                    zoneId: primaryDomainZone.id,
+                    allowOverwrite: args.dnsOptions?.allowOverwrite
+                },
+                { parent: this, aliases: opts?.route53DnsAAAARecordAliases },
+            )
+        }
     }
 }

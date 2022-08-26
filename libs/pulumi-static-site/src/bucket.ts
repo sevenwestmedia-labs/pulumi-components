@@ -36,7 +36,7 @@ export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>> & {
     alwaysDenyBadReferer?: pulumi.Input<boolean>
 }
 
-interface BucketArgs extends S3BucketOptions {
+export interface BucketArgs extends S3BucketOptions {
     /**
      * All s3:GetObject requests will be denied unless the request includes
      * a Referer header containing this value.
@@ -45,9 +45,34 @@ interface BucketArgs extends S3BucketOptions {
      */
     refererValue: pulumi.Input<string>
 
-    getTags: (
-        name: string,
-    ) => {
+    /**
+     * Allows an existing bucket to be imported into pulumi. The bucket will
+     * then be managed by pulumi, and should not be modified elsewhere.
+     */
+    importBucket?: string | undefined
+
+    /**
+     * Allows you to override the bucket args; for use with importBucket to
+     * allow importing the existing bucket without any changes.
+     */
+    overrideBucketArgs?: aws.s3.BucketArgs | undefined
+
+    /**
+     * Allows extra statements to be added to the bucket policy. The default
+     * policy will be merged with statements in this policy overriding those
+     * with the same sid in the default policy. Overrides can be created
+     * using `aws.iam.getPolicyDocument( ... ).then(doc => doc.json)`.
+     */
+    bucketPolicyOverrides?: aws.iam.GetPolicyDocumentArgs['overridePolicyDocuments']
+
+    /**
+     * Allows the bucket policy to be overridden. If possible, you should use
+     * `extraBucketPolicyStatements` instead. However, this may be useful when
+     * importing an existing bucket.
+     */
+    replaceBucketPolicy?: aws.s3.BucketArgs['policy'] | undefined
+
+    getTags: (name: string) => {
         [key: string]: pulumi.Input<string>
     }
 }
@@ -83,112 +108,140 @@ export class Bucket extends pulumi.ComponentResource {
                 }
             })
 
-        this.bucket = new aws.s3.Bucket(
-            name,
-            {
-                ...bucketOptions,
-                website: pulumi.output(website).apply((website) => ({
-                    indexDocument: 'index.html',
-                    ...website,
-                })),
-                tags: getTags(name),
-            },
-            { parent: this },
-        )
+        const bucketArgs = args.overrideBucketArgs ?? {
+            ...bucketOptions,
+            website: pulumi.output(website).apply((website) => ({
+                indexDocument: 'index.html',
+                ...website,
+            })),
+            tags: getTags(name),
+        }
+        this.bucket = new aws.s3.Bucket(name, bucketArgs, {
+            parent: this,
+            ...(args.importBucket ? { import: args.importBucket } : {}),
+        })
 
-        const ownershipControls = new aws.s3.BucketOwnershipControls(
-            name,
-            {
-                bucket: this.bucket.id,
-                rule: {
-                    objectOwnership: pulumi
-                        .output(args.bucketOwnerPreferred)
-                        .apply(
-                            (bucketOwnerPreferred) =>
-                                bucketOwnerPreferred ?? false,
-                        )
-                        .apply((bucketOwnerPreferred) =>
-                            bucketOwnerPreferred
-                                ? 'BucketOwnerPreferred'
-                                : 'ObjectWriter',
-                        ),
+        if (!args.importBucket) {
+            const ownershipControls = new aws.s3.BucketOwnershipControls(
+                name,
+                {
+                    bucket: this.bucket.id,
+                    rule: {
+                        objectOwnership: pulumi
+                            .output(args.bucketOwnerPreferred)
+                            .apply(
+                                (bucketOwnerPreferred) =>
+                                    bucketOwnerPreferred ?? false,
+                            )
+                            .apply((bucketOwnerPreferred) =>
+                                bucketOwnerPreferred
+                                    ? 'BucketOwnerPreferred'
+                                    : 'ObjectWriter',
+                            ),
+                    },
                 },
-            },
-            { parent: this },
-        )
+                { parent: this },
+            )
 
-        const policy = pulumi
-            .all([
-                this.bucket.arn,
-                refererValue,
-                args.permittedAccounts,
-                args.alwaysDenyBadReferer,
-                // This is not used, but hopefully fixes the error below.
-                //
-                // OperationAborted: A conflicting conditional operation is
-                // currently in progress against this resource. Please try
-                // again.
-                ownershipControls.id,
-            ])
-            .apply(
-                ([
-                    bucketArn,
+            const policy = pulumi
+                .all([
+                    this.bucket.arn,
                     refererValue,
-                    permittedAccounts,
-                    alwaysDenyBadReferer,
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    _ownershipId,
-                ]) =>
-                    aws.iam.getPolicyDocument(
-                        {
+                    args.permittedAccounts,
+                    args.alwaysDenyBadReferer,
+                    // This is not used, but hopefully fixes the error below.
+                    //
+                    // OperationAborted: A conflicting conditional operation is
+                    // currently in progress against this resource. Please try
+                    // again.
+                    ownershipControls.id,
+                    args.replaceBucketPolicy,
+                ])
+                .apply(
+                    async ([
+                        bucketArn,
+                        refererValue,
+                        permittedAccounts,
+                        alwaysDenyBadReferer,
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        _ownershipId,
+                        overrideBucketPolicy,
+                    ]) => {
+                        if (overrideBucketPolicy !== undefined) {
+                            return overrideBucketPolicy
+                        }
+
+                        const basePolicy = await aws.iam
+                        .getPolicyDocument({
                             version: '2012-10-17',
                             statements: [
-                                ...(alwaysDenyBadReferer ?? true
+                                ...(alwaysDenyBadReferer ??
+                                true
                                     ? [
                                           {
-                                              sid:
-                                                  'AllowCloudFrontReadGetObject',
+                                              sid: 'AllowCloudFrontReadGetObject',
                                               effect: 'Deny',
                                               principals: [
                                                   {
                                                       type: '*',
-                                                      identifiers: ['*'],
+                                                      identifiers:
+                                                          [
+                                                              '*',
+                                                          ],
                                                   },
                                               ],
-                                              actions: ['s3:GetObject'],
-                                              resources: [`${bucketArn}/*`],
+                                              actions: [
+                                                  's3:GetObject',
+                                              ],
+                                              resources: [
+                                                  `${bucketArn}/*`,
+                                              ],
                                               conditions: [
                                                   {
                                                       test: 'StringNotEquals',
-                                                      variable: 'aws:Referer',
-                                                      values: [refererValue],
+                                                      variable:
+                                                          'aws:Referer',
+                                                      values: [
+                                                          refererValue,
+                                                      ],
                                                   },
                                               ],
                                           },
                                       ]
                                     : [
                                           {
-                                              sid:
-                                                  'AllowCloudFrontReadGetObject',
+                                              sid: 'AllowCloudFrontReadGetObject',
                                               effect: 'Allow',
                                               principals: [
                                                   {
                                                       type: '*',
-                                                      identifiers: ['*'],
+                                                      identifiers:
+                                                          [
+                                                              '*',
+                                                          ],
                                                   },
                                               ],
-                                              actions: ['s3:GetObject'],
-                                              resources: [`${bucketArn}/*`],
+                                              actions: [
+                                                  's3:GetObject',
+                                              ],
+                                              resources: [
+                                                  `${bucketArn}/*`,
+                                              ],
                                               conditions: [
                                                   {
                                                       test: 'StringEquals',
-                                                      variable: 'aws:Referer',
-                                                      values: [refererValue],
+                                                      variable:
+                                                          'aws:Referer',
+                                                      values: [
+                                                          refererValue,
+                                                      ],
                                                   },
                                               ],
                                           },
                                       ]),
-                                ...((permittedAccounts ?? []).length > 0
+                                ...((
+                                    permittedAccounts ?? []
+                                ).length > 0
                                     ? [
                                           {
                                               sid: 'AllowIAMAccessToBucket',
@@ -196,11 +249,16 @@ export class Bucket extends pulumi.ComponentResource {
                                               principals: [
                                                   {
                                                       type: 'AWS',
-                                                      identifiers: permittedAccounts,
+                                                      identifiers:
+                                                          permittedAccounts,
                                                   },
                                               ],
-                                              actions: ['s3:*'],
-                                              resources: [`${bucketArn}/*`],
+                                              actions: [
+                                                  's3:*',
+                                              ],
+                                              resources: [
+                                                  `${bucketArn}/*`,
+                                              ],
                                           },
                                           {
                                               sid: 'AllowIAMAccessToListBucket',
@@ -208,24 +266,45 @@ export class Bucket extends pulumi.ComponentResource {
                                               principals: [
                                                   {
                                                       type: 'AWS',
-                                                      identifiers: permittedAccounts,
+                                                      identifiers:
+                                                          permittedAccounts,
                                                   },
                                               ],
-                                              actions: ['s3:ListBucket'],
-                                              resources: [bucketArn],
+                                              actions: [
+                                                  's3:ListBucket',
+                                              ],
+                                              resources: [
+                                                  bucketArn,
+                                              ],
                                           },
                                       ]
                                     : []),
                             ],
-                        },
-                        { parent: this },
-                    ),
-            )
+                        })
+                        .then((result) => result.json)
 
-        new aws.s3.BucketPolicy(
-            name,
-            { bucket: this.bucket.id, policy: policy.json },
-            { parent: this },
-        )
+                        return await aws.iam
+                            .getPolicyDocument(
+                                {
+                                    version: '2012-10-17',
+                                    sourcePolicyDocuments: [
+                                        basePolicy,
+                                    ],
+                                    overridePolicyDocuments: [
+
+                                    ]
+                                },
+                                { parent: this },
+                            )
+                            .then((result) => result.json)
+                    },
+                )
+
+            new aws.s3.BucketPolicy(
+                name,
+                { bucket: this.bucket.id, policy },
+                { parent: this },
+            )
+        }
     }
 }
