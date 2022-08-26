@@ -23,7 +23,7 @@ export interface StaticSiteArgs {
         bucketId?: string | undefined
         skipPolicy?: boolean | undefined
         overrideBucketArgs?: aws.s3.BucketArgs | undefined
-    },
+    }
     dnsOptions?: {
         skipDns?: boolean
         allowOverwrite?: boolean
@@ -33,6 +33,7 @@ export interface StaticSiteArgs {
 export interface StaticSiteOptions extends pulumi.ComponentResourceOptions {
     distributionIgnoreChanges?: pulumi.ComponentResourceOptions['ignoreChanges']
     providerUsEast1?: pulumi.ProviderResource
+    dnsProvider?: pulumi.ProviderResource
     route53DnsARecordAliases?: pulumi.ComponentResourceOptions['aliases']
     route53DnsAAAARecordAliases?: pulumi.ComponentResourceOptions['aliases']
 }
@@ -41,25 +42,8 @@ export class StaticSite extends pulumi.ComponentResource {
     primaryBucket: aws.s3.Bucket
     primaryDistribution: aws.cloudfront.Distribution
 
-    constructor(
-        name: string,
-        args: StaticSiteArgs,
-        opts?: StaticSiteOptions,
-    ) {
+    constructor(name: string, args: StaticSiteArgs, opts?: StaticSiteOptions) {
         super('swm:pulumi-static-site:static-site/StaticSite', name, {}, opts)
-
-        const primaryDomainZone = pulumi
-            .output(args.primaryDomain)
-            .apply((domain) =>
-                aws.route53
-                    .getZone({ name: domain }, { parent: this })
-                    .catch((e) => {
-                        throw new pulumi.ResourceError(
-                            `unable to get zone id for domain ${domain}: ${e}`,
-                            this,
-                        )
-                    }),
-            )
 
         // Setup certificate for the domain
         const providerUsEast1 =
@@ -67,6 +51,26 @@ export class StaticSite extends pulumi.ComponentResource {
             new aws.Provider(`${name}-aws-provider-us-east-1`, {
                 region: 'us-east-1',
             })
+
+        // Allow using a different provider for certificate validation and DNS
+        // record creation
+        const dnsProvider = opts?.dnsProvider ?? providerUsEast1
+
+        const primaryDomainZone = pulumi
+            .output(args.primaryDomain)
+            .apply((domain) =>
+                aws.route53
+                    .getZone(
+                        { name: domain },
+                        { parent: this, provider: dnsProvider },
+                    )
+                    .catch((e) => {
+                        throw new pulumi.ResourceError(
+                            `unable to get zone id for domain ${domain}: ${e}`,
+                            this,
+                        )
+                    }),
+            )
 
         const cert = new aws.acm.Certificate(
             `${name}-cert`,
@@ -88,7 +92,7 @@ export class StaticSite extends pulumi.ComponentResource {
                     },
                 ],
             },
-            { parent: this, provider: providerUsEast1 },
+            { parent: this, provider: dnsProvider },
         )
 
         // Generate referer secret
@@ -106,7 +110,8 @@ export class StaticSite extends pulumi.ComponentResource {
             `${name}-primary`,
             {
                 importBucket: args.importPrimaryBucket?.bucketId,
-                overrideBucketArgs: args.importPrimaryBucket?.overrideBucketArgs,
+                overrideBucketArgs:
+                    args.importPrimaryBucket?.overrideBucketArgs,
                 ...args.bucketOptions,
                 getTags: args.getTags,
                 refererValue: refererSecret.result,
@@ -125,7 +130,8 @@ export class StaticSite extends pulumi.ComponentResource {
                 originDomainName: this.primaryBucket.websiteEndpoint,
                 refererValue: refererSecret.result,
                 importDistribution: args.importDistribution?.distributionId,
-                _overrideDistributionArgs: args.importDistribution?.overrideDistributionArgs,
+                _overrideDistributionArgs:
+                    args.importDistribution?.overrideDistributionArgs,
                 getTags: args.getTags,
             },
             {
@@ -134,7 +140,7 @@ export class StaticSite extends pulumi.ComponentResource {
             },
         ).distribution
 
-        if (!(args.dnsOptions?.skipDns)) {
+        if (!args.dnsOptions?.skipDns) {
             // Add DNS records for the domain to point to the CF distribution
             new aws.route53.Record(
                 `${name}-primary-dns-A`,
@@ -150,7 +156,11 @@ export class StaticSite extends pulumi.ComponentResource {
                     ],
                     zoneId: primaryDomainZone.id,
                 },
-                { parent: this, aliases: opts?.route53DnsARecordAliases },
+                {
+                    parent: this,
+                    provider: dnsProvider,
+                    aliases: opts?.route53DnsARecordAliases,
+                },
             )
 
             new aws.route53.Record(
@@ -166,9 +176,13 @@ export class StaticSite extends pulumi.ComponentResource {
                         },
                     ],
                     zoneId: primaryDomainZone.id,
-                    allowOverwrite: args.dnsOptions?.allowOverwrite
+                    allowOverwrite: args.dnsOptions?.allowOverwrite,
                 },
-                { parent: this, aliases: opts?.route53DnsAAAARecordAliases },
+                {
+                    parent: this,
+                    provider: dnsProvider,
+                    aliases: opts?.route53DnsAAAARecordAliases,
+                },
             )
         }
     }
