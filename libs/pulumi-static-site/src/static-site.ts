@@ -155,6 +155,7 @@ export class StaticSite extends pulumi.ComponentResource {
                         },
                     ],
                     zoneId: primaryDomainZone.id,
+                    allowOverwrite: args.dnsOptions?.allowOverwrite,
                 },
                 {
                     parent: this,
