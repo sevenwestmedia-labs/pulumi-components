@@ -38,8 +38,11 @@ export type S3BucketOptions = Partial<Omit<aws.s3.BucketArgs, 'tags'>> & {
     /**
      * Allows extra statements to be added to the bucket policy. The default
      * policy will be merged with statements in this policy overriding those
-     * with the same sid in the default policy. Overrides can be created
-     * using `aws.iam.getPolicyDocument( ... ).then(doc => doc.json)`.
+     * with the same sid in the default policy. Overrides can NOT be created
+     * using `aws.iam.getPolicyDocument( ... ).then(doc => doc.json)` -- it
+     * requires string[], not Promise<string> or Output<string> :(
+     *
+     * Any instance of {{BUCKETARN}} will be replaced with the bucket arn.
      */
     bucketPolicyOverrides?: aws.iam.GetPolicyDocumentArgs['overridePolicyDocuments']
 
@@ -273,7 +276,13 @@ export class Bucket extends pulumi.ComponentResource {
                                     version: '2012-10-17',
                                     sourcePolicyDocuments: [basePolicy],
                                     overridePolicyDocuments: [
-                                        ...(args.bucketPolicyOverrides ?? []),
+                                        ...(args.bucketPolicyOverrides?.map(
+                                            (policy) =>
+                                                policy.replace(
+                                                    /{{BUCKETARN}}/g,
+                                                    bucketArn,
+                                                ),
+                                        ) ?? []),
                                     ],
                                 },
                                 { parent: this },
