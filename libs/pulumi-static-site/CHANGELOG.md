@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.5.4
+
+### Patch Changes
+
+- a2c1038: allow the bucket arn to be inserted into the bucket policy overrides using "{{BUCKETARN}}"
+
 ## 0.5.3
 
 ### Patch Changes
