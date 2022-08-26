@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.5.0
+
+### Minor Changes
+
+- c4fad16: Allow Bucket and Distribution to be imported
+
 ## 0.4.2
 
 ### Patch Changes
