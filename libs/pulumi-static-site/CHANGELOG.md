@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.7.0
+
+### Minor Changes
+
+- 3d4b363: bucketPolicyOverrides is now a Promise -- allows using aws.iam.getPolicyDocument
+
 ## 0.6.2
 
 ### Patch Changes
