@@ -172,127 +172,100 @@ export class Bucket extends pulumi.ComponentResource {
                         }
 
                         const basePolicy = await aws.iam
-                        .getPolicyDocument({
-                            version: '2012-10-17',
-                            statements: [
-                                ...(alwaysDenyBadReferer ??
-                                true
-                                    ? [
-                                          {
-                                              sid: 'AllowCloudFrontReadGetObject',
-                                              effect: 'Deny',
-                                              principals: [
-                                                  {
-                                                      type: '*',
-                                                      identifiers:
-                                                          [
-                                                              '*',
+                            .getPolicyDocument({
+                                version: '2012-10-17',
+                                statements: [
+                                    ...(alwaysDenyBadReferer ?? true
+                                        ? [
+                                              {
+                                                  sid: 'AllowCloudFrontReadGetObject',
+                                                  effect: 'Deny',
+                                                  principals: [
+                                                      {
+                                                          type: '*',
+                                                          identifiers: ['*'],
+                                                      },
+                                                  ],
+                                                  actions: ['s3:GetObject'],
+                                                  resources: [`${bucketArn}/*`],
+                                                  conditions: [
+                                                      {
+                                                          test: 'StringNotEquals',
+                                                          variable:
+                                                              'aws:Referer',
+                                                          values: [
+                                                              refererValue,
                                                           ],
-                                                  },
-                                              ],
-                                              actions: [
-                                                  's3:GetObject',
-                                              ],
-                                              resources: [
-                                                  `${bucketArn}/*`,
-                                              ],
-                                              conditions: [
-                                                  {
-                                                      test: 'StringNotEquals',
-                                                      variable:
-                                                          'aws:Referer',
-                                                      values: [
-                                                          refererValue,
-                                                      ],
-                                                  },
-                                              ],
-                                          },
-                                      ]
-                                    : [
-                                          {
-                                              sid: 'AllowCloudFrontReadGetObject',
-                                              effect: 'Allow',
-                                              principals: [
-                                                  {
-                                                      type: '*',
-                                                      identifiers:
-                                                          [
-                                                              '*',
+                                                      },
+                                                  ],
+                                              },
+                                          ]
+                                        : [
+                                              {
+                                                  sid: 'AllowCloudFrontReadGetObject',
+                                                  effect: 'Allow',
+                                                  principals: [
+                                                      {
+                                                          type: '*',
+                                                          identifiers: ['*'],
+                                                      },
+                                                  ],
+                                                  actions: ['s3:GetObject'],
+                                                  resources: [`${bucketArn}/*`],
+                                                  conditions: [
+                                                      {
+                                                          test: 'StringEquals',
+                                                          variable:
+                                                              'aws:Referer',
+                                                          values: [
+                                                              refererValue,
                                                           ],
-                                                  },
-                                              ],
-                                              actions: [
-                                                  's3:GetObject',
-                                              ],
-                                              resources: [
-                                                  `${bucketArn}/*`,
-                                              ],
-                                              conditions: [
-                                                  {
-                                                      test: 'StringEquals',
-                                                      variable:
-                                                          'aws:Referer',
-                                                      values: [
-                                                          refererValue,
-                                                      ],
-                                                  },
-                                              ],
-                                          },
-                                      ]),
-                                ...((
-                                    permittedAccounts ?? []
-                                ).length > 0
-                                    ? [
-                                          {
-                                              sid: 'AllowIAMAccessToBucket',
-                                              effect: 'Allow',
-                                              principals: [
-                                                  {
-                                                      type: 'AWS',
-                                                      identifiers:
-                                                          permittedAccounts,
-                                                  },
-                                              ],
-                                              actions: [
-                                                  's3:*',
-                                              ],
-                                              resources: [
-                                                  `${bucketArn}/*`,
-                                              ],
-                                          },
-                                          {
-                                              sid: 'AllowIAMAccessToListBucket',
-                                              effect: 'Allow',
-                                              principals: [
-                                                  {
-                                                      type: 'AWS',
-                                                      identifiers:
-                                                          permittedAccounts,
-                                                  },
-                                              ],
-                                              actions: [
-                                                  's3:ListBucket',
-                                              ],
-                                              resources: [
-                                                  bucketArn,
-                                              ],
-                                          },
-                                      ]
-                                    : []),
-                            ],
-                        })
-                        .then((result) => result.json)
+                                                      },
+                                                  ],
+                                              },
+                                          ]),
+                                    ...((permittedAccounts ?? []).length > 0
+                                        ? [
+                                              {
+                                                  sid: 'AllowIAMAccessToBucket',
+                                                  effect: 'Allow',
+                                                  principals: [
+                                                      {
+                                                          type: 'AWS',
+                                                          identifiers:
+                                                              permittedAccounts,
+                                                      },
+                                                  ],
+                                                  actions: ['s3:*'],
+                                                  resources: [`${bucketArn}/*`],
+                                              },
+                                              {
+                                                  sid: 'AllowIAMAccessToListBucket',
+                                                  effect: 'Allow',
+                                                  principals: [
+                                                      {
+                                                          type: 'AWS',
+                                                          identifiers:
+                                                              permittedAccounts,
+                                                      },
+                                                  ],
+                                                  actions: ['s3:ListBucket'],
+                                                  resources: [bucketArn],
+                                              },
+                                          ]
+                                        : []),
+                                ],
+                            })
+                            .then((result) => result.json)
 
                         return await aws.iam
                             .getPolicyDocument(
                                 {
                                     version: '2012-10-17',
-                                    sourcePolicyDocuments: [
-                                        basePolicy,
-                                    ],
+                                    sourcePolicyDocuments: [basePolicy],
                                     overridePolicyDocuments: [
-
-                                    ]
+                                        ...(args.bucketPolicyOverrides ?? []),
+                                    ],
                                 },
                                 { parent: this },
                             )
