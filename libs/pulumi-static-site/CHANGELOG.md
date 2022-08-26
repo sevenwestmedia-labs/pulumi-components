@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.6.1
+
+### Patch Changes
+
+- ae34883: Fix missing allowOverwrite on A record
+
 ## 0.6.0
 
 ### Minor Changes
