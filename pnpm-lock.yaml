@@ -92,7 +92,7 @@ importers:
 
   apps/sample-pulumi-static-site:
     specifiers:
-      '@wanews/pulumi-static-site': workspace:^0.6.0
+      '@wanews/pulumi-static-site': workspace:^0.7.0
     dependencies:
       '@wanews/pulumi-static-site': link:../../libs/pulumi-static-site
 
