@@ -27,14 +27,14 @@ export interface CfDistributionOptions {
     >
 }
 
-interface DistributionArgs extends CfDistributionOptions {
+export interface DistributionArgs extends CfDistributionOptions {
     acmCertificateArn: pulumi.Input<string>
     domains: pulumi.Input<string>[] | pulumi.Input<string[]>
     originDomainName: pulumi.Input<string>
     refererValue: pulumi.Input<string>
-    getTags: (
-        name: string,
-    ) => {
+    importDistribution?: string | undefined
+    _overrideDistributionArgs?: aws.cloudfront.DistributionArgs | undefined
+    getTags: (name: string) => {
         [key: string]: pulumi.Input<string>
     }
 }
@@ -66,66 +66,80 @@ export class Distribution extends pulumi.ComponentResource {
             { parent: this },
         )
 
+        const distributionArgs: aws.cloudfront.DistributionArgs =
+            args._overrideDistributionArgs
+                ? args._overrideDistributionArgs
+                : {
+                      enabled: true,
+                      isIpv6Enabled: true,
+                      aliases: args.domains,
+                      priceClass: args.priceClass ?? 'PriceClass_All',
+                      origins: pulumi
+                          .output(args.additionalOrigins)
+                          .apply((origins) => [
+                              {
+                                  originId: originId.result,
+                                  domainName: args.originDomainName,
+                                  customOriginConfig: {
+                                      originProtocolPolicy: 'http-only',
+                                      httpPort: 80,
+                                      httpsPort: 443,
+                                      originSslProtocols: ['TLSv1.2'],
+                                  },
+                                  customHeaders: [
+                                      {
+                                          name: 'Referer',
+                                          value: args.refererValue,
+                                      },
+                                  ],
+                              },
+                              ...(origins || []),
+                          ]),
+                      defaultRootObject: 'index.html',
+                      defaultCacheBehavior: {
+                          targetOriginId: originId.result,
+                          allowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                          cachedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                          viewerProtocolPolicy: 'redirect-to-https',
+                          cachePolicyId:
+                              args.cachePolicyId ??
+                              managedCachingOptimizedCachePolicyId,
+                          originRequestPolicyId:
+                              args.originRequestPolicyId ??
+                              managedCorsS3OriginRequestPolicyId,
+                          lambdaFunctionAssociations:
+                              args.lambdaFunctionAssociations,
+                          responseHeadersPolicyId: args.responseHeadersPolicyId,
+                      },
+                      orderedCacheBehaviors: args.orderedCacheBehaviors,
+                      restrictions: {
+                          geoRestriction: {
+                              restrictionType: 'none',
+                          },
+                      },
+                      viewerCertificate: {
+                          acmCertificateArn: args.acmCertificateArn,
+                          minimumProtocolVersion: 'TLSv1.2_2019',
+                          sslSupportMethod: 'sni-only',
+                      },
+                      httpVersion: 'http2',
+                      webAclId: args.webAclId,
+                      comment: pulumi.interpolate`Static Site Distribution for ${pulumi
+                          .output(args.domains)
+                          .apply((domains) => domains.join(', '))}`,
+                      tags: args.getTags(name),
+                  }
+
         this.distribution = new aws.cloudfront.Distribution(
             name,
+            distributionArgs,
             {
-                enabled: true,
-                isIpv6Enabled: true,
-                aliases: args.domains,
-                priceClass: args.priceClass ?? 'PriceClass_All',
-                origins: pulumi
-                    .output(args.additionalOrigins)
-                    .apply((origins) => [
-                        {
-                            originId: originId.result,
-                            domainName: args.originDomainName,
-                            customOriginConfig: {
-                                originProtocolPolicy: 'http-only',
-                                httpPort: 80,
-                                httpsPort: 443,
-                                originSslProtocols: ['TLSv1.2'],
-                            },
-                            customHeaders: [
-                                { name: 'Referer', value: args.refererValue },
-                            ],
-                        },
-                        ...(origins || []),
-                    ]),
-                defaultRootObject: 'index.html',
-                defaultCacheBehavior: {
-                    targetOriginId: originId.result,
-                    allowedMethods: ['GET', 'HEAD', 'OPTIONS'],
-                    cachedMethods: ['GET', 'HEAD', 'OPTIONS'],
-                    viewerProtocolPolicy: 'redirect-to-https',
-                    cachePolicyId:
-                        args.cachePolicyId ??
-                        managedCachingOptimizedCachePolicyId,
-                    originRequestPolicyId:
-                        args.originRequestPolicyId ??
-                        managedCorsS3OriginRequestPolicyId,
-                    lambdaFunctionAssociations: args.lambdaFunctionAssociations,
-                    responseHeadersPolicyId: args.responseHeadersPolicyId,
-                    
-                },
-                orderedCacheBehaviors: args.orderedCacheBehaviors,
-                restrictions: {
-                    geoRestriction: {
-                        restrictionType: 'none',
-                    },
-                },
-                viewerCertificate: {
-                    acmCertificateArn: args.acmCertificateArn,
-                    minimumProtocolVersion: 'TLSv1.2_2019',
-                    sslSupportMethod: 'sni-only',
-                },
-                webAclId: args.webAclId,
-                comment: pulumi.interpolate`Static Site Distribution for ${pulumi
-                    .output(args.domains)
-                    .apply((domains) => domains.join(', '))}`,
-                tags: args.getTags(name),
+                parent: this,
+                ignoreChanges: opts?.distributionIgnoreChanges,
+                ...(args.importDistribution
+                    ? { import: args.importDistribution }
+                    : {}),
             },
-            { parent: this, ignoreChanges: opts?.distributionIgnoreChanges },
         )
-
     }
 }
