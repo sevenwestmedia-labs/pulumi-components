@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.7.1
+
+### Patch Changes
+
+- 55bb436: allow overriding httpVersion
+
 ## 0.7.0
 
 ### Minor Changes
