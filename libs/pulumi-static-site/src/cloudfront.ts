@@ -12,6 +12,7 @@ const managedCachingOptimizedCachePolicyId =
 
 export interface CfDistributionOptions {
     priceClass?: pulumi.Input<string>
+    httpVersion?: pulumi.Input<string>
     cachePolicyId?: pulumi.Input<string>
     originRequestPolicyId?: pulumi.Input<string>
     responseHeadersPolicyId?: pulumi.Input<string>
@@ -123,7 +124,7 @@ export class Distribution extends pulumi.ComponentResource {
                           minimumProtocolVersion: 'TLSv1.2_2019',
                           sslSupportMethod: 'sni-only',
                       },
-                      httpVersion: 'http2',
+                      httpVersion: args.httpVersion ?? 'http2',
                       webAclId: args.webAclId,
                       comment: pulumi.interpolate`Static Site Distribution for ${pulumi
                           .output(args.domains)
