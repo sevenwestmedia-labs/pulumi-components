@@ -41,7 +41,15 @@ export const handler = async (event, context) => {
       }
     }
 
-    const deduplicatedItems = [...new Set(items.filter((item) => !!item))]
+    const deduplicatedItems = [
+      ...new Set(
+        items
+          .filter((item) => !!item)
+          .map((item) => item.replace(/^\//, ''))
+          .map((item) => `/${item}`),
+      ),
+    ]
+
     const input = {
       DistributionId: `${process.env.DISTRIBUTION}`,
       InvalidationBatch: {
