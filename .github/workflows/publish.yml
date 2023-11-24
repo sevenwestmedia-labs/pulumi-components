@@ -37,6 +37,10 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
 
+      - name: tsc
+        run: |
+          pnpm run build-tsc
+
       - name: Package
         run: |
           if [ ${{ inputs.package }} == 'all' ]; then
