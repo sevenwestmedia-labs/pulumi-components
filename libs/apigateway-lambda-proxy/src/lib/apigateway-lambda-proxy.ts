@@ -25,6 +25,8 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
             getTags,
 
             apiGatewayAccessLoggingEnabled,
+
+            integrationOptions,
         }: {
             /** The custom hostname to map to the API Gateway */
             hostname?: pulumi.Input<string>
@@ -47,13 +49,11 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
              *
              * If you are creating the role in the same program, use executionRole
              */
-            executionRoleName?: string;
-            executionRole?: aws.iam.Role;
+            executionRoleName?: string
+            executionRole?: aws.iam.Role
 
             /** Callback to create tags for the resources created */
-            getTags: (
-                name: string,
-            ) => {
+            getTags: (name: string) => {
                 [key: string]: pulumi.Input<string>
             }
 
@@ -64,6 +64,23 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
              * and deployments start failing.
              */
             apiGatewayAccessLoggingEnabled?: boolean
+
+            /**
+             * Allow overriding the integration options for the API Gateway
+             *
+             * Example: pass the accept header to the lambda function
+             * ```typescript
+             * integrationOptions: {
+             *   requestParameters: {
+             *     'append:header.accept': '$request.header.accept',
+             *   },
+             * }
+             * ```
+             */
+            integrationOptions?: Omit<
+                aws.apigatewayv2.IntegrationArgs,
+                'apiId' | 'integrationType' | 'integrationUri'
+            >
         },
         opts?: pulumi.ComponentResourceOptions & {
             /**
@@ -143,6 +160,7 @@ export class ApiGatewayLambdaProxy extends pulumi.ComponentResource {
                 apiId: this.apiGateway.id,
                 integrationType: 'AWS_PROXY',
                 integrationUri: this.lambdaFunction.function.arn,
+                ...integrationOptions,
             },
             { parent: this },
         )
