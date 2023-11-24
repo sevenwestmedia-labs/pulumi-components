@@ -1,5 +1,11 @@
 # @wanews/pulumi-apigateway-lambda-proxy
 
+## 0.15.0
+
+### Minor Changes
+
+- 894c0c3: allow api integration options to be extended
+
 ## 0.14.1
 
 ### Patch Changes
