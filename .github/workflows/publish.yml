@@ -1,0 +1,48 @@
+name: Publish to NPM
+concurrency: main
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish'
+        required: true
+        default: 'all'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
+
+      - name: Enable node
+        uses: actions/setup-node@master
+        with:
+          node-version: 18.x
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@wanews'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Install pnpm
+        run: |
+          npm i -g pnpm
+          pnpm set verify-store-integrity false
+
+      - name: pnpm install
+        run: |
+          pnpm install --frozen-lockfile
+
+      - name: Package
+        run: pnpm package ${{ inputs.package }}
+
+      - name: Release packages
+        uses: changesets/action@master
+        with:
+          publish: pnpm exec changeset publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.SERVICE_ACCOUNT_PAT }}
