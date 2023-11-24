@@ -246,7 +246,8 @@ export class Bucket extends pulumi.ComponentResource {
                                                       {
                                                           type: 'AWS',
                                                           identifiers:
-                                                              permittedAccounts,
+                                                              permittedAccounts ??
+                                                              [],
                                                       },
                                                   ],
                                                   actions: ['s3:*'],
@@ -259,7 +260,8 @@ export class Bucket extends pulumi.ComponentResource {
                                                       {
                                                           type: 'AWS',
                                                           identifiers:
-                                                              permittedAccounts,
+                                                              permittedAccounts ??
+                                                              [],
                                                       },
                                                   ],
                                                   actions: ['s3:ListBucket'],

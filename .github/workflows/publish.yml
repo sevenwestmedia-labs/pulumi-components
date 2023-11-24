@@ -38,7 +38,12 @@ jobs:
           pnpm install --frozen-lockfile
 
       - name: Package
-        run: pnpm package ${{ inputs.package }}
+        run: |
+          if [ ${{ inputs.package }} == 'all' ]; then
+            pnpm package
+          else
+            pnpm nx run ${{ inputs.package }}:package
+          fi
 
       - name: Release packages
         uses: changesets/action@master
