@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.7.2
+
+### Patch Changes
+
+- ab3db4a: allow overriding the default viewer protocol policy
+
 ## 0.7.1
 
 ### Patch Changes
