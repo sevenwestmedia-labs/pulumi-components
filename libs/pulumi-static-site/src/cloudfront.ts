@@ -27,6 +27,7 @@ export interface CfDistributionOptions {
         pulumi.Input<aws.types.input.cloudfront.DistributionOrderedCacheBehavior>[]
     >
     protect?: boolean
+    viewerProtocolPolicy?: pulumi.Input<string>
 }
 
 export interface DistributionArgs extends CfDistributionOptions {
@@ -102,7 +103,8 @@ export class Distribution extends pulumi.ComponentResource {
                           targetOriginId: originId.result,
                           allowedMethods: ['GET', 'HEAD', 'OPTIONS'],
                           cachedMethods: ['GET', 'HEAD', 'OPTIONS'],
-                          viewerProtocolPolicy: 'redirect-to-https',
+                          viewerProtocolPolicy:
+                              args.viewerProtocolPolicy ?? 'redirect-to-https',
                           cachePolicyId:
                               args.cachePolicyId ??
                               managedCachingOptimizedCachePolicyId,
