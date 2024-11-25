@@ -41,7 +41,6 @@ jobs:
 
       - name: pnpm install
         run: |
-          pnpm store prune
           pnpm install --frozen-lockfile
 
       - name: Build packages
