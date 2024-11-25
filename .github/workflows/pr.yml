@@ -41,7 +41,7 @@ jobs:
 
       - name: pnpm install
         run: |
-          pnpm install --force
+          pnpm install --frozen-lockfile
 
       - name: Build packages
         run: pnpm run build-tsc
