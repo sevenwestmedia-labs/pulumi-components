@@ -104,6 +104,9 @@ export class StaticSite extends pulumi.ComponentResource {
                 number: true,
                 special: false,
             },
+            {
+                parent: this,
+            },
         )
 
         // Setup S3 Bucket
