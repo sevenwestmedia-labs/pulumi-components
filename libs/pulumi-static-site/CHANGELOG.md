@@ -1,5 +1,11 @@
 # @wanews/pulumi-static-site
 
+## 0.7.3
+
+### Patch Changes
+
+- d77c09c: Add provider to randomPassword component
+
 ## 0.7.2
 
 ### Patch Changes
