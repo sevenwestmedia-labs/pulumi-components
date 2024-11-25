@@ -41,35 +41,35 @@ export class LambdaFunction extends pulumi.ComponentResource {
         },
         opts?:
             | (pulumi.ComponentResourceOptions & {
-                  /**
-                   * Some versions of pulumi and/or aws-sdk are unable to delete log groups D:<
-                   * This provides a way to alias them, so they don't need to be deleted &
-                   * recreated. More info:
-                   * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
-                   */
-                  logGroupAliases?: pulumi.ComponentResourceOptions['aliases']
+                /**
+                 * Some versions of pulumi and/or aws-sdk are unable to delete log groups D:<
+                 * This provides a way to alias them, so they don't need to be deleted &
+                 * recreated. More info:
+                 * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+                 */
+                logGroupAliases?: pulumi.ComponentResourceOptions['aliases']
 
-                  /**
-                   * Allow an existing aws.iam.Role resource to be migrated into this module,
-                   * without module without being deleted & recreated. More info:
-                   * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
-                   */
-                  executionRoleAliases?: pulumi.ComponentResourceOptions['aliases']
+                /**
+                 * Allow an existing aws.iam.Role resource to be migrated into this module,
+                 * without module without being deleted & recreated. More info:
+                 * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+                 */
+                executionRoleAliases?: pulumi.ComponentResourceOptions['aliases']
 
-                  /**
-                   * Allow an existing aws.iam.RolePolicyAttachment resource to be migrated
-                   * into this module without being deleted & recreated. More info:
-                   * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
-                   */
-                  rolePolicyAttachmentAliases?: pulumi.ComponentResourceOptions['aliases']
+                /**
+                 * Allow an existing aws.iam.RolePolicyAttachment resource to be migrated
+                 * into this module without being deleted & recreated. More info:
+                 * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+                 */
+                rolePolicyAttachmentAliases?: pulumi.ComponentResourceOptions['aliases']
 
-                  /**
-                   * Allow an existing aws.lambda.Function resource to be migrated
-                   * into this module without being deleted & recreated. More info:
-                   * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
-                   */
-                  functionAliases?: pulumi.ComponentResourceOptions['aliases']
-              })
+                /**
+                 * Allow an existing aws.lambda.Function resource to be migrated
+                 * into this module without being deleted & recreated. More info:
+                 * https://www.pulumi.com/docs/intro/concepts/resources/#aliases
+                 */
+                functionAliases?: pulumi.ComponentResourceOptions['aliases']
+            })
             | undefined,
     ) {
         super('wanews:lambda', name, {}, opts)
@@ -111,47 +111,47 @@ export class LambdaFunction extends pulumi.ComponentResource {
 
         this.executionRole = args.executionRoleName
             ? pulumi
-                  .output(args.executionRoleName)
-                  .apply((role) =>
-                      aws.iam.getRole(
-                          { name: role },
-                          {
-                              parent: this,
-                              async: true,
-                          },
-                      ),
-                  )
-                  .apply((result) =>
-                      aws.iam.Role.get(result.name, result.id, undefined, {
-                          parent: this,
-                      }),
-                  )
+                .output(args.executionRoleName)
+                .apply((role) =>
+                    aws.iam.getRole(
+                        { name: role },
+                        {
+                            parent: this,
+                            async: true,
+                        },
+                    ),
+                )
+                .apply((result) =>
+                    aws.iam.Role.get(result.name, result.id, undefined, {
+                        parent: this,
+                    }),
+                )
             : args.executionRole
-            ? pulumi.output(args.executionRole)
-            : pulumi.output(
-                  new aws.iam.Role(
-                      roleName,
-                      {
-                          assumeRolePolicy: {
-                              Version: '2012-10-17',
-                              Statement: [
-                                  {
-                                      Action: 'sts:AssumeRole',
-                                      Principal: {
-                                          Service: 'lambda.amazonaws.com',
-                                      },
-                                      Effect: 'Allow',
-                                  },
-                              ],
-                          },
-                          tags: args.getTags(name),
-                      },
-                      {
-                          parent: this,
-                          aliases: opts?.executionRoleAliases,
-                      },
-                  ),
-              )
+                ? pulumi.output(args.executionRole)
+                : pulumi.output(
+                    new aws.iam.Role(
+                        roleName,
+                        {
+                            assumeRolePolicy: {
+                                Version: '2012-10-17',
+                                Statement: [
+                                    {
+                                        Action: 'sts:AssumeRole',
+                                        Principal: {
+                                            Service: 'lambda.amazonaws.com',
+                                        },
+                                        Effect: 'Allow',
+                                    },
+                                ],
+                            },
+                            tags: args.getTags(name),
+                        },
+                        {
+                            parent: this,
+                            aliases: opts?.executionRoleAliases,
+                        },
+                    ),
+                )
 
         new aws.iam.RolePolicyAttachment(
             `${name}-attach-execution-policy`,
@@ -166,7 +166,7 @@ export class LambdaFunction extends pulumi.ComponentResource {
             name,
             {
                 name,
-                runtime: 'nodejs14.x',
+                runtime: 'nodejs16.x',
                 role: this.executionRole.arn.apply(async (arn) => {
                     if (args.delayLambdaDeployment) {
                         console.log('waiting for IAM changes to propagate')
