@@ -35,7 +35,7 @@ jobs:
 
       - name: Install pnpm
         run: |
-          npm i -g pnpm
+          npm i -g pnpm@8
           pnpm set verify-store-integrity false
 
       - name: pnpm install
