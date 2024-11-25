@@ -26,11 +26,11 @@
             "extends": ["plugin:@nrwl/nx/typescript"],
             "rules": {
                 "@typescript-eslint/no-empty-function": "off",
-                "@typescript-eslint/no-empty-interface": "warn", // To be remvoed after upgrading to aws-sdk v3
-                "@typescript-eslint/ban-types": "warn", // To be remvoed after upgrading to ndode 18
-                "no-irregular-whitespace": "warn", // To be remvoed after upgrading to ndode 18
-                "@typescript-eslint/no-var-requires": "warn", // To be remvoed after upgrading to ndode 18
-                "no-var": "warn" // To be remvoed after upgrading to ndode 18
+                "@typescript-eslint/no-empty-interface": "warn", // To be removed after upgrading to aws-sdk v3
+                "@typescript-eslint/ban-types": "warn", // To be removed after upgrading to ndode 18
+                "no-irregular-whitespace": "warn", // To be removed after upgrading to ndode 18
+                "@typescript-eslint/no-var-requires": "warn", // To be removed after upgrading to ndode 18
+                "no-var": "warn" // To be removed after upgrading to ndode 18
             }
         },
         {
