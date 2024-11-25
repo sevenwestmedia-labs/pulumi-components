@@ -94,7 +94,7 @@ jobs:
         run: pnpm run build-tsc
 
       - name: Lint types and code
-        run: pnpm run lint
+        run: pnpm run lint --quiet
 
       - name: Run tests
         run: pnpm test
