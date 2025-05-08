@@ -18,5 +18,9 @@
     "bugs": {
         "url": "https://github.com/sevenwestmedia-labs/pulumi-components/issues"
     },
-    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/invoke-lambda#readme"
+    "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/invoke-lambda#readme",
+    "dependencies": {
+        "@aws-sdk/client-lambda": "^3.804.0",
+        "@aws-sdk/client-sts": "^3.804.0"
+    }
 }
