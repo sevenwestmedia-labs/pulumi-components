@@ -1,3 +1,7 @@
 packages:
-  - 'apps/**'
-  - 'libs/**'
+  - apps/**
+  - libs/**
+ignoredBuiltDependencies:
+  - '@swc/core'
+  - aws-sdk
+  - protobufjs
