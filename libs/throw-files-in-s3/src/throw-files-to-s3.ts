@@ -112,7 +112,7 @@ async function putFilesIntoS3(
             : undefined,
     })
 
-    crawlDirectory(sourceFolder, async (filePath: string) => {
+    await crawlDirectory(sourceFolder, async (filePath: string) => {
         let relativeFilePath = filePath.replace(sourceFolder + '/', '')
 
         const cacheControl = getCacheControl(relativeFilePath)
