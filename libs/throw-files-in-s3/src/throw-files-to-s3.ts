@@ -137,6 +137,10 @@ async function putFilesIntoS3(
 
         try {
             fs.readFile(`./${relativeToCwd}`, async (err, data) => {
+                if (err) {
+                    console.error(`Error reading file ${relativeToCwd}:`, err.message);
+                    throw new Error(`Failed to read file: ${relativeToCwd}`);
+                }
 
                 const args = {
                     CacheControl: cacheControl,
