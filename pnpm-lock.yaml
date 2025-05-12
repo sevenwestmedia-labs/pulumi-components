@@ -144,8 +144,8 @@ importers:
   libs/apigateway-lambda-proxy:
     dependencies:
       '@pulumi/aws':
-        specifier: ^5.0.0
-        version: 5.43.0(ts-node@10.7.0)(typescript@4.6.3)
+        specifier: ^6.80.0
+        version: 6.80.0(ts-node@10.7.0)(typescript@4.6.3)
       '@pulumi/pulumi':
         specifier: ^3.0.0
         version: 3.169.0(ts-node@10.7.0)(typescript@4.6.3)
@@ -3390,6 +3390,18 @@ packages:
       - supports-color
       - ts-node
       - typescript
+
+  /@pulumi/aws@6.80.0(ts-node@10.7.0)(typescript@4.6.3):
+    resolution: {integrity: sha512-7+k/2PPqFz09Ykb+YkabaHa2RjvFREfUds4oBV57dsZkKpZsoCy58xV94oUvcPPB52OE4Z2zpGsvIg3z2mCTHw==}
+    dependencies:
+      '@pulumi/pulumi': 3.169.0(ts-node@10.7.0)(typescript@4.6.3)
+      mime: 2.6.0
+    transitivePeerDependencies:
+      - bluebird
+      - supports-color
+      - ts-node
+      - typescript
+    dev: false
 
   /@pulumi/pagerduty@3.11.2(ts-node@10.7.0)(typescript@4.6.3):
     resolution: {integrity: sha512-dCE8B7D/cHx20E+tC/L+0o+kES7oRTO7L2nrqi1Hq43g2/cNcYPkigl4P48KgLdxrRs3b9hDfR4C3KDHjMCkKw==}
