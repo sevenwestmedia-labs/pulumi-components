@@ -172,7 +172,7 @@ importers:
         specifier: ^3.0.0
         version: 3.169.0(ts-node@10.7.0)(typescript@4.6.3)
 
-  libs/invoke-lamda:
+  libs/invoke-lambda:
     dependencies:
       '@aws-sdk/client-lambda':
         specifier: ^3.804.0
