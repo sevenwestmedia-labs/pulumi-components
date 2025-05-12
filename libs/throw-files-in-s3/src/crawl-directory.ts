@@ -1,20 +1,36 @@
-import fs from 'fs'
+import fs from 'fs/promises'
+import path from 'path'
 
-// crawlDirectory recursive crawls the provided directory, applying the provided function
-// to every file it contains. Doesn't handle cycles from symlinks.
-export function crawlDirectory(dir: string, f: (_: string) => void) {
-    const files = fs.readdirSync(dir)
+/**
+ * Recursively crawls the provided directory, applying the provided function
+ * to every file it contains. Handles symlink cycles and uses asynchronous operations.
+ */
+export async function crawlDirectory(
+    dir: string,
+    fileCallback: (filePath: string) => void | Promise<void>,
+    visited = new Set<string>(),
+): Promise<void> {
+    const resolvedPath = path.resolve(dir)
 
-    for (const file of files) {
-        const filePath = `${dir}/${file}`
-        const stat = fs.statSync(filePath)
+    // Avoid infinite loops
+    if (visited.has(resolvedPath)) {
+        return
+    }
+    visited.add(resolvedPath)
 
-        if (stat.isDirectory()) {
-            crawlDirectory(filePath, f)
+    try {
+        const entries = await fs.readdir(resolvedPath, { withFileTypes: true })
+
+        for (const entry of entries) {
+            const entryPath = path.join(resolvedPath, entry.name)
+
+            if (entry.isDirectory()) {
+                await crawlDirectory(entryPath, fileCallback, visited)
+            } else if (entry.isFile()) {
+                await fileCallback(entryPath)
+            }
         }
-
-        if (stat.isFile()) {
-            f(filePath)
-        }
+    } catch (err) {
+        console.error(`Error reading directory ${resolvedPath}:`, err)
     }
 }

@@ -1,12 +1,12 @@
 import * as aws from '@pulumi/aws'
 import * as pulumi from '@pulumi/pulumi'
 import { RandomString } from '@pulumi/random'
-import * as sdk from 'aws-sdk'
 import mime from 'mime'
 import fs from 'fs'
 import path from 'path'
 import { crawlDirectory } from './crawl-directory'
 import { Unwrap } from '@pulumi/pulumi'
+import { S3Client, ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 interface ThrowIntoS3ResourceInputs {
     resourceId: pulumi.Output<string>
@@ -102,18 +102,17 @@ async function putFilesIntoS3(
     awsRegion: string,
     assumeRole?: string,
 ) {
-    const sentFiles: Array<Promise<string>> = []
-    const s3 = new sdk.S3({
+    const s3 = new S3Client({
         region: awsRegion,
         credentials: assumeRole
             ? new aws.sdk.TemporaryCredentials({
-                  RoleSessionName: 'ThrowFilesInS3',
-                  RoleArn: assumeRole,
-              })
+                RoleSessionName: 'ThrowFilesInS3',
+                RoleArn: assumeRole,
+            })
             : undefined,
     })
 
-    crawlDirectory(sourceFolder, (filePath: string) => {
+    crawlDirectory(sourceFolder, async (filePath: string) => {
         let relativeFilePath = filePath.replace(sourceFolder + '/', '')
 
         const cacheControl = getCacheControl(relativeFilePath)
@@ -136,57 +135,42 @@ async function putFilesIntoS3(
         }
         const relativeToCwd = path.relative(process.cwd(), filePath)
 
-        sentFiles.push(
-            new Promise((resolve, reject) => {
-                fs.readFile(`./${relativeToCwd}`, (err, data) => {
-                    if (err) {
-                        reject(err)
-                    }
+        try {
+            fs.readFile(`./${relativeToCwd}`, async (err, data) => {
 
-                    const args = {
-                        CacheControl: cacheControl,
+                const args = {
+                    CacheControl: cacheControl,
+                    Bucket: targetBucket,
+                    Key: relativeFilePath,
+                    ContentType:
+                        mime.getType(`./${relativeToCwd}`) || undefined,
+                }
+
+                let putFile = new PutObjectCommand({
+                    ...args,
+                    Body: data,
+                })
+
+                if (nonIndexPage) {
+
+                    putFile = new PutObjectCommand({
                         Bucket: targetBucket,
                         Key: relativeFilePath,
                         ContentType:
-                            mime.getType(`./${relativeToCwd}`) || undefined,
-                    }
-
-                    let putFile = s3
-                        .putObject({ ...args, Body: data })
-                        .promise()
-
-                    if (nonIndexPage) {
-                        putFile = putFile.then(() => {
-                            return s3
-                                .putObject({
-                                    Bucket: targetBucket,
-                                    Key: relativeFilePath,
-                                    ContentType:
-                                        mime.getType(`./${relativeToCwd}`) ||
-                                        undefined,
-                                    Body: data,
-                                })
-                                .promise()
-                        })
-                    }
-
-                    putFile
-                        .then(() => resolve(filePath))
-                        .catch(() => reject(`Could not send ${filePath} to S3`))
-                })
-            }),
-        )
+                            mime.getType(`./${relativeToCwd}`) ||
+                            undefined,
+                        Body: data,
+                    })
+                }
+                const putObjectOutput = await s3.send(putFile)
+                return putObjectOutput
+            })
+        } catch (err: any) {
+            console.log('Failed to throw files to S3', err.message)
+            throw new Error('Failed to throw files to S3')
+        }
     })
-
-    try {
-        await Promise.all(sentFiles)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-        console.log('Failed to throw files to S3', err.message)
-        throw new Error('Failed to throw files to S3')
-    }
 }
-
 /**
  * Do not cache the HTML files or config file, this is so that they can be uploaded
  * with as plain files that point to hashed chunks, e.g.
