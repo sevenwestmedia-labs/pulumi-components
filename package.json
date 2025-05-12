@@ -41,7 +41,7 @@
         "@nrwl/jest": "13.10.2",
         "@nrwl/linter": "13.10.2",
         "@nrwl/workspace": "13.10.2",
-        "@pulumi/aws": "^5.43.0",
+        "@pulumi/aws": "^6.80.0",
         "@pulumi/pagerduty": "^3.11.2",
         "@pulumi/pulumi": "^3.168.0",
         "@pulumi/random": "^4.18.2",
