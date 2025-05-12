@@ -1,3 +1,4 @@
+import { PutObjectCommandOutput } from '@aws-sdk/client-s3'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -7,7 +8,7 @@ import path from 'path'
  */
 export async function crawlDirectory(
     dir: string,
-    fileCallback: (filePath: string) => void | Promise<void>,
+    fileCallback: (filePath: string) => Promise<PutObjectCommandOutput>,
     visited = new Set<string>(),
 ): Promise<void> {
     const resolvedPath = path.resolve(dir)
@@ -30,7 +31,8 @@ export async function crawlDirectory(
                 await fileCallback(entryPath)
             }
         }
-    } catch (err) {
-        console.error(`Error reading directory ${resolvedPath}:`, err)
+    } catch (err: any) {
+        console.error(`Error reading directory ${resolvedPath}:`, err.message)
+        throw new Error(`Error reading directory ${resolvedPath}: ${err.message}`)
     }
 }

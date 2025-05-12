@@ -117,13 +117,6 @@ async function putFilesIntoS3(
 
         const cacheControl = getCacheControl(relativeFilePath)
 
-        /**
-         * When uploading a HTML page to the S3 bucket, we need to replace the .html
-         * prefix to support linking to pages by their page name, e.g. /about. We also
-         * add an index file for these HTML files in a folder to support linking to them
-         * with a trailing slash. So any NextJS page.ts file becomes a page (with content
-         * type of HTML) and /page/index.html.
-         */
         let nonIndexPage = false
         if (
             relativeFilePath.endsWith('.html') &&
@@ -136,41 +129,41 @@ async function putFilesIntoS3(
         const relativeToCwd = path.relative(process.cwd(), filePath)
 
         try {
-            fs.readFile(`./${relativeToCwd}`, async (err, data) => {
-                if (err) {
-                    console.error(`Error reading file ${relativeToCwd}:`, err.message);
-                    throw new Error(`Failed to read file: ${relativeToCwd}`);
-                }
+            const data = await new Promise<Buffer>((resolve, reject) => {
+                fs.readFile(`./${relativeToCwd}`, (err, data) => {
+                    if (err) {
+                        reject(new Error(`Error reading file ${relativeToCwd}: ${err.message}`))
+                    } else {
+                        resolve(data)
+                    }
+                })
+            })
 
-                const args = {
-                    CacheControl: cacheControl,
+            const args = {
+                CacheControl: cacheControl,
+                Bucket: targetBucket,
+                Key: relativeFilePath,
+                ContentType: mime.getType(`./${relativeToCwd}`) || undefined,
+            }
+
+            let putFile = new PutObjectCommand({
+                ...args,
+                Body: data,
+            })
+
+            if (nonIndexPage) {
+                putFile = new PutObjectCommand({
                     Bucket: targetBucket,
                     Key: relativeFilePath,
-                    ContentType:
-                        mime.getType(`./${relativeToCwd}`) || undefined,
-                }
-
-                let putFile = new PutObjectCommand({
-                    ...args,
+                    ContentType: mime.getType(`./${relativeToCwd}`) || undefined,
                     Body: data,
                 })
+            }
 
-                if (nonIndexPage) {
-
-                    putFile = new PutObjectCommand({
-                        Bucket: targetBucket,
-                        Key: relativeFilePath,
-                        ContentType:
-                            mime.getType(`./${relativeToCwd}`) ||
-                            undefined,
-                        Body: data,
-                    })
-                }
-                const putObjectOutput = await s3.send(putFile)
-                return putObjectOutput
-            })
+            const putObjectOutput = await s3.send(putFile)
+            return putObjectOutput
         } catch (err: any) {
-            console.log('Failed to throw files to S3', err.message)
+            console.error('Failed to throw files to S3:', err.message)
             throw new Error('Failed to throw files to S3')
         }
     })
