@@ -1,6 +1,7 @@
 import * as pulumi from '@pulumi/pulumi'
-import { _Blob } from 'aws-sdk/clients/lambda'
 import { invokeLambdaProvider } from './invoke-lambda-provider'
+
+type _Blob = Uint8Array | Buffer
 
 export interface LambdaInvocationResourceInputs {
     functionName: pulumi.Input<string>

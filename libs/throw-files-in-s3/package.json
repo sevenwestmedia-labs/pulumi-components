@@ -16,10 +16,11 @@
     },
     "homepage": "https://github.com/sevenwestmedia-labs/pulumi-components/tree/master/libs/throw-files-in-s3#readme",
     "dependencies": {
+        "@aws-sdk/client-sts": "^3.804.0",
         "mime": "^3.0.0"
     },
     "peerDependencies": {
-        "@pulumi/aws": "^5.0.0",
+        "@pulumi/aws": "^6.80.0",
         "@pulumi/pulumi": "^3.0.0",
         "@pulumi/random": "^4.0.0",
         "aws-sdk": "^2.800.0"

@@ -88,16 +88,16 @@
             },
             "tags": []
         },
-        "invoke-lamda": {
-            "root": "libs/invoke-lamda",
+        "invoke-lambda": {
+            "root": "libs/invoke-lambda",
             "projectType": "library",
-            "sourceRoot": "libs/invoke-lamda/src",
+            "sourceRoot": "libs/invoke-lambda/src",
             "targets": {
                 "package": {
                     "executor": "@wanews/nx-typescript-project-references:package",
                     "options": {
-                        "main": "libs/invoke-lamda/src/index.ts",
-                        "tsConfig": "libs/invoke-lamda/tsconfig.json"
+                        "main": "libs/invoke-lambda/src/index.ts",
+                        "tsConfig": "libs/invoke-lambda/tsconfig.json"
                     }
                 }
             },
