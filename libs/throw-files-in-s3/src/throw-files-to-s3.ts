@@ -6,12 +6,8 @@ import fs from 'fs'
 import path from 'path'
 import { crawlDirectory } from './crawl-directory'
 import { Unwrap } from '@pulumi/pulumi'
-
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { STSClient, AssumeRoleCommand } from '@aws-sdk/client-sts'
-import { Role } from '@pulumi/aws/iam'
-
-import { S3Client, ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 interface ThrowIntoS3ResourceInputs {
     resourceId: pulumi.Output<string>
@@ -110,7 +106,6 @@ async function putFilesIntoS3(
     const s3 = new S3Client({
         region: awsRegion,
         credentials: assumeRole
-
             ? await (async () => {
                   const stsClient = new STSClient({ region: awsRegion })
                   const assumeRoleResponse = await stsClient.send(
@@ -128,12 +123,6 @@ async function putFilesIntoS3(
                           assumeRoleResponse.Credentials?.SessionToken || '',
                   }
               })()
-
-            ? new aws.sdk.TemporaryCredentials({
-                RoleSessionName: 'ThrowFilesInS3',
-                RoleArn: assumeRole,
-            })
-      
             : undefined,
     })
 
@@ -162,9 +151,6 @@ async function putFilesIntoS3(
                                 `Error reading file ${relativeToCwd}: ${err.message}`,
                             ),
                         )
-
-                        reject(new Error(`Error reading file ${relativeToCwd}: ${err.message}`))
-
                     } else {
                         resolve(data)
                     }
@@ -190,8 +176,6 @@ async function putFilesIntoS3(
 
                     ContentType:
                         mime.getType(`./${relativeToCwd}`) || undefined,
-
-                    ContentType: mime.getType(`./${relativeToCwd}`) || undefined,
 
                     Body: data,
                 })
