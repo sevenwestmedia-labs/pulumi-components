@@ -6,7 +6,9 @@ import fs from 'fs'
 import path from 'path'
 import { crawlDirectory } from './crawl-directory'
 import { Unwrap } from '@pulumi/pulumi'
-import { S3Client, ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { STSClient, AssumeRoleCommand } from '@aws-sdk/client-sts'
+import { Role } from '@pulumi/aws/iam'
 
 interface ThrowIntoS3ResourceInputs {
     resourceId: pulumi.Output<string>
@@ -105,10 +107,23 @@ async function putFilesIntoS3(
     const s3 = new S3Client({
         region: awsRegion,
         credentials: assumeRole
-            ? new aws.sdk.TemporaryCredentials({
-                RoleSessionName: 'ThrowFilesInS3',
-                RoleArn: assumeRole,
-            })
+            ? await (async () => {
+                  const stsClient = new STSClient({ region: awsRegion })
+                  const assumeRoleResponse = await stsClient.send(
+                      new AssumeRoleCommand({
+                          RoleArn: assumeRole,
+                          RoleSessionName: 'ThrowFilesInS3',
+                      }),
+                  )
+                  return {
+                      accessKeyId:
+                          assumeRoleResponse.Credentials?.AccessKeyId || '',
+                      secretAccessKey:
+                          assumeRoleResponse.Credentials?.SecretAccessKey || '',
+                      sessionToken:
+                          assumeRoleResponse.Credentials?.SessionToken || '',
+                  }
+              })()
             : undefined,
     })
 
@@ -132,7 +147,11 @@ async function putFilesIntoS3(
             const data = await new Promise<Buffer>((resolve, reject) => {
                 fs.readFile(`./${relativeToCwd}`, (err, data) => {
                     if (err) {
-                        reject(new Error(`Error reading file ${relativeToCwd}: ${err.message}`))
+                        reject(
+                            new Error(
+                                `Error reading file ${relativeToCwd}: ${err.message}`,
+                            ),
+                        )
                     } else {
                         resolve(data)
                     }
@@ -155,7 +174,8 @@ async function putFilesIntoS3(
                 putFile = new PutObjectCommand({
                     Bucket: targetBucket,
                     Key: relativeFilePath,
-                    ContentType: mime.getType(`./${relativeToCwd}`) || undefined,
+                    ContentType:
+                        mime.getType(`./${relativeToCwd}`) || undefined,
                     Body: data,
                 })
             }
