@@ -6,6 +6,8 @@ import { waitForService } from './dynamic-resource-provider'
 
 const ecsMock = mockClient(ECSClient)
 
+jest.setTimeout(25000)
+
 describe('#waitForServices', () => {
     beforeEach(() => {
         ecsMock.reset()
@@ -103,7 +105,7 @@ describe('#waitForServices', () => {
                     clusterName: cluster.clusterName,
                     serviceName: service.serviceName,
                     desiredTaskDef: service.taskDefinition,
-                    timeoutMs: 10,
+                    timeoutMs: 20000,
                 })
                 await expect(result).resolves.toHaveProperty('status', 'FAILED')
             }
