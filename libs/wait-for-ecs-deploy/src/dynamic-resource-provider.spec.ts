@@ -1,57 +1,14 @@
 import fs from 'fs'
 import path from 'path'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { ECS } = require('aws-sdk')
-jest.mock('aws-sdk')
-
+import { ECSClient, DescribeServicesCommand } from '@aws-sdk/client-ecs'
+import { mockClient } from 'aws-sdk-client-mock'
 import { waitForService } from './dynamic-resource-provider'
 
-/**
- * Mock ECS client implements describeServices method, returning the specified
- * response. Also includes a dummy waitFor method.
- * @param describeServicesResponse the response to be returned by
- * describeServices
- * @returns a mock ECS client implementation, for use with jest mocking
- */
-function mockedEcs(describeServicesResponse: unknown) {
-    return () => ({
-        describeServices: jest.fn().mockReturnValue({
-            promise: jest.fn().mockResolvedValue(describeServicesResponse),
-        }),
-        waitFor: jest.fn().mockReturnValue({
-            promise: jest.fn().mockResolvedValue(null),
-        }),
-    })
-}
-
-/**
- * Mock ECS client implements a dummy waitFor method that never resolves.
- * Also includes a dummy describeServices method
- * @returns a mock ECS client implementation, for use with jest mocking
- */
-function mockedEcsDeploymentTimeout(describeServicesResponse: unknown) {
-    return () => ({
-        describeServices: jest.fn().mockReturnValue({
-            promise: jest.fn().mockResolvedValue(describeServicesResponse),
-        }),
-        waitFor: jest.fn().mockReturnValue({
-            promise: jest.fn(
-                async () =>
-                    await new Promise((resolve) => {
-                        const timer = setTimeout(() => {
-                            clearTimeout(timer)
-                            resolve('done')
-                        }, (1 << 31) - 1 /* maximum value for a 32-bit signed integer */)
-                    }),
-            ),
-        }),
-    })
-}
+const ecsMock = mockClient(ECSClient)
 
 describe('#waitForServices', () => {
-    beforeEach(async () => {
-        jest.resetAllMocks()
+    beforeEach(() => {
+        ecsMock.reset()
     })
 
     it('should return COMPLETED when a service is successfully deployed', async () => {
@@ -62,7 +19,8 @@ describe('#waitForServices', () => {
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        ECS.mockImplementation(mockedEcs(json))
+
+        ecsMock.on(DescribeServicesCommand).resolves(json)
 
         for (const cluster of clusters) {
             for (const service of cluster.services) {
@@ -87,7 +45,8 @@ describe('#waitForServices', () => {
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        ECS.mockImplementation(mockedEcs(json))
+
+        ecsMock.on(DescribeServicesCommand).resolves(json)
 
         for (const cluster of clusters) {
             for (const service of cluster.services) {
@@ -109,7 +68,8 @@ describe('#waitForServices', () => {
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        ECS.mockImplementation(mockedEcs(json))
+
+        ecsMock.on(DescribeServicesCommand).resolves(json)
 
         for (const cluster of clusters) {
             for (const service of cluster.services) {
@@ -123,10 +83,7 @@ describe('#waitForServices', () => {
         }
     })
 
-    /**
-     * skipped because I couldn't get it working without jest.useFakeTimers()
-     */
-    it.skip('should time out if it takes too long', async () => {
+    it('should time out if it takes too long', async () => {
         const file = path.join(
             __dirname,
             '__data__',
@@ -134,8 +91,11 @@ describe('#waitForServices', () => {
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        ECS.mockImplementation(mockedEcsDeploymentTimeout(json))
-        //jest.useFakeTimers()
+
+        // Simulate a long-running operation by returning a promise that never resolves
+        ecsMock
+            .on(DescribeServicesCommand)
+            .callsFake(() => new Promise(() => {}))
 
         for (const cluster of clusters) {
             for (const service of cluster.services) {
@@ -148,21 +108,26 @@ describe('#waitForServices', () => {
                 await expect(result).resolves.toHaveProperty('status', 'FAILED')
             }
         }
-        //jest.runAllTimers()
     })
 })
 
 function getSampleResponseFromFile(filename: string) {
     const mockResponse = fs.readFileSync(filename).toString()
-    const json = JSON.parse(mockResponse) as AWS.ECS.DescribeServicesResponse
+    const json = JSON.parse(mockResponse) as {
+        services?: Array<{
+            clusterArn?: string
+            serviceName?: string
+            taskDefinition?: string
+        }>
+    }
 
     const clusterArns = json.services?.map((service) => service.clusterArn)
 
-    if (clusterArns === undefined || clusterArns.length < 1) {
+    if (!clusterArns || clusterArns.length < 1) {
         throw new Error('clusterArns missing from mock response!')
     }
 
-    let clusters: Array<{
+    const clusters: Array<{
         clusterName: string
         services: Array<{
             serviceName: string
@@ -173,11 +138,11 @@ function getSampleResponseFromFile(filename: string) {
     let serviceCount = 0
 
     for (const clusterArn of clusterArns) {
-        if (clusterArn === undefined) {
+        if (!clusterArn) {
             throw new Error('clusterArn missing from mock response!')
         }
 
-        const clusterName = clusterArn?.replace(/.*\//, '')
+        const clusterName = clusterArn.replace(/.*\//, '')
         const services = json.services
             ?.filter((service) => service.clusterArn === clusterArn)
             .map((service) => ({
@@ -186,26 +151,23 @@ function getSampleResponseFromFile(filename: string) {
             }))
 
         if (
-            services === undefined ||
+            !services ||
             services.length < 1 ||
-            services.some((s) => s.serviceName === undefined) ||
-            services.some((s) => s.taskDefinition === undefined)
+            services.some((s) => !s.serviceName) ||
+            services.some((s) => !s.taskDefinition)
         ) {
             throw new Error('serviceNames missing from mock response!')
         }
 
         serviceCount += services.length
 
-        clusters = [
-            ...clusters,
-            {
-                clusterName,
-                services: services as Array<{
-                    serviceName: string
-                    taskDefinition: string
-                }>,
-            },
-        ]
+        clusters.push({
+            clusterName,
+            services: services as Array<{
+                serviceName: string
+                taskDefinition: string
+            }>,
+        })
     }
 
     return {

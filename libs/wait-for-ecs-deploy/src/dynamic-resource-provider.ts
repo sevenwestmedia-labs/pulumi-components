@@ -1,11 +1,17 @@
-import * as pulumi from '@pulumi/pulumi'
-import aws from 'aws-sdk'
+import {
+    ECSClient,
+    DescribeServicesCommand,
+    waitUntilServicesStable,
+    Service,
+} from '@aws-sdk/client-ecs'
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers'
 import cuid from 'cuid'
+import * as pulumi from '@pulumi/pulumi'
 
 export interface State {
     clusterName: pulumi.Input<string>
     serviceName: pulumi.Input<string>
-    status: pulumi.Input<string> //'COMPLETED' | 'FAILED'
+    status: pulumi.Input<string> // 'COMPLETED' | 'FAILED'
     failureMessage: pulumi.Input<string>
     desiredTaskDef: pulumi.Input<string>
     timeoutMs: pulumi.Input<number>
@@ -30,52 +36,47 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
     }),
 }
 
-/**
- * Wait for ECS to stabilize, then check to see if the latest deployment(s)
- * were successful. A timeout is treated as a failed deployment.
- * @param inputs inputs
- * @returns a State object representing the deployment result.
- */
-export async function waitForService(inputs: Inputs) {
-    const timeoutMs = inputs.timeoutMs ?? 180000
-    pulumi.log.debug(`waitForService: timeoutMs is ${timeoutMs}`)
+export async function waitForService(inputs: Inputs): Promise<State> {
+    const timeoutMs = inputs.timeoutMs ?? 180000 // returns 3 minutes (180 seconds or 180000 ms) if the left hand operator is undefined
 
-    const ecs = new aws.ECS({
+    const ecsClient = new ECSClient({
         region: inputs.awsRegion,
         credentials: inputs.assumeRole
-            ? new aws.TemporaryCredentials({
-                  RoleArn: inputs.assumeRole,
-                  RoleSessionName: `wait-for-ecs.ecs.${cuid()}`,
+            ? fromTemporaryCredentials({
+                  params: {
+                      RoleArn: inputs.assumeRole,
+                      RoleSessionName: `wait-for-ecs.ecs.${cuid()}`,
+                  },
               })
             : undefined,
     })
 
-    // current circuit breakers don't catch all error conditions,
-    // eg https://github.com/aws/containers-roadmap/issues/1206 --
-    // this timeout will cause a deployment to fail after a certain
-    // amount of time.
-    await ecs
-        .waitFor('servicesStable', {
+    const maxAttempts = Math.max(1, Math.round(timeoutMs / (1000 * 6)))
+
+    await waitUntilServicesStable(
+        {
+            client: ecsClient,
+            maxWaitTime: timeoutMs / 1000, // Total wait time in seconds
+            minDelay: 0, // Minimum delay between attempts in seconds
+            maxDelay: 6, // Maximum delay between attempts in seconds
+        },
+        {
             cluster: inputs.clusterName,
             services: [inputs.serviceName],
-            $waiter: {
-                delay: 6,
-                maxAttempts: Math.max(1, Math.round(timeoutMs / (1000 * 6))),
-            },
-        })
-        .promise()
+        },
+    )
 
     pulumi.log.debug(`waitForService: services are stable`)
 
-    const services = await ecs
-        .describeServices({
-            cluster: inputs.clusterName,
-            services: [inputs.serviceName],
-        })
-        .promise()
-        .then((result) => result.services)
+    const describeCommand = new DescribeServicesCommand({
+        cluster: inputs.clusterName,
+        services: [inputs.serviceName],
+    })
 
-    if (!services) {
+    const describeResponse = await ecsClient.send(describeCommand)
+    const services = describeResponse.services
+
+    if (!services || services.length === 0) {
         throw new Error('No services found!')
     }
 
@@ -85,9 +86,9 @@ export async function waitForService(inputs: Inputs) {
 
     const failureMessage =
         failedServices.length > 0
-            ? `One or more services failed to deploy: ${failedServices.map(
-                  (service) => service.serviceName,
-              )}`
+            ? `One or more services failed to deploy: ${failedServices
+                  .map((service) => service.serviceName)
+                  .join(', ')}`
             : ''
 
     const status = failedServices.length > 0 ? 'FAILED' : 'COMPLETED'
@@ -108,20 +109,7 @@ export async function waitForService(inputs: Inputs) {
     return retval
 }
 
-/**
- * Check whether a deployment has failed. Checks rolloutState and
- * rolloutStateReason to see if the circuit breaker has triggered.
- *
- * Note that rollbacks trigger a new deployment; if rollbacks are
- * enabled, you should also provide a desiredTaskDef to detect the
- * rollback.
- *
- * @param service the esc service object to examine
- * @param desiredTaskDef optional task definition to check
- * @returns boolean true if the deployment failed
- */
-function hasFailed(service: aws.ECS.Service, desiredTaskDef?: string) {
-    // primary deployment does not match the desired taskDef
+function hasFailed(service: Service, desiredTaskDef?: string): boolean {
     if (
         service.deployments?.some(
             (deployment) =>
