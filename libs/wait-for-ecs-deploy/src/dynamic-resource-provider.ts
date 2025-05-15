@@ -57,7 +57,6 @@ export async function waitForService(inputs: Inputs): Promise<State> {
         {
             client: ecsClient,
             maxWaitTime: timeoutMs / 1000, // Total wait time in seconds
-            maxDelay: 6, // Maximum delay between attempts in seconds
         },
         {
             cluster: inputs.clusterName,
