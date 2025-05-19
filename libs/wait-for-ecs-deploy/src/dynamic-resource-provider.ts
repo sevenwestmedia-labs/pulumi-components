@@ -63,8 +63,8 @@ export async function waitForService(inputs: Inputs) {
         {
             client: ecsClient,
             maxWaitTime: delay * maxAttempts, // in seconds
-            minDelay: 6, // seconds between retries
-            maxDelay: 6,
+            minDelay: delay, // seconds between retries
+            maxDelay: delay,
         },
         {
             cluster: inputs.clusterName,
