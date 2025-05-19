@@ -270,6 +270,12 @@ importers:
       cuid:
         specifier: ^2.1.8
         version: 2.1.8
+      waiter:
+        specifier: link:@aws-sdk/client-ecs/waiter
+        version: link:@aws-sdk/client-ecs/waiter
+      waiters:
+        specifier: link:@aws-sdk/client-ecs/waiters
+        version: link:@aws-sdk/client-ecs/waiters
     devDependencies:
       '@aws-sdk/client-ecs':
         specifier: ^3.810.0

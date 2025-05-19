@@ -23,7 +23,9 @@
     },
     "dependencies": {
         "@aws-sdk/credential-providers": "^3.810.0",
-        "cuid": "^2.1.8"
+        "cuid": "^2.1.8",
+        "waiter": "link:@aws-sdk/client-ecs/waiter",
+        "waiters": "link:@aws-sdk/client-ecs/waiters"
     },
     "devDependencies": {
         "@aws-sdk/client-ecs": "^3.810.0",
