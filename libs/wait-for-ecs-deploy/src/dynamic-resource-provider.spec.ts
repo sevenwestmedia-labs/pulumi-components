@@ -7,70 +7,24 @@ import {
 } from '@aws-sdk/client-ecs'
 import { mockClient } from 'aws-sdk-client-mock'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-//const { ECS } = require('aws-sdk')
 const ecsMock = mockClient(ECSClient)
 
 jest.mock('@aws-sdk/client-ecs', () => {
     const actual = jest.requireActual('@aws-sdk/client-ecs')
     return {
         ...actual,
-        waitUntilServicesStable: jest.fn(), // just define the mock, don't bind it to reject here
+        waitUntilServicesStable: jest.fn(), // defining the mock
     }
 })
-//jest.mock('aws-sdk')
 
 import { waitForService } from './dynamic-resource-provider'
 
-/**
- * Mock ECS client implements describeServices method, returning the specified
- * response. Also includes a dummy waitFor method.
- * @param describeServicesResponse the response to be returned by
- * describeServices
- * @returns a mock ECS client implementation, for use with jest mocking
- */
-function mockedEcs(describeServicesResponse: unknown) {
-    return () => ({
-        describeServices: jest.fn().mockReturnValue({
-            promise: jest.fn().mockResolvedValue(describeServicesResponse),
-        }),
-        waitFor: jest.fn().mockReturnValue({
-            promise: jest.fn().mockResolvedValue(null),
-        }),
-    })
-}
-
-/**
- * Mock ECS client implements a dummy waitFor method that never resolves.
- * Also includes a dummy describeServices method
- * @returns a mock ECS client implementation, for use with jest mocking
- */
-function mockedEcsDeploymentTimeout(describeServicesResponse: unknown) {
-    return () => ({
-        describeServices: jest.fn().mockReturnValue({
-            promise: jest.fn().mockResolvedValue(describeServicesResponse),
-        }),
-        waitFor: jest.fn().mockReturnValue({
-            promise: jest.fn(
-                async () =>
-                    await new Promise((resolve) => {
-                        const timer = setTimeout(() => {
-                            clearTimeout(timer)
-                            resolve('done')
-                        }, (1 << 31) - 1 /* maximum value for a 32-bit signed integer */)
-                    }),
-            ),
-        }),
-    })
-}
-
 describe('#waitForServices', () => {
-    jest.setTimeout(15000) // Increase timeout for all tests in this describe block
     beforeEach(async () => {
-        //jest.resetAllMocks()
         ecsMock.reset()
     })
 
+    // Test case for waitForService function showing COMPLETED when all services are deployed
     it('should return COMPLETED when a service is successfully deployed', async () => {
         ;(waitUntilServicesStable as jest.Mock).mockResolvedValue({}) // ✅ success for this test
 
@@ -81,7 +35,6 @@ describe('#waitForServices', () => {
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        //ECS.mockImplementation(mockedEcs(json))
         ecsMock.on(DescribeServicesCommand).resolves(json)
 
         for (const cluster of clusters) {
@@ -98,11 +51,12 @@ describe('#waitForServices', () => {
             }
         }
     })
+
+    // Test case for waitForService function showing FAILED when one or more services have failed and a rollback is in progress
     it('should return FAILED when one or more services has failed and a rollback is in progress', async () => {
-        jest.setTimeout(15000) // Increase timeout specifically for this test if needed
         ;(waitUntilServicesStable as jest.Mock).mockResolvedValue(
             new Error('FAILED'),
-        ) // ✅ fail for this test
+        ) //  ❌ fail for this test
 
         const file = path.join(
             __dirname,
@@ -111,7 +65,6 @@ describe('#waitForServices', () => {
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        // ECS.mockImplementation(mockedEcs(json))
         ecsMock.on(DescribeServicesCommand).resolves(json)
 
         for (const cluster of clusters) {
@@ -125,6 +78,8 @@ describe('#waitForServices', () => {
             }
         }
     })
+
+    // Test case for waitForService function showing FAILED when rollback has completed
     it('should return FAILED when a rollback has completed', async () => {
         const file = path.join(
             __dirname,
@@ -133,7 +88,6 @@ describe('#waitForServices', () => {
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        // ECS.mockImplementation(mockedEcs(json))
         ecsMock.on(DescribeServicesCommand).resolves(json)
 
         for (const cluster of clusters) {
@@ -150,6 +104,7 @@ describe('#waitForServices', () => {
 
     /**
      * skipped because I couldn't get it working without jest.useFakeTimers()
+     * Test case for waitForService function showing FAILED when a timeout occurs
      */
     it.skip('should time out if it takes too long', async () => {
         const file = path.join(
@@ -159,9 +114,9 @@ describe('#waitForServices', () => {
         )
         const { json, clusters, serviceCount } = getSampleResponseFromFile(file)
         expect.assertions(serviceCount)
-        // ECS.mockImplementation(mockedEcsDeploymentTimeout(json))
+
         ecsMock.on(DescribeServicesCommand).resolves(json)
-        //jest.useFakeTimers()
+        jest.useFakeTimers()
 
         for (const cluster of clusters) {
             for (const service of cluster.services) {
@@ -174,13 +129,11 @@ describe('#waitForServices', () => {
                 await expect(result).resolves.toHaveProperty('status', 'FAILED')
             }
         }
-        //jest.runAllTimers()
     })
 })
 
 function getSampleResponseFromFile(filename: string) {
     const mockResponse = fs.readFileSync(filename).toString()
-    // const json = JSON.parse(mockResponse) as AWS.ECS.DescribeServicesResponse
     const json = JSON.parse(mockResponse) as {
         services?: Array<{
             clusterArn?: string

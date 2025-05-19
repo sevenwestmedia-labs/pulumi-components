@@ -1,5 +1,4 @@
 import * as pulumi from '@pulumi/pulumi'
-import aws from 'aws-sdk'
 import cuid from 'cuid'
 import {
     ECSClient,
@@ -45,16 +44,6 @@ export async function waitForService(inputs: Inputs) {
     const timeoutMs = inputs.timeoutMs ?? 180000
     pulumi.log.debug(`waitForService: timeoutMs is ${timeoutMs}`)
 
-    /*const ecs = new aws.ECS({
-        region: inputs.awsRegion,
-        credentials: inputs.assumeRole
-            ? new aws.TemporaryCredentials({
-                  RoleArn: inputs.assumeRole,
-                  RoleSessionName: `wait-for-ecs.ecs.${cuid()}`,
-              })
-            : undefined,
-    })*/
-
     const ecsClient = new ECSClient({
         region: inputs.awsRegion,
         credentials: inputs.assumeRole
@@ -70,21 +59,6 @@ export async function waitForService(inputs: Inputs) {
     const maxAttempts = Math.max(1, Math.round(timeoutMs / (1000 * 6)))
     const delay = 2
 
-    // current circuit breakers don't catch all error conditions,
-    // eg https://github.com/aws/containers-roadmap/issues/1206 --
-    // this timeout will cause a deployment to fail after a certain
-    // amount of time.
-    /* await ecs
-        .waitFor('servicesStable', {
-            cluster: inputs.clusterName,
-            services: [inputs.serviceName],
-            $waiter: {
-                delay: delay,
-                maxAttempts: maxAttempts,
-            },
-        })
-        .promise() */
-
     await waitUntilServicesStable(
         {
             client: ecsClient,
@@ -98,13 +72,6 @@ export async function waitForService(inputs: Inputs) {
         },
     )
 
-    // Optional: Check if the waiter failed
-    /*if (result.state !== 'SUCCESS') {
-        throw new Error(
-            'ECS service did not become stable within the timeout period.',
-        )
-    } */
-
     pulumi.log.debug(`waitForService: services are stable`)
 
     const describeCommand = new DescribeServicesCommand({
@@ -115,14 +82,6 @@ export async function waitForService(inputs: Inputs) {
     const describeResponse = await ecsClient.send(describeCommand)
 
     const services = describeResponse.services
-
-    /*const services = await ecs
-        .describeServices({
-            cluster: inputs.clusterName,
-            services: [inputs.serviceName],
-        })
-        .promise()
-        .then((result) => result.services) */
 
     if (!services) {
         throw new Error('No services found!')
