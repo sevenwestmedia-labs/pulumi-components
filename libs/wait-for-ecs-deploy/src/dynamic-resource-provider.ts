@@ -1,6 +1,12 @@
 import * as pulumi from '@pulumi/pulumi'
-import aws from 'aws-sdk'
 import cuid from 'cuid'
+import {
+    ECSClient,
+    DescribeServicesCommand,
+    waitUntilServicesStable,
+    Service,
+} from '@aws-sdk/client-ecs'
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers'
 
 export interface State {
     clusterName: pulumi.Input<string>
@@ -10,7 +16,6 @@ export interface State {
     desiredTaskDef: pulumi.Input<string>
     timeoutMs: pulumi.Input<number>
 }
-
 export interface Inputs {
     clusterName: string
     serviceName: string
@@ -19,7 +24,6 @@ export interface Inputs {
     awsRegion?: string
     assumeRole?: string
 }
-
 export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
     create: async (inputs: Inputs) => ({
         id: cuid(),
@@ -40,40 +44,44 @@ export async function waitForService(inputs: Inputs) {
     const timeoutMs = inputs.timeoutMs ?? 180000
     pulumi.log.debug(`waitForService: timeoutMs is ${timeoutMs}`)
 
-    const ecs = new aws.ECS({
+    const ecsClient = new ECSClient({
         region: inputs.awsRegion,
         credentials: inputs.assumeRole
-            ? new aws.TemporaryCredentials({
-                  RoleArn: inputs.assumeRole,
-                  RoleSessionName: `wait-for-ecs.ecs.${cuid()}`,
+            ? fromTemporaryCredentials({
+                  params: {
+                      RoleArn: inputs.assumeRole,
+                      RoleSessionName: `wait-for-ecs.ecs.${cuid()}`,
+                  },
               })
             : undefined,
     })
 
-    // current circuit breakers don't catch all error conditions,
-    // eg https://github.com/aws/containers-roadmap/issues/1206 --
-    // this timeout will cause a deployment to fail after a certain
-    // amount of time.
-    await ecs
-        .waitFor('servicesStable', {
+    const maxAttempts = Math.max(1, Math.round(timeoutMs / (1000 * 6)))
+    const delay = 2
+
+    await waitUntilServicesStable(
+        {
+            client: ecsClient,
+            maxWaitTime: delay * maxAttempts, // in seconds
+            minDelay: delay, // seconds between retries
+            maxDelay: delay,
+        },
+        {
             cluster: inputs.clusterName,
             services: [inputs.serviceName],
-            $waiter: {
-                delay: 6,
-                maxAttempts: Math.max(1, Math.round(timeoutMs / (1000 * 6))),
-            },
-        })
-        .promise()
+        },
+    )
 
     pulumi.log.debug(`waitForService: services are stable`)
 
-    const services = await ecs
-        .describeServices({
-            cluster: inputs.clusterName,
-            services: [inputs.serviceName],
-        })
-        .promise()
-        .then((result) => result.services)
+    const describeCommand = new DescribeServicesCommand({
+        cluster: inputs.clusterName,
+        services: [inputs.serviceName],
+    })
+
+    const describeResponse = await ecsClient.send(describeCommand)
+
+    const services = describeResponse.services
 
     if (!services) {
         throw new Error('No services found!')
@@ -91,7 +99,6 @@ export async function waitForService(inputs: Inputs) {
             : ''
 
     const status = failedServices.length > 0 ? 'FAILED' : 'COMPLETED'
-
     const retval: pulumi.UnwrappedObject<State> = {
         clusterName: inputs.clusterName,
         serviceName: inputs.serviceName,
@@ -100,11 +107,9 @@ export async function waitForService(inputs: Inputs) {
         status,
         timeoutMs,
     }
-
     pulumi.log.debug(
         `waitForService: successful return: ${JSON.stringify(retval)}`,
     )
-
     return retval
 }
 
@@ -120,7 +125,7 @@ export async function waitForService(inputs: Inputs) {
  * @param desiredTaskDef optional task definition to check
  * @returns boolean true if the deployment failed
  */
-function hasFailed(service: aws.ECS.Service, desiredTaskDef?: string) {
+function hasFailed(service: Service, desiredTaskDef?: string) {
     // primary deployment does not match the desired taskDef
     if (
         service.deployments?.some(
@@ -132,7 +137,6 @@ function hasFailed(service: aws.ECS.Service, desiredTaskDef?: string) {
     ) {
         return true
     }
-
     if (
         service.deployments?.some(
             (deployment) => deployment.rolloutState === 'FAILED',
@@ -140,7 +144,6 @@ function hasFailed(service: aws.ECS.Service, desiredTaskDef?: string) {
     ) {
         return true
     }
-
     if (
         service.deployments?.some(
             (deployment) =>
@@ -158,6 +161,5 @@ function hasFailed(service: aws.ECS.Service, desiredTaskDef?: string) {
     ) {
         return true
     }
-
     return false
 }
