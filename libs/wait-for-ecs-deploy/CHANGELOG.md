@@ -1,5 +1,11 @@
 # @wanews/pulumi-wait-for-ecs-deploy
 
+## 1.0.0
+
+### Major Changes
+
+- 3db68e4: Upgrade AWS SDK to Version 3 from Version 2
+
 ## 0.3.1
 
 ### Patch Changes
