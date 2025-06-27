@@ -42,6 +42,7 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
  */
 export async function waitForService(inputs: Inputs) {
     const timeoutMs = inputs.timeoutMs ?? 180000
+    const timeout = Math.round(timeoutMs / 1000)
     pulumi.log.debug(`waitForService: timeoutMs is ${timeoutMs}`)
 
     const ecsClient = new ECSClient({
@@ -56,15 +57,12 @@ export async function waitForService(inputs: Inputs) {
             : undefined,
     })
 
-    const maxAttempts = Math.max(1, Math.round(timeoutMs / (1000 * 6)))
-    const delay = 2
-
     await waitUntilServicesStable(
         {
             client: ecsClient,
-            maxWaitTime: delay * maxAttempts, // in seconds
-            minDelay: delay, // seconds between retries
-            maxDelay: delay,
+            maxWaitTime: timeout, // in seconds
+            minDelay: 1, // in seconds
+            maxDelay: 10, // in seconds
         },
         {
             cluster: inputs.clusterName,
