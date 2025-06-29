@@ -45,6 +45,7 @@
         "@pulumi/pagerduty": "^3.11.2",
         "@pulumi/pulumi": "^3.169.0",
         "@pulumi/random": "^4.18.2",
+        "@swc/types": ">= 0.1",
         "@types/debug": "^4.1.12",
         "@types/jest": "27.4.1",
         "@types/mime": "^2.0.3",
@@ -76,5 +77,6 @@
     "description": "Contains reusable Pulumi ComponentResources or DynamicResources we have written.",
     "main": "jest.config.js",
     "keywords": [],
-    "author": ""
+    "author": "",
+    "packageManager": "pnpm@7.33.7+sha512.7afe2410642b39c698df46da4ce5c7231a5cce360698d69f8cf8f42257d40b3e43f231053b07b8de849fd4ffbf4a71ff57b835137777a352388f3d3da747200e"
 }
