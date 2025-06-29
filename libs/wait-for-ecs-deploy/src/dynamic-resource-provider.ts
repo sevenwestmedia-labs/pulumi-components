@@ -42,7 +42,7 @@ export const dynamicProvider: pulumi.dynamic.ResourceProvider = {
  */
 export async function waitForService(inputs: Inputs) {
     const timeoutMs = inputs.timeoutMs ?? 180000
-    const timeout = Math.round(timeoutMs / 1000)
+    const timeoutSeconds = Math.round(timeoutMs / 1000)
     pulumi.log.debug(`waitForService: timeoutMs is ${timeoutMs}`)
 
     const ecsClient = new ECSClient({
@@ -57,10 +57,19 @@ export async function waitForService(inputs: Inputs) {
             : undefined,
     })
 
-    await waitUntilServicesStable(
+    // At time of writing, [`waitUntilServicesStable`][1] is almost entirely
+    // undocumented. However, [this discussion][2] seems to indicate that it
+    // is a wrapper around the (deprecated, and also entirely undocumented)
+    // [`waitForServicesStable`][3] function, which throws unless the result
+    // is SUCCESS.
+    //
+    // [1]: https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-ecs/Function/waitUntilServicesStable1/
+    // [2]: https://github.com/aws/aws-sdk-js-v3/issues/1917#issuecomment-777061186
+    // [3]: https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-ecs/Function/waitForServicesStable1/
+    const result = await waitUntilServicesStable(
         {
             client: ecsClient,
-            maxWaitTime: timeout, // in seconds
+            maxWaitTime: timeoutSeconds, // in seconds
             minDelay: 1, // in seconds
             maxDelay: 10, // in seconds
         },
@@ -69,6 +78,14 @@ export async function waitForService(inputs: Inputs) {
             services: [inputs.serviceName],
         },
     )
+
+    if (result.state !== 'SUCCESS') {
+        // this should be unreachable: waitUntilServicesStable throws unless
+        // the result is SUCCESS, and we don't catch it.
+        throw new Error(
+            `Failed to stabilize ECS services: ${JSON.stringify(result)}`,
+        )
+    }
 
     pulumi.log.debug(`waitForService: services are stable`)
 
